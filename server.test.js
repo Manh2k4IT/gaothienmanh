@@ -251,14 +251,20 @@ test("Admin login requires username and password, protects every admin page, and
     assert.equal(login.status, 200);
     const setCookie = login.headers.get("set-cookie");
     assert.match(setCookie, /HttpOnly; SameSite=Strict; Path=\/; Max-Age=28800/);
+    assert.match(setCookie, /Path=\/api; Max-Age=0/);
     const cookie = setCookie.split(";")[0];
+    const oldCookie = `rice_admin=${"0".repeat(64)}; ${cookie}`;
+    assert.equal((await fetch(origin + "/api/admin/session", { headers: { Cookie: oldCookie } })).status, 200);
+    assert.equal((await fetch(origin + "/admin.html", { headers: { Cookie: oldCookie }, redirect: "manual" })).status, 200);
     for (const name of pages) {
       const response = await fetch(origin + "/" + name, { headers: { Cookie: cookie }, redirect: "manual" });
       assert.equal(response.status, 200, name);
       assert.equal(response.headers.get("cache-control"), "no-store");
       assert.match(await response.text(), /src="admin-session.js"/);
     }
-    assert.equal((await post("/api/admin/logout", {}, cookie)).status, 200);
+    const logout = await post("/api/admin/logout", {}, oldCookie);
+    assert.equal(logout.status, 200);
+    assert.match(logout.headers.get("set-cookie"), /Path=\/api; Max-Age=0/);
     assert.equal((await fetch(origin + "/api/admin/session", { headers: { Cookie: cookie } })).status, 401);
     assert.equal((await fetch(origin + "/admin.html", { headers: { Cookie: cookie }, redirect: "manual" })).status, 302);
     assert.equal((await fetch(origin + "/")).status, 200);

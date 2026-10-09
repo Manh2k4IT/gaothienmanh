@@ -91,8 +91,9 @@ function createStore({ databasePath, password, publicOrigin = "", allowLocalAdmi
         localAddress.includes(req.socket.remoteAddress) &&
         /^(?:localhost|127\.0\.0\.1|\[::1\])(?::\d+)?$/.test(req.headers.host || "")) return null;
     for (const [token, expiry] of sessions) if (expiry < Date.now()) sessions.delete(token);
-    const token = /(?:^|;\s*)rice_admin=([a-f0-9]{64})(?:;|$)/.exec(req.headers.cookie || "")?.[1];
-    if (!token || !sessions.has(token)) throw new RequestError(401, "Vui lòng đăng nhập quản trị.");
+    const tokens = (req.headers.cookie || "").split(";").map((cookie) => /^rice_admin=([a-f0-9]{64})$/.exec(cookie.trim())?.[1]);
+    const token = tokens.find((value) => value && sessions.has(value));
+    if (!token) throw new RequestError(401, "Vui lòng đăng nhập quản trị.");
     return token;
   }
   async function readBody(req, max = 32000) {
@@ -228,7 +229,10 @@ function createStore({ databasePath, password, publicOrigin = "", allowLocalAdmi
           if (body.username !== "Manh Trinh" || !validPassword) throw new RequestError(401, "Tài khoản hoặc mật khẩu không đúng.");
           const token = crypto.randomBytes(32).toString("hex");
           sessions.set(token, Date.now() + 8 * 3600000);
-          return json(res, 200, { ok: true }, { "Set-Cookie": `rice_admin=${token}; HttpOnly; SameSite=Strict; Path=/; Max-Age=28800${publicOrigin.startsWith("https:") ? "; Secure" : ""}` });
+          return json(res, 200, { ok: true }, { "Set-Cookie": [
+            `rice_admin=${token}; HttpOnly; SameSite=Strict; Path=/; Max-Age=28800${publicOrigin.startsWith("https:") ? "; Secure" : ""}`,
+            `rice_admin=; HttpOnly; SameSite=Strict; Path=/api; Max-Age=0${publicOrigin.startsWith("https:") ? "; Secure" : ""}`
+          ] });
         }
         if (route.startsWith("/api/admin/")) {
           const token = requireAdmin(req);
@@ -308,7 +312,12 @@ function createStore({ databasePath, password, publicOrigin = "", allowLocalAdmi
           }
           if (route === "/api/admin/logout" && req.method === "POST") {
             sessions.delete(token);
-            return json(res, 200, { ok: true }, { "Set-Cookie": `rice_admin=; HttpOnly; SameSite=Strict; Path=/; Max-Age=0${publicOrigin.startsWith("https:") ? "; Secure" : ""}` });
+            for (const cookie of (req.headers.cookie || "").split(";")) {
+              const otherToken = /^rice_admin=([a-f0-9]{64})$/.exec(cookie.trim())?.[1];
+              if (otherToken) sessions.delete(otherToken);
+            }
+            return json(res, 200, { ok: true }, { "Set-Cookie": ["/", "/api"].map((cookiePath) =>
+              `rice_admin=; HttpOnly; SameSite=Strict; Path=${cookiePath}; Max-Age=0${publicOrigin.startsWith("https:") ? "; Secure" : ""}`) });
           }
           if (route === "/api/admin/catalog" && req.method === "GET") return json(res, 200, { products: JSON.parse(getSetting("products")), vouchers: JSON.parse(getSetting("vouchers")) });
           if (route === "/api/admin/catalog" && req.method === "PUT") {
