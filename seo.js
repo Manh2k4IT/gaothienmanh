@@ -1,13 +1,14 @@
 (function () {
   const path = location.pathname.replace(/\/+$/, "") || "/";
   const page = path.split("/").pop();
+  const articlePath = /^\/bai-viet\/[^/]+$/.test(path);
   const allowedParams = {
     "gao.html": ["category"],
     "chi-tiet-gao.html": ["id"],
     "bai-viet-danh-sach.html": ["category"],
     "bai-viet.html": ["slug"]
   };
-  const canonical = new URL(page === "index.html" || page === "/" ? "/" : `/${page}`, location.origin);
+  const canonical = new URL(articlePath ? path : page === "index.html" || page === "/" ? "/" : `/${page}`, location.origin);
   for (const key of allowedParams[page] || []) {
     const value = new URL(location.href).searchParams.get(key);
     if (value) canonical.searchParams.set(key, value);

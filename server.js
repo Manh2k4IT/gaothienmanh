@@ -366,6 +366,19 @@ function createStore({ databasePath, password, publicOrigin = "", allowLocalAdmi
         throw new RequestError(404, "Không tìm thấy chức năng.");
       }
       if (req.method !== "GET" && req.method !== "HEAD") throw new RequestError(405, "Phương thức không hỗ trợ.");
+      const articlePath = /^\/bai-viet\/([^/]+)\/?$/.exec(route);
+      const articleSlug = articlePath ? decodeURIComponent(articlePath[1]) : route === "/bai-viet.html" ? url.searchParams.get("slug") : null;
+      if (articleSlug !== null) {
+        if (!articleSlug || /[/\\\u0000-\u001f\u007f]/.test(articleSlug) || [".", ".."].includes(articleSlug)) throw new RequestError(404, "Đường dẫn bài viết không hợp lệ.");
+        const canonicalPath = `/bai-viet/${encodeURIComponent(articleSlug)}`;
+        if (route !== canonicalPath || url.search) {
+          res.writeHead(301, { Location: canonicalPath });
+          return res.end();
+        }
+        const html = fs.readFileSync(path.join(root, "bai-viet.html"), "utf8").replace("<head>", '<head>\n  <base href="/">');
+        res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-cache" });
+        return res.end(req.method === "HEAD" ? undefined : html);
+      }
       const name = route === "/" ? "index.html" : decodeURIComponent(route.slice(1));
       if (!/^[a-zA-Z0-9_-]+\.(?:html|js|css|png|jpg|jpeg|svg|ico)$/.test(name) || ["server.js", "server.test.js"].includes(name)) throw new RequestError(404, "Không tìm thấy trang.");
       const file = path.join(root, name);

@@ -365,7 +365,7 @@
         actions.className = "row-actions";
         if (article.status === "published") {
           const view = textElement("a", "row-action", "Xem bài");
-          view.href = `bai-viet.html?slug=${encodeURIComponent(article.id)}`;
+          view.href = RiceArticles.articleHref(article);
           actions.append(view);
         }
         const edit = textElement("button", "row-action", "Sửa");

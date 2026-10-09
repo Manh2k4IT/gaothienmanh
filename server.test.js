@@ -302,6 +302,21 @@ test("Order API: authoritative pricing, vouchers, customer validation, persisten
     assert.equal((await api("/api/quote", { method: "POST", body: { items } })).status, 409);
     for (const file of ["/server.js", "/server.test.js", "/data/store.sqlite", "/package.json", "/HUONG-DAN.txt"]) assert.equal((await fetch(origin + file)).status, 404);
     assert.equal((await fetch(origin + "/dat-hang.html")).status, 200);
+    const oldArticle = await fetch(origin + "/bai-viet.html?slug=bi-quyet-nau-com-deo-thom&utm_source=test", { redirect: "manual" });
+    assert.equal(oldArticle.status, 301);
+    assert.equal(oldArticle.headers.get("location"), "/bai-viet/bi-quyet-nau-com-deo-thom");
+    const articlePage = await fetch(origin + oldArticle.headers.get("location"));
+    assert.equal(articlePage.status, 200);
+    assert.match(await articlePage.text(), /<base href="\/">/);
+    for (const suffix of ["/", "?utm_source=test"]) {
+      const response = await fetch(origin + "/bai-viet/bi-quyet-nau-com-deo-thom" + suffix, { redirect: "manual" });
+      assert.equal(response.status, 301);
+      assert.equal(response.headers.get("location"), "/bai-viet/bi-quyet-nau-com-deo-thom");
+    }
+    const articleHead = await fetch(origin + "/bai-viet/bi-quyet-nau-com-deo-thom", { method: "HEAD" });
+    assert.equal(articleHead.status, 200);
+    assert.equal(await articleHead.text(), "");
+    assert.equal((await fetch(origin + "/bai-viet/bad%2Fslug")).status, 404);
     const robots = await fetch(origin + "/robots.txt");
     assert.equal(robots.status, 200);
     assert.match(await robots.text(), /Sitemap: http:\/\/127\.0\.0\.1:\d+\/sitemap\.xml/);

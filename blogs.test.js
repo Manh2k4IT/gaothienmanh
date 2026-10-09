@@ -4,12 +4,37 @@ const fs = require("node:fs");
 const vm = require("node:vm");
 const path = require("node:path");
 
-function context(memory = new Map()) {
-  const sandbox = { window: {}, localStorage: { getItem: (key) => memory.get(key) ?? null, setItem: (key, value) => memory.set(key, value), removeItem: (key) => memory.delete(key) }, URL, console };
+function context(memory = new Map(), protocol = "https:") {
+  const sandbox = { window: {}, location: { protocol }, localStorage: { getItem: (key) => memory.get(key) ?? null, setItem: (key, value) => memory.set(key, value), removeItem: (key) => memory.delete(key) }, URL, console };
   vm.createContext(sandbox);
   vm.runInContext(fs.readFileSync(path.join(__dirname, "blogs.js"), "utf8"), sandbox);
   return sandbox.window.RiceArticles;
 }
+
+test("Article links use readable server paths and preserve direct-file previews", () => {
+  assert.equal(context().articleHref({ id: "bi-quyet-nau-com-deo-thom" }), "/bai-viet/bi-quyet-nau-com-deo-thom");
+  assert.equal(context().articleHref({ id: "bài viết" }), "/bai-viet/b%C3%A0i%20vi%E1%BA%BFt");
+  assert.equal(context(new Map(), "file:").articleHref({ id: "nau-com" }), "bai-viet.html?slug=nau-com");
+});
+
+test("Clean article canonical keeps the full slug path without duplicate tags", () => {
+  const links = [];
+  const sandbox = {
+    location: { pathname: "/bai-viet/nau-com/", origin: "https://rice.example", href: "https://rice.example/bai-viet/nau-com/?utm_source=test" },
+    document: {
+      querySelector: (selector) => selector === 'link[rel="canonical"]' ? links[0] || null : null,
+      createElement: () => ({}),
+      head: { append: (element) => links.push(element) }
+    },
+    URL
+  };
+  vm.createContext(sandbox);
+  const script = fs.readFileSync(path.join(__dirname, "seo.js"), "utf8");
+  vm.runInContext(script, sandbox);
+  vm.runInContext(script, sandbox);
+  assert.equal(links.length, 1);
+  assert.equal(links[0].href, "https://rice.example/bai-viet/nau-com");
+});
 
 test("Blog categories preserve old groups, rename membership, persist and delete without deleting articles", () => {
   const memory = new Map();
