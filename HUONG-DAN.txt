@@ -24,9 +24,11 @@ Giay phep: https://www.pexels.com/license/
    de lay dang ky moi, co phan trang 25 luot/trang. Cua hang tu lien he khach,
    chua tu gui tin Zalo. Neu gui loi, form giu thong tin de khach thu lai.
    Dang ky luu trong SQLite; danh sach chi quan tri duoc xem.
-3. Ban chay cuc bo (HOST=127.0.0.1/localhost/::1, chua dat PUBLIC_ORIGIN)
-   khong can dang nhap: mo /admin-don-hang.html de xem don ngay.
-   Neu doi HOST de mo truy cap mang hoac dat PUBLIC_ORIGIN, admin can dang nhap.
+3. Vao /admin-login.html de dang nhap. Tai khoan: Manh Trinh.
+   Mat khau do ban dat trong Environment tren Render: ADMIN_PASSWORD.
+   Trang admin yeu cau dang nhap ca khi chay npm start tren may cuc bo.
+   Mo link admin truc tiep se chuyen sang dang nhap; phien keo dai 8 gio.
+   Nut Dang xuat co tren moi trang admin. Sau deploy can dang nhap lai.
    Lan dau, terminal van hien mat khau quan tri du phong. Luu o noi an toan.
    Muon doi mat khau: dat bien moi truong ADMIN_PASSWORD (it nhat 12 ky tu)
    roi khoi dong lai may chu. Khong ghi mat khau vao ma nguon.

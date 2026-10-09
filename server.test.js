@@ -48,7 +48,7 @@ test("Product categories API: authenticated writes, membership, stale edits, per
     server = null;
   };
   async function login() {
-    const response = await fetch(origin + "/api/admin/login", { method: "POST", headers: { Origin: origin, "Content-Type": "application/json" }, body: JSON.stringify({ password }) });
+    const response = await fetch(origin + "/api/admin/login", { method: "POST", headers: { Origin: origin, "Content-Type": "application/json" }, body: JSON.stringify({ username: "Manh Trinh", password }) });
     return response.headers.get("set-cookie").split(";")[0];
   }
   async function save(body, cookie, customOrigin = origin) {
@@ -86,7 +86,7 @@ test("Product categories API: authenticated writes, membership, stale edits, per
     assert.deepEqual(await (await fetch(origin + "/api/categories")).json(), { items: [], version: 3 });
     assert.ok(!(await (await fetch(origin + "/api/menu")).json()).category.children.some((child) => child.href.startsWith("gao.html?category=")));
     assert.deepEqual((await (await fetch(origin + "/api/catalog")).json()).products, products);
-    assert.equal((await fetch(origin + "/admin-danh-muc.html")).status, 200);
+    assert.equal((await fetch(origin + "/admin-danh-muc.html", { headers: { Cookie: secondCookie } })).status, 200);
   } finally {
     if (server) await stop();
     fs.rmSync(directory, { recursive: true, force: true });
@@ -142,7 +142,7 @@ test("Menu API saves, protects access, detects stale edits and persists after re
     const products = (await (await fetch(origin + "/api/catalog")).json()).products;
     assert.deepEqual(original, { items: defaultMenu, category: defaultCategory(products), version: 1 });
     assert.equal((await fetch(origin + "/api/admin/menu")).status, 401);
-    const login = await fetch(origin + "/api/admin/login", { method: "POST", headers: { "Content-Type": "application/json", Origin: origin }, body: JSON.stringify({ password }) });
+    const login = await fetch(origin + "/api/admin/login", { method: "POST", headers: { "Content-Type": "application/json", Origin: origin }, body: JSON.stringify({ username: "Manh Trinh", password }) });
     const cookie = login.headers.get("set-cookie").split(";")[0];
     const save = (body, customOrigin = origin, auth = cookie) => fetch(origin + "/api/admin/menu", {
       method: "PUT", headers: { "Content-Type": "application/json", Origin: customOrigin, Cookie: auth }, body: JSON.stringify(body)
@@ -162,7 +162,7 @@ test("Menu API saves, protects access, detects stale edits and persists after re
     await stop();
     await start();
     assert.deepEqual(await (await fetch(origin + "/api/menu")).json(), result);
-    const secondLogin = await fetch(origin + "/api/admin/login", { method: "POST", headers: { "Content-Type": "application/json", Origin: origin }, body: JSON.stringify({ password }) });
+    const secondLogin = await fetch(origin + "/api/admin/login", { method: "POST", headers: { "Content-Type": "application/json", Origin: origin }, body: JSON.stringify({ username: "Manh Trinh", password }) });
     assert.equal((await save({ items: [], version: 2 }, origin, secondLogin.headers.get("set-cookie").split(";")[0])).status, 200);
     assert.deepEqual(await (await fetch(origin + "/api/menu")).json(), { items: [], category: result.category, version: 3 });
   } finally {
@@ -227,6 +227,48 @@ test("Local admin opens without login, but public origin still requires authenti
   } finally { fs.rmSync(directory, { recursive: true, force: true }); }
 });
 
+test("Admin login requires username and password, protects every admin page, and logout revokes access", async () => {
+  const directory = fs.mkdtempSync(path.join(os.tmpdir(), "rice-login-test-"));
+  const password = crypto.randomBytes(24).toString("hex");
+  const server = createStore({ databasePath: path.join(directory, "test.sqlite"), password });
+  await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
+  const origin = `http://127.0.0.1:${server.address().port}`;
+  const post = (route, body, cookie = "") => fetch(origin + route, {
+    method: "POST", headers: { Origin: origin, "Content-Type": "application/json", Cookie: cookie }, body: JSON.stringify(body)
+  });
+  try {
+    assert.equal((await fetch(origin + "/admin-login.html")).status, 200);
+    const pages = fs.readdirSync(__dirname).filter((name) => /^admin.*\.html$/.test(name) && name !== "admin-login.html");
+    for (const name of pages) {
+      const response = await fetch(origin + "/" + name, { redirect: "manual" });
+      assert.equal(response.status, 302, name);
+      assert.equal(response.headers.get("location"), `/admin-login.html?next=${encodeURIComponent("/" + name)}`);
+    }
+    for (const body of [{ password }, { username: "Wrong", password }, { username: "Manh Trinh", password: "invalid" }]) {
+      assert.equal((await post("/api/admin/login", body)).status, 401);
+    }
+    const login = await post("/api/admin/login", { username: "Manh Trinh", password });
+    assert.equal(login.status, 200);
+    const setCookie = login.headers.get("set-cookie");
+    assert.match(setCookie, /HttpOnly; SameSite=Strict; Path=\/; Max-Age=28800/);
+    const cookie = setCookie.split(";")[0];
+    for (const name of pages) {
+      const response = await fetch(origin + "/" + name, { headers: { Cookie: cookie }, redirect: "manual" });
+      assert.equal(response.status, 200, name);
+      assert.equal(response.headers.get("cache-control"), "no-store");
+      assert.match(await response.text(), /src="admin-session.js"/);
+    }
+    assert.equal((await post("/api/admin/logout", {}, cookie)).status, 200);
+    assert.equal((await fetch(origin + "/api/admin/session", { headers: { Cookie: cookie } })).status, 401);
+    assert.equal((await fetch(origin + "/admin.html", { headers: { Cookie: cookie }, redirect: "manual" })).status, 302);
+    assert.equal((await fetch(origin + "/")).status, 200);
+  } finally {
+    server.closeAllConnections();
+    await new Promise((resolve) => server.close(resolve));
+    fs.rmSync(directory, { recursive: true, force: true });
+  }
+});
+
 test("Order API: authoritative pricing, vouchers, customer validation, persistence and admin access", async () => {
   const directory = fs.mkdtempSync(path.join(os.tmpdir(), "rice-order-test-"));
   const databasePath = path.join(directory, "test.sqlite");
@@ -250,7 +292,7 @@ test("Order API: authoritative pricing, vouchers, customer validation, persisten
     await start();
     assert.equal((await api("/api/admin/orders")).status, 401);
     assert.equal((await api("/api/admin/login", { method: "POST", body: { password: "invalid" } })).status, 401);
-    const login = await api("/api/admin/login", { method: "POST", body: { password } });
+    const login = await api("/api/admin/login", { method: "POST", body: { username: "Manh Trinh", password } });
     assert.equal(login.status, 200);
     const cookie = login.cookie;
     const products = (await api("/api/catalog")).body.products;
@@ -313,7 +355,7 @@ test("Order API: authoritative pricing, vouchers, customer validation, persisten
     assert.match(sitemapXml, /bai-viet-danh-sach\.html/);
     await stop();
     await start();
-    const relogin = await api("/api/admin/login", { method: "POST", body: { password } });
+    const relogin = await api("/api/admin/login", { method: "POST", body: { username: "Manh Trinh", password } });
     const persisted = await api("/api/admin/orders", { cookie: relogin.cookie });
     assert.equal(persisted.body.count, 1);
     assert.equal(persisted.body.orders[0].status, "confirmed");

@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Đăng nhập quản trị — Gạo Thiên Mạnh</title>
+  <link rel="icon" href="logo.png">
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; display: grid; place-items: center; padding: 24px; background: #f8f6ef; color: #233329; font: 15px Arial, sans-serif; }
+    main { width: min(100%, 430px); padding: 36px; border: 1px solid #e8e7dc; border-radius: 14px; background: #fffefa; box-shadow: 0 15px 45px #173d2c12; }
+    img { display: block; width: 80px; height: 80px; object-fit: contain; margin: auto; }
+    h1 { text-align: center; color: #173d2c; font-size: 25px; }
+    .intro { text-align: center; color: #748075; line-height: 1.6; }
+    label { display: grid; gap: 9px; margin: 20px 0; font-weight: bold; }
+    input, button { width: 100%; padding: 13px; font: inherit; border-radius: 6px; }
+    input { border: 1px solid #dcded5; background: white; }
+    input:focus-visible, button:focus-visible, a:focus-visible { outline: 3px solid #d3a650; outline-offset: 3px; }
+    button { border: 0; background: #173d2c; color: white; cursor: pointer; }
+    button:disabled { opacity: .65; cursor: wait; }
+    #status { color: #a33122; line-height: 1.6; }
+    a { display: block; text-align: center; color: #173d2c; margin-top: 22px; }
+  </style>
+</head>
+<body>
+  <main>
+    <img src="logo.png" alt="Gạo Thiên Mạnh">
+    <h1>Đăng nhập quản trị</h1>
+    <p class="intro">Quản lý cửa hàng Gạo Thiên Mạnh.</p>
+    <form id="adminLoginForm">
+      <label>Tài khoản<input name="username" autocomplete="username" value="Manh Trinh" required maxlength="80"></label>
+      <label>Mật khẩu<input name="password" type="password" autocomplete="current-password" required maxlength="256"></label>
+      <button type="submit">Đăng nhập</button>
+    </form>
+    <p id="status" role="alert"></p>
+    <a href="index.html">← Quay về cửa hàng</a>
+  </main>
+  <script src="orders-api.js"></script>
+  <script src="admin-login.js"></script>
+</body>
+</html>

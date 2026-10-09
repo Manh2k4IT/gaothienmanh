@@ -86,7 +86,7 @@ test("Site content API: authentication, same-origin, conflict, persistence and i
     assert.deepEqual(initial, { content: defaults(), version: 1 });
     assert.equal((await fetch(origin + "/api/admin/site-content")).status, 401);
     assert.equal((await save(initial)).status, 401);
-    const login = await fetch(origin + "/api/admin/login", { method: "POST", headers: { Origin: origin, "Content-Type": "application/json" }, body: JSON.stringify({ password }) });
+    const login = await fetch(origin + "/api/admin/login", { method: "POST", headers: { Origin: origin, "Content-Type": "application/json" }, body: JSON.stringify({ username: "Manh Trinh", password }) });
     const cookie = login.headers.get("set-cookie").split(";")[0];
     initial.content.brand.name = "Cửa hàng mới";
     initial.content.brand.logo = "data:image/png;base64," + Buffer.from("\x89PNG\r\n\x1a\nhello", "latin1").toString("base64");

@@ -5,6 +5,9 @@
     if (!response.headers.get("content-type")?.includes("application/json")) throw new Error("Máy chủ hiện tại chưa hỗ trợ nhận đơn. Hãy mở cửa hàng trên cổng 8002.");
     const data = await response.json();
     if (!response.ok) {
+      if (response.status === 401 && /^\/admin(?:-[a-z0-9-]+)?\.html$/.test(location.pathname) && location.pathname !== "/admin-login.html") {
+        location.replace(`/admin-login.html?next=${encodeURIComponent(location.pathname)}`);
+      }
       const error = new Error(data.error || "Không thể xử lý yêu cầu.");
       error.status = response.status;
       throw error;

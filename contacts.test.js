@@ -36,7 +36,7 @@ test("Contacts API saves persistently, protects admin list, paginates and dedupl
     method: "POST", headers: { Origin: customOrigin, "Content-Type": "application/json" }, body: JSON.stringify(body)
   });
   async function login() {
-    const response = await fetch(origin + "/api/admin/login", { method: "POST", headers: { Origin: origin, "Content-Type": "application/json" }, body: JSON.stringify({ password }) });
+    const response = await fetch(origin + "/api/admin/login", { method: "POST", headers: { Origin: origin, "Content-Type": "application/json" }, body: JSON.stringify({ username: "Manh Trinh", password }) });
     return response.headers.get("set-cookie").split(";")[0];
   }
   try {

@@ -224,10 +224,11 @@ function createStore({ databasePath, password, publicOrigin = "", allowLocalAdmi
           const body = await readBody(req);
           if (typeof body?.password !== "string" || body.password.length > 256) throw new RequestError(400, "Mật khẩu không hợp lệ.");
           const [salt, hash] = getSetting("password").split(":");
-          if (!crypto.timingSafeEqual(crypto.scryptSync(body.password, salt, 64), Buffer.from(hash, "hex"))) throw new RequestError(401, "Mật khẩu không đúng.");
+          const validPassword = crypto.timingSafeEqual(crypto.scryptSync(body.password, salt, 64), Buffer.from(hash, "hex"));
+          if (body.username !== "Manh Trinh" || !validPassword) throw new RequestError(401, "Tài khoản hoặc mật khẩu không đúng.");
           const token = crypto.randomBytes(32).toString("hex");
           sessions.set(token, Date.now() + 8 * 3600000);
-          return json(res, 200, { ok: true }, { "Set-Cookie": `rice_admin=${token}; HttpOnly; SameSite=Strict; Path=/api; Max-Age=28800${publicOrigin.startsWith("https:") ? "; Secure" : ""}` });
+          return json(res, 200, { ok: true }, { "Set-Cookie": `rice_admin=${token}; HttpOnly; SameSite=Strict; Path=/; Max-Age=28800${publicOrigin.startsWith("https:") ? "; Secure" : ""}` });
         }
         if (route.startsWith("/api/admin/")) {
           const token = requireAdmin(req);
@@ -307,7 +308,7 @@ function createStore({ databasePath, password, publicOrigin = "", allowLocalAdmi
           }
           if (route === "/api/admin/logout" && req.method === "POST") {
             sessions.delete(token);
-            return json(res, 200, { ok: true }, { "Set-Cookie": "rice_admin=; HttpOnly; SameSite=Strict; Path=/api; Max-Age=0" });
+            return json(res, 200, { ok: true }, { "Set-Cookie": `rice_admin=; HttpOnly; SameSite=Strict; Path=/; Max-Age=0${publicOrigin.startsWith("https:") ? "; Secure" : ""}` });
           }
           if (route === "/api/admin/catalog" && req.method === "GET") return json(res, 200, { products: JSON.parse(getSetting("products")), vouchers: JSON.parse(getSetting("vouchers")) });
           if (route === "/api/admin/catalog" && req.method === "PUT") {
@@ -370,6 +371,16 @@ function createStore({ databasePath, password, publicOrigin = "", allowLocalAdmi
       if (!/^[a-zA-Z0-9_-]+\.(?:html|js|css|png|jpg|jpeg|svg|ico)$/.test(name) || ["server.js", "server.test.js"].includes(name)) throw new RequestError(404, "Không tìm thấy trang.");
       const file = path.join(root, name);
       if (!fs.existsSync(file)) throw new RequestError(404, "Không tìm thấy trang.");
+      if (/^admin(?:-[a-z0-9-]+)?\.html$/.test(name) && name !== "admin-login.html") {
+        try { requireAdmin(req); }
+        catch (error) {
+          if (!(error instanceof RequestError) || error.status !== 401) throw error;
+          res.writeHead(302, { Location: `/admin-login.html?next=${encodeURIComponent(`/${name}`)}`, "Cache-Control": "no-store" });
+          return res.end();
+        }
+        res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store" });
+        return res.end(req.method === "HEAD" ? undefined : fs.readFileSync(file, "utf8").replace("</body>", '<script src="admin-session.js"></script>\n</body>'));
+      }
       const types = { ".html": "text/html; charset=utf-8", ".js": "text/javascript; charset=utf-8", ".css": "text/css; charset=utf-8", ".png": "image/png", ".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".svg": "image/svg+xml", ".ico": "image/x-icon" };
       res.writeHead(200, { "Content-Type": types[path.extname(file)], "Cache-Control": "no-cache" });
       if (req.method === "HEAD") return res.end();
@@ -391,7 +402,7 @@ function createStore({ databasePath, password, publicOrigin = "", allowLocalAdmi
 if (require.main === module) {
   const host = process.env.HOST || "127.0.0.1";
   const publicOrigin = process.env.PUBLIC_ORIGIN || "";
-  const allowLocalAdmin = ["127.0.0.1", "::1", "localhost"].includes(host) && !publicOrigin;
+  const allowLocalAdmin = false;
   const server = createStore({ databasePath: process.env.DATABASE_PATH || path.join(root, "data", "store.sqlite"), password: process.env.ADMIN_PASSWORD, publicOrigin, allowLocalAdmin });
   const port = Number(process.env.PORT || 8002);
   server.listen(port, host, () => console.log(`Cửa hàng: http://127.0.0.1:${port}\nQuản trị đơn hàng: http://127.0.0.1:${port}/admin-don-hang.html${allowLocalAdmin ? "\nChế độ cục bộ: không cần đăng nhập quản trị trên máy này." : ""}`));

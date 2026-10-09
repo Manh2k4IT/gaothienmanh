@@ -72,7 +72,7 @@
   document.getElementById("loginForm").addEventListener("submit", event => {
     event.preventDefault();
     action(async () => {
-      await RiceOrders.post("/api/admin/login", { password: event.target.elements.password.value });
+      await RiceOrders.post("/api/admin/login", { username: "Manh Trinh", password: event.target.elements.password.value });
       event.target.reset();
       await load();
       message("");
