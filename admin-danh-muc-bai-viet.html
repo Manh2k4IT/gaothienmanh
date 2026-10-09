@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Danh mục bài viết — Gạo Thiên Mạnh</title>
+  <link rel="icon" href="logo.png">
+  <link rel="stylesheet" href="order-pages.css">
+  <link rel="stylesheet" href="admin-categories.css">
+</head>
+<body class="blog-categories-admin">
+  <div class="admin-layout">
+    <aside class="sidebar" aria-label="Quản trị cửa hàng">
+      <a class="brand" href="index.html"><img src="logo.png" alt="Gạo Thiên Mạnh"><span><strong>Thiên Mạnh</strong><small>Quản trị cửa hàng</small></span></a>
+      <div class="side-label">Cửa hàng</div>
+      <a class="side-link" href="admin.html"><span class="side-icon" aria-hidden="true">▦</span>Sản phẩm</a>
+      <a class="side-link" href="admin-danh-muc.html"><span class="side-icon" aria-hidden="true">▤</span>Danh mục sản phẩm</a>
+      <a class="side-link" href="admin-blog.html"><span class="side-icon" aria-hidden="true">✎</span>Bài viết</a>
+      <a class="side-link active" href="admin-danh-muc-bai-viet.html" aria-current="page"><span class="side-icon" aria-hidden="true">▤</span>Danh mục bài viết</a>
+      <a class="side-link" href="admin-voucher.html"><span class="side-icon" aria-hidden="true">%</span>Voucher</a>
+      <a class="side-link" href="admin-don-hang.html"><span class="side-icon" aria-hidden="true">☷</span>Đơn hàng</a>
+      <a class="side-link" href="admin-menu.html"><span class="side-icon" aria-hidden="true">≡</span>Menu</a>
+      <a class="side-link" href="admin-khach-dang-ky.html"><span class="side-icon" aria-hidden="true">✉</span>Khách đăng ký</a>
+      <a class="side-link" href="admin-giao-dien.html"><span class="side-icon" aria-hidden="true">▧</span>Giao diện cửa hàng</a>
+      <a class="side-link" href="index.html"><span class="side-icon" aria-hidden="true">↗</span>Xem cửa hàng</a>
+    </aside>
+    <main class="main">
+      <header class="topbar"><span>Quản trị / <strong>Danh mục bài viết</strong></span><a href="bai-viet-danh-sach.html">↗ Xem blog</a></header>
+      <div class="content">
+        <span class="eyebrow">Phân nhóm nội dung</span><h1>Danh mục bài viết</h1>
+        <p class="intro">Tạo danh mục rồi tích chọn bài viết bên trong. Bài viết và danh mục hiện lưu trên trình duyệt, thiết bị này, chưa đồng bộ lên máy chủ.</p>
+        <p id="status" class="message" role="status" aria-live="polite"></p>
+        <button id="retryLoad" type="button" hidden>Thử tải lại</button>
+        <section id="categoriesContent" hidden>
+          <div class="category-list-toolbar"><h2 id="categoryCount">Danh sách danh mục</h2><div class="categories-buttons"><button id="reloadCategories" type="button">Tải lại</button><button id="addCategory" class="primary" type="button">+ Tạo danh mục</button></div></div>
+          <div id="categoriesList"></div>
+        </section>
+        <form id="categoriesForm" hidden>
+          <section class="category-card">
+            <h2 id="editorTitle">Tạo danh mục bài viết</h2>
+            <div class="category-fields">
+              <label>Tên danh mục<input name="name" required maxlength="60" placeholder="Ví dụ: Mẹo nấu cơm"></label>
+              <label>Đường dẫn (không dấu)<input name="slug" required maxlength="80" pattern="[a-z0-9]+(?:-[a-z0-9]+)*" placeholder="meo-nau-com"></label>
+            </div>
+            <p class="category-selected" id="selectedArticleCount">Đã chọn 0 bài viết</p>
+            <p class="intro">Mỗi bài thuộc một danh mục. Chọn bài đang ở danh mục khác sẽ chuyển bài sang danh mục này khi lưu. Bỏ chọn sẽ chuyển bài sang Chưa phân loại.</p>
+            <label>Tìm bài viết để chọn<input type="search" id="articleSearch" placeholder="Nhập tiêu đề bài viết…"></label>
+            <div class="category-products" id="articleChoices"></div>
+          </section>
+          <div class="categories-toolbar"><div><span id="draftStatus">Chưa có thay đổi</span><p id="editorStatus" class="message" role="status"></p></div><div class="categories-buttons"><button id="cancelCategory" type="button">Hủy</button><button type="submit" class="primary">Lưu danh mục</button></div></div>
+        </form>
+      </div>
+    </main>
+  </div>
+  <script src="blogs.js"></script><script src="admin-blog-categories.js"></script>
+</body>
+</html>

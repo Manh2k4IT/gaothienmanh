@@ -1,0 +1,503 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#173d2c">
+  <meta name="description" content="Xem lại các sản phẩm gạo đã chọn, điều chỉnh số lượng và liên hệ đặt hàng với Gạo Thiên Mạnh.">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Giỏ hàng — Gạo Thiên Mạnh</title>
+  <link rel="icon" type="image/png" href="logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="checkout-brand.css">
+  <style>
+    :root { --green: #173d2c; --green-soft: #24543b; --cream: #f8f6ef; --paper: #fffefa; --gold: #d3a650; --ink: #233329; --muted: #748075; --line: #e8e7dc; --serif: "Playfair Display", Georgia, serif; --sans: "DM Sans", Arial, sans-serif; }
+    * { box-sizing: border-box; }
+    body { min-width: 320px; margin: 0; background: var(--cream); color: var(--ink); font-family: var(--sans); -webkit-font-smoothing: antialiased; }
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; }
+    img { display: block; max-width: 100%; }
+    .topline { min-height: 31px; padding: 8px 24px; background: #122f22; color: rgba(255,255,255,.82); font-size: 10px; text-align: center; }
+    .topline strong { color: #edca78; }
+    .header { background: #fdf9ed; box-shadow: 0 3px 14px rgba(24,45,32,.08); }
+    .header-inner { display: flex; width: min(1180px, calc(100% - 48px)); min-height: 82px; align-items: center; justify-content: space-between; gap: 20px; margin: auto; }
+    .brand { display: inline-flex; align-items: center; gap: 11px; color: var(--green); }
+    .brand img { width: 62px; height: 62px; object-fit: contain; }
+    .brand span { display: grid; gap: 3px; }
+    .brand strong { font-family: var(--serif); font-size: 19px; }
+    .brand small { color: #8b7955; font-size: 9px; letter-spacing: .12em; text-transform: uppercase; }
+    .header-links { display: flex; align-items: center; gap: 16px; color: #173d2c; font-family: Arial, Tahoma, sans-serif; font-size: 15px; font-weight: 700; line-height: 1.5; }
+    .header-links > a { display: inline-flex; align-items: center; min-height: 44px; padding: 8px 10px; border-radius: 6px; white-space: nowrap; }
+    .header-links a:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+    .header-links a:hover { color: #a27b32; }
+    .header-cart { display: inline-flex; align-items: center; gap: 9px; color: var(--green); }
+    .cart-icon { width: 23px; height: 23px; flex-shrink: 0; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.7; }
+    .cart-count { display: grid; min-width: 23px; height: 23px; place-items: center; padding: 0 5px; border-radius: 20px; background: var(--gold); color: var(--green); font-size: 12px; font-weight: 700; }
+    main { width: min(1180px, calc(100% - 48px)); min-height: 67vh; margin: auto; padding: 47px 0 76px; }
+    .breadcrumb { margin-bottom: 28px; color: #8a8e80; font-size: 11px; }
+    .breadcrumb a { color: var(--green); }
+    .heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; margin-bottom: 29px; }
+    .eyebrow { color: #98722d; font-size: 10px; font-weight: 700; letter-spacing: .15em; text-transform: uppercase; }
+    h1 { margin: 8px 0 0; color: var(--green); font-family: var(--serif); font-size: clamp(34px, 4vw, 47px); font-weight: 500; letter-spacing: -.02em; }
+    .heading p { margin: 0 0 4px; color: var(--muted); font-size: 12px; }
+    .cart-layout { display: grid; grid-template-columns: minmax(0, 1fr) 340px; align-items: start; gap: 25px; }
+    .cart-panel, .summary { border: 1px solid var(--line); border-radius: 9px; background: var(--paper); box-shadow: 0 7px 24px rgba(30,45,35,.035); }
+    .cart-panel-heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 19px 22px; border-bottom: 1px solid var(--line); }
+    .cart-panel-heading h2 { margin: 0; color: var(--green); font-family: Arial, Tahoma, sans-serif; font-size: 20px; font-weight: 700; line-height: 1.4; }
+    .clear-button, .remove-button { display: inline-flex; min-height: 44px; align-items: center; justify-content: center; gap: 7px; padding: 10px 13px; border: 1px solid #e7d7d2; border-radius: 8px; background: #fffefa; color: #964a3d; font-size: 13px; font-weight: 600; line-height: 1.4; cursor: pointer; transition: background .2s, border-color .2s, color .2s; }
+    .clear-button:hover, .remove-button:hover { border-color: #d4aca1; background: #faf0ec; color: #803629; }
+    .clear-button:active, .remove-button:active { background: #f4e3dc; }
+    .delete-icon { width: 16px; height: 16px; flex: 0 0 16px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; pointer-events: none; }
+    .clear-button[hidden] { display: none; }
+    .cart-items { padding: 0 22px; }
+    .cart-item { display: grid; grid-template-columns: 84px minmax(0, 1fr) auto; align-items: center; gap: 17px; padding: 21px 0; border-bottom: 1px solid #efeee8; }
+    .cart-item:last-child { border-bottom: 0; }
+    .item-image { display: block; width: 84px; height: 84px; border-radius: 6px; background: #f0eee5; object-fit: cover; }
+    .item-info { min-width: 0; }
+    .item-origin { margin-bottom: 5px; color: var(--muted); font-size: 10px; }
+    .item-name { display: inline-block; margin-bottom: 7px; color: var(--green); font-family: Arial, Tahoma, sans-serif; font-size: 17px; font-weight: 700; line-height: 1.4; }
+    .item-name:hover { color: #98722d; }
+    .item-unit-price { color: #69736a; font-size: 11px; }
+    .item-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 12px; }
+    .quantity-control { display: inline-flex; flex: 0 0 auto; height: 46px; align-items: center; padding: 0 2px; border: 1px solid #d9dfd4; border-radius: 9px; background: #fffefa; box-shadow: 0 2px 5px rgba(23,61,44,.04); }
+    .quantity-control button { display: grid; width: 44px; height: 44px; place-items: center; padding: 0; border: 0; border-radius: 7px; background: transparent; color: var(--green); font-size: 23px; font-weight: 600; cursor: pointer; transition: background .18s, color .18s; }
+    .quantity-control button:hover:not(:disabled) { background: #edf2e9; color: #24543b; }
+    .quantity-control button:active:not(:disabled) { background: #e2eadb; }
+    .quantity-control button:focus-visible { outline: 2px solid #98722d; outline-offset: -3px; }
+    .quantity-control output { display: grid; min-width: 38px; height: 26px; place-items: center; border-right: 1px solid #e8ebe3; border-left: 1px solid #e8ebe3; color: var(--green); font-size: 16px; font-weight: 700; font-variant-numeric: tabular-nums; text-align: center; }
+    .quantity-unit { color: #657167; font-size: 13px; font-weight: 600; }
+    .remove-button { min-width: 76px; background: #fcf8f5; }
+    .clear-button:focus-visible, .remove-button:focus-visible { outline: 3px solid #963c2e; outline-offset: 3px; }
+    .item-total { min-width: 95px; color: var(--green); font-size: 13px; font-weight: 700; text-align: right; white-space: nowrap; }
+    .item-total small { display: block; margin-top: 5px; color: var(--muted); font-size: 9px; font-weight: 400; }
+    .summary { position: sticky; top: 133px; padding: 23px; }
+    .summary h2 { margin: 0 0 20px; color: var(--green); font-family: Arial, Tahoma, sans-serif; font-size: 20px; font-weight: 700; line-height: 1.4; }
+    .summary-row { display: flex; justify-content: space-between; gap: 14px; margin: 13px 0; color: #657167; font-size: 11px; }
+    .summary-row strong { color: var(--ink); font-weight: 600; text-align: right; }
+    .voucher-form { margin: 20px 0 16px; padding-top: 16px; border-top: 1px dashed var(--line); }
+    .voucher-form label { display: block; margin-bottom: 9px; color: var(--green); font-size: 12px; font-weight: 700; }
+    .voucher-entry { display: flex; gap: 8px; }
+    .voucher-entry input { width: 100%; min-width: 0; height: 44px; padding: 0 12px; border: 1px solid #d9dfd4; border-radius: 6px; background: white; color: var(--ink); font: 13px var(--sans); text-transform: uppercase; }
+    .voucher-entry input:focus { outline: 2px solid var(--gold); outline-offset: 1px; }
+    .voucher-entry button { flex-shrink: 0; min-height: 44px; padding: 0 12px; border: 1px solid #d9dfd4; border-radius: 6px; background: #edf2e9; color: var(--green); font: 700 12px var(--sans); cursor: pointer; }
+    .voucher-entry button:hover { background: #e2eadb; }
+    .voucher-status { margin: 9px 0 0; color: #24543b; font-size: 11px; line-height: 1.6; }
+    .voucher-status.error { color: #964a3d; }
+    .voucher-remove { min-height: 44px; margin-top: 4px; padding: 0; border: 0; background: none; color: #964a3d; font: 600 12px var(--sans); cursor: pointer; }
+    .discount-row strong { color: #24543b; }
+    #discountRow[hidden], #removeVoucher[hidden] { display: none; }
+    .summary-total { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-top: 19px; padding-top: 18px; border-top: 1px solid var(--line); color: var(--green); font-weight: 700; }
+    .summary-total strong { color: #b3261e; font-size: 21px; white-space: nowrap; }
+    .shipping-note { margin: 14px 0 18px; padding: 11px 12px; border-radius: 5px; background: #f7f5ed; color: #687369; font-size: 10px; line-height: 1.6; }
+    .order-button { display: flex; min-height: 56px; align-items: center; justify-content: center; gap: 10px; padding: 12px 16px; border: 1px solid var(--green); border-radius: 5px; background: var(--green); color: white; font-size: 18px; font-weight: 700; line-height: 1.4; text-align: center; transition: background .2s, transform .2s; }
+    .order-button:hover { transform: translateY(-1px); background: var(--green-soft); }
+    .order-button[aria-disabled="true"] { opacity: .45; pointer-events: none; }
+    .continue-link { display: block; margin-top: 14px; color: var(--green); font-size: 11px; font-weight: 600; text-align: center; }
+    .continue-link:hover { text-decoration: underline; }
+    .empty-state { display: grid; min-height: 330px; align-content: center; justify-items: center; padding: 34px; text-align: center; }
+    .empty-icon { display: grid; width: 68px; height: 68px; place-items: center; margin-bottom: 17px; border-radius: 50%; background: #f4eedf; color: #98722d; }
+    .empty-icon svg { width: 31px; height: 31px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.5; }
+    .empty-state h2 { margin: 0 0 8px; color: var(--green); font-family: var(--serif); font-size: 23px; font-weight: 500; }
+    .empty-state p { max-width: 340px; margin: 0 0 20px; color: var(--muted); font-size: 12px; line-height: 1.7; }
+    .shop-button { display: inline-flex; min-height: 42px; align-items: center; justify-content: center; padding: 0 18px; border-radius: 4px; background: var(--green); color: white; font-size: 11px; font-weight: 700; }
+    .shop-button:hover { background: var(--green-soft); }
+    .page-error { padding: 30px; color: #9b4534; font-size: 13px; text-align: center; }
+    .stock-warning { margin: 10px 0 0; color: #9b4534; font-size: 11px; line-height: 1.6; }
+    .quantity-control button:disabled { opacity: .4; cursor: not-allowed; }
+    @media (max-width: 820px) {
+      .cart-layout { grid-template-columns: minmax(0, 1fr) 300px; gap: 16px; }
+      .cart-items { padding: 0 16px; }
+      .cart-item { grid-template-columns: 68px minmax(0, 1fr); gap: 13px; }
+      .item-image { width: 68px; height: 68px; }
+      .item-total { grid-column: 2; min-width: 0; text-align: left; }
+      .item-total small { display: inline; margin-left: 5px; }
+    }
+    @media (max-width: 650px) {
+      .header-inner, main { width: calc(100% - 32px); }
+      .header-inner { min-height: 68px; }
+      .brand img { width: 49px; height: 49px; }
+      .brand strong { font-size: 16px; }
+      .brand small { font-size: 8px; }
+      .header-links > a:first-child { display: none; }
+      .header-links { gap: 8px; font-size: 14px; }
+      .header-links > a { padding: 8px 4px; }
+      main { padding: 30px 0 48px; }
+      .breadcrumb { margin-bottom: 20px; }
+      .heading { display: block; margin-bottom: 22px; }
+      h1 { font-size: 37px; }
+      .heading p { margin-top: 9px; }
+      .cart-layout { grid-template-columns: 1fr; }
+      .summary { position: static; }
+      .cart-panel-heading { padding: 16px; }
+      .cart-items { padding: 0 14px; }
+      .cart-item { padding: 17px 0; }
+      .item-name { font-size: 15px; }
+      .summary { padding: 20px; }
+    }
+  </style>
+  <link rel="stylesheet" href="site-content.css">
+</head>
+<body>
+  <div class="checkout-header">
+  <div class="topline">GẠO MỚI MỖI NGÀY · GIAO HÀNG TẬN NHÀ &nbsp; <strong>Hotline: 0901 234 567</strong></div>
+  <header class="header">
+    <div class="header-inner">
+      <a class="brand" href="index.html" aria-label="Gạo Thiên Mạnh - Trang chủ"><img src="logo.png" alt=""><span><strong>Gạo Thiên Mạnh</strong><small>Gạo ngon · Cơm lành</small></span></a>
+      <nav class="header-links" aria-label="Điều hướng">
+        <a href="gao.html">Danh mục gạo</a>
+        <a class="header-cart" href="gio-hang.html" aria-current="page" aria-label="Giỏ hàng">
+          <svg class="cart-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h14l1 13H4L5 8Z"></path><path d="M9 9V6a3 3 0 0 1 6 0v3"></path></svg>
+          Giỏ hàng <span class="cart-count" id="cartCount">0</span>
+        </a>
+      </nav>
+    </div>
+  </header>
+  </div>
+  <main>
+    <div class="breadcrumb"><a href="index.html">Trang chủ</a> &nbsp;›&nbsp; Giỏ hàng</div>
+    <div class="heading"><div><span class="eyebrow">Đơn hàng của bạn</span><h1>Giỏ hàng</h1></div><p id="cartItemCount" aria-live="polite"></p></div>
+    <div class="cart-layout">
+      <section class="cart-panel" aria-labelledby="cartItemsTitle">
+        <div class="cart-panel-heading"><h2 id="cartItemsTitle">Sản phẩm đã chọn</h2><button class="clear-button" id="clearCart" type="button" hidden>Xóa toàn bộ</button></div>
+        <div class="cart-items" id="cartItems" aria-live="polite"></div>
+      </section>
+      <aside class="summary" aria-labelledby="summaryTitle">
+        <h2 id="summaryTitle">Tóm tắt đơn hàng</h2>
+        <div class="summary-row"><span>Tạm tính</span><strong id="subtotal">0đ</strong></div>
+        <div class="summary-row"><span>Giao hàng</span><strong>Thỏa thuận</strong></div>
+        <form class="voucher-form" id="voucherForm">
+          <label for="voucherCode">Mã giảm giá (nếu có)</label>
+          <div class="voucher-entry"><input id="voucherCode" maxlength="30" placeholder="Nhập mã voucher" autocomplete="off"><button type="submit">Áp dụng</button></div>
+          <p class="voucher-status">Mỗi đơn dùng một mã. Ưu đãi cần được cửa hàng xác nhận khi đặt hàng.</p>
+          <p class="voucher-status" id="voucherStatus" role="status" aria-live="polite"></p>
+          <button class="voucher-remove" id="removeVoucher" type="button" hidden>Bỏ mã giảm giá</button>
+        </form>
+        <div class="summary-row discount-row" id="discountRow" hidden><span>Giảm giá</span><strong id="discountAmount">0đ</strong></div>
+        <div class="summary-total"><span>Tổng cộng</span><strong id="total">0đ</strong></div>
+        <p class="shipping-note">Bước tiếp theo: nhập thông tin giao hàng. Phí giao hàng sẽ được cửa hàng xác nhận sau khi nhận đơn. Giá tính theo mỗi kg; giỏ chưa giữ chỗ hoặc trừ tồn kho.</p>
+        <p class="stock-warning" id="stockWarning" role="status" hidden></p>
+        <a class="order-button" id="orderButton" href="dat-hang.html" aria-disabled="true">Đặt hàng ngay <span aria-hidden="true">→</span></a>
+        <a class="continue-link" href="gao.html">← Tiếp tục chọn gạo</a>
+      </aside>
+    </div>
+  </main>
+  <footer class="store-footer"><div class="store-footer-inner"><img class="store-footer-logo" src="logo.png" alt=""><div class="store-footer-copy"><strong>Gạo Thiên Mạnh</strong><p>Chăm chút từ hạt gạo, thương nhau từ bữa cơm.</p></div></div></footer>
+  <script src="products.js"></script>
+  <script src="cart.js"></script>
+  <script src="vouchers.js"></script>
+  <script src="orders-api.js"></script>
+  <script>
+    const cartItemsElement = document.getElementById("cartItems");
+    const cartCountElement = document.getElementById("cartCount");
+    const cartItemCount = document.getElementById("cartItemCount");
+    const clearCartButton = document.getElementById("clearCart");
+    const orderButton = document.getElementById("orderButton");
+    let products = [];
+    let appliedVoucher = "";
+    const voucherStatus = document.getElementById("voucherStatus");
+
+    function updateVoucherSummary(subtotal) {
+      let discount = 0;
+      if (appliedVoucher) {
+        try {
+          const result = RiceVouchers.calculateDiscount(appliedVoucher, subtotal);
+          discount = result.discount;
+          voucherStatus.textContent = `Đã áp dụng ${result.code}: giảm ${formatPrice(discount)}.`;
+          voucherStatus.classList.remove("error");
+        } catch (error) {
+          if (!(error instanceof RangeError)) throw error;
+          voucherStatus.textContent = `${error.message} Mã không được áp dụng cho giỏ hiện tại.`;
+          voucherStatus.classList.add("error");
+        }
+      }
+      document.getElementById("removeVoucher").hidden = !appliedVoucher;
+      document.getElementById("discountRow").hidden = discount === 0;
+      document.getElementById("discountAmount").textContent = `−${formatPrice(discount)}`;
+      document.getElementById("total").textContent = formatPrice(subtotal - discount);
+    }
+
+    function formatPrice(price) {
+      return `${price.toLocaleString("vi-VN")}đ`;
+    }
+
+    function addDeleteIcon(button) {
+      const icon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      icon.classList.add("delete-icon");
+      icon.setAttribute("viewBox", "0 0 24 24");
+      icon.setAttribute("aria-hidden", "true");
+      icon.innerHTML = '<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v5M14 11v5"></path>';
+      button.prepend(icon);
+    }
+    addDeleteIcon(clearCartButton);
+
+    function renderCart() {
+      products = RiceCatalog.getProducts();
+      const cart = RiceCart.getCart();
+      const productById = new Map(products.map((product) => [product.id, product]));
+      const itemCount = cart.reduce((total, item) => total + item.quantity, 0);
+      let subtotal = 0;
+      const stockErrors = [];
+      cart.forEach((item) => {
+        try {
+          RiceCart.validateAvailability(item.id, item.quantity, products);
+        } catch (error) {
+          if (!(error instanceof RangeError || error instanceof TypeError)) throw error;
+          stockErrors.push(error.message);
+        }
+      });
+      cartItemsElement.replaceChildren();
+      cartCountElement.textContent = String(itemCount);
+      cartItemCount.textContent = itemCount ? `${itemCount} kg trong giỏ` : "Chưa có sản phẩm";
+      clearCartButton.hidden = cart.length === 0;
+      const cannotOrder = cart.length === 0 || stockErrors.length > 0;
+      orderButton.setAttribute("aria-disabled", String(cannotOrder));
+      orderButton.tabIndex = cannotOrder ? -1 : 0;
+      document.getElementById("stockWarning").hidden = stockErrors.length === 0;
+      document.getElementById("stockWarning").textContent = stockErrors.join(" ");
+
+      if (cart.length === 0) {
+        const empty = document.createElement("div");
+        empty.className = "empty-state";
+        const icon = document.createElement("span");
+        icon.className = "empty-icon";
+        icon.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h14l1 13H4L5 8Z"></path><path d="M9 9V6a3 3 0 0 1 6 0v3"></path></svg>';
+        const title = document.createElement("h2");
+        title.textContent = "Giỏ hàng đang trống";
+        const message = document.createElement("p");
+        message.textContent = "Chọn loại gạo yêu thích để thêm vào giỏ. Bạn có thể điều chỉnh số kg trước khi liên hệ đặt hàng.";
+        const shop = document.createElement("a");
+        shop.className = "shop-button";
+        shop.href = "gao.html";
+        shop.textContent = "Khám phá các loại gạo";
+        empty.append(icon, title, message, shop);
+        cartItemsElement.append(empty);
+        document.getElementById("subtotal").textContent = formatPrice(0);
+        updateVoucherSummary(0);
+        return;
+      }
+
+      cart.forEach((item) => {
+        const product = productById.get(item.id);
+        if (!product) {
+          const unavailable = document.createElement("article");
+          unavailable.className = "cart-item";
+          const placeholder = document.createElement("span");
+          placeholder.className = "item-image";
+          placeholder.setAttribute("aria-hidden", "true");
+          const info = document.createElement("div");
+          info.className = "item-info";
+          const message = document.createElement("p");
+          message.className = "item-origin";
+          message.textContent = "Sản phẩm này không còn trong cửa hàng.";
+          const remove = document.createElement("button");
+          remove.className = "remove-button";
+          remove.type = "button";
+          remove.dataset.action = "remove";
+          remove.dataset.productId = item.id;
+          remove.textContent = "Xóa khỏi giỏ";
+          addDeleteIcon(remove);
+          info.append(message, remove);
+          const quantity = document.createElement("div");
+          quantity.className = "item-total";
+          quantity.textContent = `${item.quantity} kg`;
+          unavailable.append(placeholder, info, quantity);
+          cartItemsElement.append(unavailable);
+          return;
+        }
+        const lineTotal = product.price * item.quantity;
+        subtotal += lineTotal;
+        const row = document.createElement("article");
+        row.className = "cart-item";
+        const image = document.createElement("img");
+        image.className = "item-image";
+        image.src = product.image;
+        image.alt = product.alt || product.name;
+        const info = document.createElement("div");
+        info.className = "item-info";
+        const origin = document.createElement("div");
+        origin.className = "item-origin";
+        origin.textContent = product.origin;
+        const name = document.createElement("a");
+        name.className = "item-name";
+        name.href = `chi-tiet-gao.html?id=${encodeURIComponent(product.id)}`;
+        name.textContent = product.name;
+        const unitPrice = document.createElement("div");
+        unitPrice.className = "item-unit-price";
+        unitPrice.textContent = `${formatPrice(product.price)} / kg · ${RiceCatalog.getAvailabilityLabel(product)}`;
+        const controls = document.createElement("div");
+        controls.className = "item-controls";
+        const quantityControl = document.createElement("div");
+        quantityControl.className = "quantity-control";
+        quantityControl.setAttribute("aria-label", `Số lượng ${product.name}`);
+        const decrease = document.createElement("button");
+        decrease.type = "button";
+        decrease.dataset.action = "decrease";
+        decrease.dataset.productId = product.id;
+        decrease.setAttribute("aria-label", `Giảm ${product.name}`);
+        decrease.textContent = "−";
+        const quantity = document.createElement("output");
+        quantity.textContent = String(item.quantity);
+        const increase = document.createElement("button");
+        increase.type = "button";
+        increase.dataset.action = "increase";
+        increase.dataset.productId = product.id;
+        increase.setAttribute("aria-label", `Tăng ${product.name}`);
+        increase.textContent = "+";
+        increase.disabled = item.quantity >= 99 || (product.stock !== undefined && product.stock !== null && item.quantity >= product.stock);
+        quantityControl.append(decrease, quantity, increase);
+        const unit = document.createElement("span");
+        unit.className = "quantity-unit";
+        unit.textContent = "kg";
+        const remove = document.createElement("button");
+        remove.className = "remove-button";
+        remove.type = "button";
+        remove.dataset.action = "remove";
+        remove.dataset.productId = product.id;
+        remove.setAttribute("aria-label", `Xóa ${product.name} khỏi giỏ hàng`);
+        remove.textContent = "Xóa";
+        addDeleteIcon(remove);
+        controls.append(quantityControl, unit, remove);
+        info.append(origin, name, unitPrice, controls);
+        const total = document.createElement("div");
+        total.className = "item-total";
+        total.textContent = formatPrice(lineTotal);
+        const unitLabel = document.createElement("small");
+        unitLabel.textContent = `${item.quantity} kg`;
+        total.append(unitLabel);
+        row.append(image, info, total);
+        cartItemsElement.append(row);
+      });
+      document.getElementById("subtotal").textContent = formatPrice(subtotal);
+      updateVoucherSummary(subtotal);
+    }
+
+    function renderSafely() {
+      try {
+        renderCart();
+      } catch (error) {
+        console.error("Không thể hiển thị giỏ hàng.", error);
+        cartItemsElement.replaceChildren();
+        const message = document.createElement("p");
+        message.className = "page-error";
+        message.textContent = "Không tính được đơn hàng từ dữ liệu đã lưu. Vui lòng tải lại trang và kiểm tra dữ liệu sản phẩm, giỏ hàng hoặc voucher.";
+        cartItemsElement.append(message);
+        orderButton.setAttribute("aria-disabled", "true");
+        document.getElementById("discountRow").hidden = true;
+        document.getElementById("total").textContent = "—";
+        document.getElementById("subtotal").textContent = "—";
+      }
+    }
+
+    try {
+      products = RiceCatalog.getProducts();
+      renderSafely();
+    } catch (error) {
+      console.error("Không thể đọc dữ liệu cửa hàng.", error);
+      cartItemsElement.innerHTML = '<p class="page-error">Không tải được sản phẩm. Vui lòng tải lại trang sau.</p>';
+      orderButton.setAttribute("aria-disabled", "true");
+    }
+
+    cartItemsElement.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-action]");
+      if (!button) return;
+      try {
+        const item = RiceCart.getCart().find((entry) => entry.id === button.dataset.productId);
+        if (!item) throw new TypeError("Không tìm thấy sản phẩm trong giỏ hàng.");
+        if (button.dataset.action === "remove") RiceCart.removeItem(item.id);
+        else if (button.dataset.action === "increase") RiceCart.setQuantity(item.id, item.quantity + 1);
+        else if (button.dataset.action === "decrease") {
+          if (item.quantity === 1) RiceCart.removeItem(item.id);
+          else RiceCart.setQuantity(item.id, item.quantity - 1);
+        }
+        renderSafely();
+      } catch (error) {
+        console.error("Không thể cập nhật giỏ hàng.", error);
+        window.alert(error.message || "Không thể cập nhật giỏ hàng.");
+      }
+    });
+
+    clearCartButton.addEventListener("click", () => {
+      if (!window.confirm("Bạn muốn xóa tất cả sản phẩm khỏi giỏ hàng?")) return;
+      try {
+        RiceCart.clear();
+        renderSafely();
+      } catch (error) {
+        console.error("Không thể xóa giỏ hàng.", error);
+        window.alert("Không thể xóa giỏ hàng. Vui lòng thử lại.");
+      }
+    });
+
+    document.getElementById("voucherForm").addEventListener("submit", (event) => {
+      event.preventDefault();
+      try {
+        const code = RiceVouchers.normalizeCode(document.getElementById("voucherCode").value);
+        if (!code) throw new RangeError("Vui lòng nhập mã voucher.");
+        const currentProducts = RiceCatalog.getProducts();
+        const subtotal = RiceCart.getCart().reduce((sum, item) => {
+          const product = currentProducts.find((product) => product.id === item.id);
+          return sum + (product ? product.price * item.quantity : 0);
+        }, 0);
+        RiceVouchers.calculateDiscount(code, subtotal);
+        appliedVoucher = code;
+        document.getElementById("voucherCode").value = code;
+        renderSafely();
+      } catch (error) {
+        console.error("Không thể áp dụng voucher.", error);
+        voucherStatus.textContent = `${error.message || "Không thể áp dụng voucher."}${appliedVoucher ? ` Mã đã áp dụng trước đó: ${appliedVoucher}.` : ""}`;
+        voucherStatus.classList.add("error");
+      }
+    });
+    document.getElementById("removeVoucher").addEventListener("click", () => {
+      appliedVoucher = "";
+      document.getElementById("voucherCode").value = "";
+      voucherStatus.textContent = "Đã bỏ mã giảm giá.";
+      voucherStatus.classList.remove("error");
+      renderSafely();
+    });
+
+    orderButton.addEventListener("click", (event) => {
+      try {
+        const cart = RiceCart.getCart();
+        const currentProducts = RiceCatalog.getProducts();
+        if (!cart.length) throw new RangeError("Giỏ hàng đang trống.");
+        cart.forEach((item) => RiceCart.validateAvailability(item.id, item.quantity, currentProducts));
+        const previousTotal = document.getElementById("total").textContent;
+        renderCart();
+        if (document.getElementById("total").textContent !== previousTotal) {
+          event.preventDefault();
+          window.alert("Tổng tiền vừa thay đổi. Vui lòng kiểm tra ưu đãi và tổng tiền trước khi đặt hàng lại.");
+          return;
+        }
+        sessionStorage.setItem(RiceOrders.voucherKey, appliedVoucher);
+      } catch (error) {
+        event.preventDefault();
+        console.error("Không thể đặt hàng với tồn kho hiện tại.", error);
+        renderSafely();
+        window.alert(error.message || "Không thể kiểm tra tồn kho.");
+      }
+    });
+
+    window.addEventListener("ricecartchange", renderSafely);
+    document.addEventListener("visibilitychange", () => {
+      if (!document.hidden) renderSafely();
+    });
+    window.addEventListener("storage", (event) => {
+      if (event.key === RiceVouchers.storageKey || event.key === null) renderSafely();
+      if (event.key === RiceCart.storageKey) renderSafely();
+      if (event.key === RiceCatalog.storageKey) {
+        try {
+          products = RiceCatalog.getProducts();
+          renderSafely();
+        } catch (error) {
+          console.error("Không thể đồng bộ sản phẩm trong giỏ.", error);
+          renderSafely();
+        }
+      }
+    });
+  </script>
+  <script src="store-sync.js"></script>
+  <script src="menu-model.js"></script><script src="site-content-model.js"></script><script src="site-content.js"></script>
+</body>
+</html>

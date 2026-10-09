@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Danh mục sản phẩm — Gạo Thiên Mạnh</title>
+  <link rel="icon" href="logo.png">
+  <link rel="stylesheet" href="order-pages.css">
+  <link rel="stylesheet" href="admin-categories.css">
+</head>
+<body>
+  <div class="admin-layout">
+    <aside class="sidebar" aria-label="Quản trị cửa hàng">
+      <a class="brand" href="index.html"><img src="logo.png" alt="Gạo Thiên Mạnh"><span><strong>Thiên Mạnh</strong><small>Quản trị cửa hàng</small></span></a>
+      <div class="side-label">Cửa hàng</div>
+      <a class="side-link" href="admin.html"><span class="side-icon" aria-hidden="true">▦</span>Sản phẩm</a>
+      <a class="side-link active" href="admin-danh-muc.html" aria-current="page"><span class="side-icon" aria-hidden="true">▤</span>Danh mục sản phẩm</a>
+      <a class="side-link" href="admin-blog.html"><span class="side-icon" aria-hidden="true">✎</span>Bài viết</a>
+      <a class="side-link" href="admin-danh-muc-bai-viet.html"><span class="side-icon" aria-hidden="true">▤</span>Danh mục bài viết</a>
+      <a class="side-link" href="admin-voucher.html"><span class="side-icon" aria-hidden="true">%</span>Voucher</a>
+      <a class="side-link" href="admin-don-hang.html"><span class="side-icon" aria-hidden="true">☷</span>Đơn hàng</a>
+      <a class="side-link" href="admin-menu.html"><span class="side-icon" aria-hidden="true">≡</span>Menu</a>
+      <a class="side-link" href="admin-khach-dang-ky.html"><span class="side-icon" aria-hidden="true">✉</span>Khách đăng ký</a>
+      <a class="side-link" href="admin-giao-dien.html"><span class="side-icon" aria-hidden="true">▧</span>Giao diện cửa hàng</a>
+      <a class="side-link" href="index.html"><span class="side-icon" aria-hidden="true">↗</span>Xem cửa hàng</a>
+    </aside>
+    <main class="main">
+      <header class="topbar"><span>Quản trị / <strong>Danh mục sản phẩm</strong></span><a href="gao.html">↗ Xem cửa hàng</a></header>
+      <div class="content">
+        <span class="eyebrow">Phân nhóm sản phẩm</span><h1>Danh mục sản phẩm</h1>
+        <section class="panel" id="loginPanel" hidden><h2>Đăng nhập quản trị</h2><form id="loginForm"><label>Mật khẩu<input name="password" type="password" required autocomplete="current-password" maxlength="256"></label><button class="primary">Đăng nhập</button></form></section>
+        <section id="categoriesContent" hidden>
+          <div class="category-list-toolbar"><h2 id="categoryCount">Danh sách danh mục</h2><div class="categories-buttons"><button id="reloadCategories" type="button">Tải lại</button><button id="addCategory" class="primary" type="button">+ Tạo danh mục</button></div></div>
+          <p id="status" class="message" role="status" aria-live="polite"></p>
+          <div id="categoriesList"></div>
+        </section>
+        <form id="categoriesForm" hidden>
+          <div id="categoriesEditor"></div>
+          <div class="categories-toolbar">
+            <div><span id="draftStatus">Chưa có thay đổi</span><p id="editorStatus" class="message" role="status" aria-live="polite"></p></div>
+            <div class="categories-buttons"><button id="reloadEditor" type="button">Tải lại</button><button id="cancelCategory" type="button">Hủy</button><button id="saveCategories" type="submit" class="primary">Lưu danh mục</button></div>
+          </div>
+        </form>
+        <p id="loadError" class="message error" role="alert"></p>
+        <button id="retryLoad" type="button" hidden>Thử tải lại</button>
+      </div>
+    </main>
+  </div>
+  <script src="orders-api.js"></script><script src="categories-model.js"></script><script src="admin-categories.js"></script>
+</body>
+</html>

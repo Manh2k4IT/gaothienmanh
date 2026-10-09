@@ -1,0 +1,61 @@
+.content { padding-bottom: 150px; }
+.content h1 { font: 700 34px/1.3 Arial, Tahoma, sans-serif; margin-bottom: 24px; }
+#menuForm { display: block; }
+#status:not(:empty) { margin-bottom: 22px; padding: 12px 16px; border: 1px solid #d6e5d8; border-radius: 10px; background: #edf5ee; }
+#status.error { border-color: #ecd0c9; background: #fff1ee; }
+.menu-section { margin: 28px 0 36px; }
+.menu-section-heading { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 16px; }
+.menu-section-heading h2 { margin: 0; font-size: 21px; }
+.section-number { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 10px; background: #e4ecdf; color: #24543b; font-size: 13px; font-weight: 700; }
+.section-placement { margin-left: auto; color: #68786d; font-size: 12px; }
+#addMenu { margin-left: auto; border-color: #c6d8c8; background: #eaf2e7; }
+.menu-card { min-width: 0; margin-bottom: 18px; border: 1px solid #dce4d8; border-radius: 14px; background: #fffefa; box-shadow: 0 4px 18px #173d2c06; }
+.menu-card-top { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; padding: 18px 22px; border-bottom: 1px solid #e5ebdf; border-radius: 14px 14px 0 0; background: #f0f5ec; }
+.menu-card-identity { min-width: 0; flex: 1; }
+.menu-card-number { display: block; margin-bottom: 5px; color: #65765f; font-size: 11px; font-weight: 700; }
+.menu-card-title { margin: 0; color: #173d2c; font-size: 18px; line-height: 1.4; overflow-wrap: anywhere; }
+.menu-item-actions { display: flex; gap: 6px; flex-shrink: 0; }
+.menu-item-actions button { min-width: 44px; min-height: 40px; padding: 8px 12px; font-size: 14px; }
+.menu-item-actions .menu-delete { color: #a04436; border-color: #ecd9d3; background: #fff7f3; }
+.menu-fields { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr); gap: 16px; padding: 20px 22px; }
+.menu-fields label { min-width: 0; gap: 8px; font-size: 13px; color: #415244; }
+.menu-fields input, .menu-fields select { min-height: 46px; padding: 11px 12px; font-size: 14px; font-weight: 400; border-color: #d8e1d2; border-radius: 8px; }
+.menu-fields select { background-color: #f8faf5; }
+.menu-children { padding: 18px; margin: 0 22px 22px; border: 1px solid #e0e7d9; border-radius: 10px; background: #f7f9f3; }
+.menu-children-heading { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; justify-content: space-between; margin-bottom: 14px; }
+.menu-children-heading h4 { margin: 0; color: #38523b; font-size: 14px; }
+.menu-count { padding: 5px 9px; border-radius: 20px; background: #e7eedf; color: #496342; font-size: 12px; font-weight: 700; }
+.menu-child { margin-bottom: 12px; border: 1px solid #e0e7d9; border-radius: 9px; background: #fff; }
+.menu-child-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 14px; border-bottom: 1px solid #edf0e7; }
+.menu-child-number { color: #63735d; font-size: 12px; font-weight: 700; }
+.menu-child .menu-fields { padding: 16px; }
+.menu-add-child { width: 100%; border-style: dashed; border-color: #b5c9ad; background: transparent; }
+.menu-empty { padding: 24px; border: 1px dashed #c9d6c2; border-radius: 12px; color: #65755f; background: #f3f7ee; font-size: 14px; line-height: 1.7; }
+.menu-toolbar { position: fixed; bottom: 16px; left: 286px; right: 38px; z-index: 20; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; padding: 14px 18px; border: 1px solid #d5dfcf; border-radius: 12px; background: #fffefa; box-shadow: 0 8px 30px #173d2c24; }
+.menu-toolbar > div { display: flex; gap: 10px; }
+.menu-toolbar button { min-height: 46px; font-size: 14px; }
+#saveMenu { padding-inline: 24px; }
+#draftStatus { display: flex; align-items: center; gap: 8px; color: #506749; font-size: 13px; }
+#draftStatus::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #5e8b50; flex-shrink: 0; }
+#draftStatus.is-dirty { color: #896016; }
+#draftStatus.is-dirty::before { background: #d3a650; }
+@media (max-width: 900px) {
+  .menu-toolbar { left: 229px; right: 24px; }
+  .menu-fields { grid-template-columns: 1fr; }
+}
+@media (max-width: 650px) {
+  .content h1 { font-size: 28px; }
+  .menu-section-heading h2 { font-size: 18px; }
+  .section-placement { width: 100%; margin-left: 48px; }
+  #addMenu { width: 100%; margin-left: 0; }
+  .menu-card-top { padding: 16px; }
+  .menu-card-title { font-size: 17px; }
+  .menu-card-top > .menu-item-actions { width: 100%; justify-content: flex-end; }
+  .menu-fields { padding: 16px; }
+  .menu-children { margin: 0 12px 12px; padding: 10px; }
+  .menu-child-top { padding: 10px; }
+  .menu-child .menu-fields { padding: 12px; }
+  .menu-toolbar { left: 15px; right: 15px; bottom: 10px; padding: 12px; }
+  .menu-toolbar > div { width: 100%; }
+  .menu-toolbar button { flex: 1; }
+}

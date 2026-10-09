@@ -1,0 +1,120 @@
+HE THONG DAT HANG GAO THIEN MANH
+
+Anh family-meal.jpg trong khoi dang ky: Pexels, anh 5591187.
+Nguon: https://www.pexels.com/photo/a-family-eating-together-5591187/
+Giay phep: https://www.pexels.com/license/
+
+1. Cai Node.js 24 hoac moi hon. Trong thu muc website, chay: npm start
+2. Mo http://127.0.0.1:8002 (khong dung server tinh cong 8000/8001).
+   Giao dien cua hang: vao admin > Giao dien cua hang (/admin-giao-dien.html).
+   Sua logo/ten cua hang, banner, cau chuyen, khoi dang ky va chan trang.
+   Nhom 4 cam ket cua hang: sua tieu de va mo ta tung o tren trang chu;
+   bieu tuong va thu tu 4 o giu nguyen. Bam Luu giao dien de ap dung.
+   Nhom Lien he dau trang: sua so/chu Hotline, chu va dia chi Email,
+   ten va lien ket Gioi thieu; dong bo tren 5 trang co thanh dieu huong.
+   So/email dau trang chinh rieng voi chan trang. Lan dau lay so/email
+   chan trang dang luu, khong mat noi dung cu.
+   Chon anh PNG/JPEG/WebP tu may (toi da 8 MB, tu thu gon) hoac nhap URL anh.
+   Bam Luu giao dien de luu anh va chu vao SQLite tren may chu, sau do tai
+   lai trang cua hang. Logo/chan trang dong bo tren 7 trang cua hang.
+   Menu chinh/dropdown van chinh trong muc Menu, khong bi ghi de.
+   Neu co nguoi luu truoc, ban nhap duoc giu va bao loi; Tai lai de lay ban moi.
+   Form dang ky trang chu luu ten, so Zalo, email (khong bat buoc) tren may chu.
+   Vao admin > Khach dang ky (/admin-khach-dang-ky.html) de xem; bam Lam moi
+   de lay dang ky moi, co phan trang 25 luot/trang. Cua hang tu lien he khach,
+   chua tu gui tin Zalo. Neu gui loi, form giu thong tin de khach thu lai.
+   Dang ky luu trong SQLite; danh sach chi quan tri duoc xem.
+3. Ban chay cuc bo (HOST=127.0.0.1/localhost/::1, chua dat PUBLIC_ORIGIN)
+   khong can dang nhap: mo /admin-don-hang.html de xem don ngay.
+   Neu doi HOST de mo truy cap mang hoac dat PUBLIC_ORIGIN, admin can dang nhap.
+   Lan dau, terminal van hien mat khau quan tri du phong. Luu o noi an toan.
+   Muon doi mat khau: dat bien moi truong ADMIN_PASSWORD (it nhat 12 ky tu)
+   roi khoi dong lai may chu. Khong ghi mat khau vao ma nguon.
+4. San pham va voucher trong admin hien la ban nhap tren trinh duyet.
+   Trong danh sach san pham, bam mui ten len/xuong de doi thu tu.
+   Thu tu tu dong luu vao ban nhap; bam Dang san pham ra web de ap dung
+   cho trang chu va danh sach gao (ke ca khi loc tim kiem/danh muc).
+   Trang San pham co nut Dang san pham ra web: dang ban nhap san pham
+   va giu voucher dang ban tren may chu. Can xac nhan truoc khi thay the;
+   cac san pham bi go duoc liet ke trong hop xac nhan. Loi khong mat ban nhap.
+   Sau khi sua, vao Du lieu cua hang (lien ket tren trang San pham,
+   hoac /admin-du-lieu.html) > Dang du lieu len may chu.
+   May chu kiem tra gia, voucher va ton kho khi khach gui don.
+   Tren thiet bi admin moi, Tai du lieu ve trinh chinh sua truoc khi chinh.
+   Khi xem cua hang, du lieu may chu duoc nap ve cache rieng cho khach,
+   khong thay the ban nhap cua admin. Khi quay lai tab cua hang, san pham
+   va thu tu da dang duoc tai lai tu may chu, khong can tai lai ca trang.
+   Du lieu cu o cong 8001/file HTML: mo admin-du-lieu.html tren dia chi cu,
+   bam Xuat ban nhap san pham & voucher. Tren cong 8002, mo Du lieu cua hang va nhap
+   tep nay de dang du lieu. Khong tu dong di chuyen du lieu cua ban.
+5. Khach bam Dat hang ngay, nhap ten, dien thoai, dia chi va gui don.
+   Don moi hien trong admin khi bam Lam moi don hang.
+   Chua thanh toan online, chua tu tinh phi giao hang, chua tru/giu ton kho.
+   Admin tu xac nhan don, cap nhat ton va dang du lieu moi len may chu.
+6. Co so du lieu: data\store.sqlite. Sao luu bang cong cu SQLite backup
+   hoac dung may chu truoc khi sao chep ca thu muc data.
+   Don luu thong tin ca nhan: chi cap quyen truy cap cho nguoi quan tri;
+   khong dua file data, file sao luu hay mat khau len Git/repository cong khai.
+7. Len hosting: chon VPS/hosting ho tro Node.js 24 va o dia ben vung cho SQLite.
+   Dat HOST=0.0.0.0, PORT theo hosting, PUBLIC_ORIGIN=https://ten-mien-cua-ban.
+   Sau khi gan ten mien va bat HTTPS, kiem tra /robots.txt va /sitemap.xml,
+   khai bao sitemap trong Google Search Console. Trang blog duoc phep index,
+   nhung bai viet do admin luu trong localStorage chi co tren trinh duyet do;
+   muon Google va khach thay bai tu moi thiet bi, can chuyen kho bai len WordPress
+   hoac may chu. Khong dua trang admin, gio hang hay dat hang vao sitemap.
+   Mui gio het han voucher mac dinh Asia/Ho_Chi_Minh (co the doi bang TZ).
+   Bat HTTPS qua reverse proxy, gioi han kich thuoc request 25 MB va backup dinh ky.
+   DATABASE_PATH co the tro toi o dia ben vung; khong dung o dia tam/serverless.
+   Neu nhieu may chu cung ghi du lieu, can chuyen sang PostgreSQL/MySQL.
+   Blog van la du lieu trinh duyet, khong nam trong he thong dong bo nay.
+8. Kiem tra: npm test (dung co so du lieu tam, khong thay doi don that).
+9. Menu: vao admin > Menu (/admin-menu.html). Them/sua/xoa menu chinh,
+   them muc dropdown voi ten va lien ket rieng; dung mui ten len/xuong de sap xep.
+   Bam Luu menu de dang truc tiep len may chu, khong can cong cu Du lieu cua hang.
+   Menu dung chung cho trang chu, danh muc, chi tiet gao va hai trang bai viet.
+   Nut Luu menu nam trong thanh thao tac ghim cuoi man hinh khi cuon.
+   Giao dien chia ro khoi danh muc va menu chinh; moi the hien ten menu,
+   so muc dropdown va nut doi thu tu/xoa. Cham vang bao thay doi chua luu.
+   Menu co muc con: bam ten de mo dropdown, roi chon danh muc ben trong.
+   Lien ket chinh nam o muc Xem tat ca trong dropdown.
+   Menu khong co muc con van mo lien ket truc tiep.
+   Dropdown mot cap, toi da 12 menu chinh va 20 muc con moi menu.
+   Khoi Danh muc gao ngon ben trai cung duoc quan ly tai day: sua ten,
+   lien ket chinh, them/xoa/sap xep toi da 200 muc lien ket rieng.
+   Khi nang cap, danh sach ban dau lay tu san pham may chu hien co.
+   Sau do danh muc duoc quan ly rieng, khong tu doi khi sua/them san pham.
+   Dung dia chi may chu cong 8002; ban HTML mo truc tiep chi hien menu co san.
+10. Danh muc san pham: vao admin > Danh muc san pham (/admin-danh-muc.html).
+    Bam Tao danh muc san pham, nhap ten (vi du Gao lai), tich chon cac san pham
+    thuoc danh muc roi bam Luu danh muc. Mot san pham co the thuoc nhieu danh muc.
+    San pham duoc chon la ban da dang len may chu; neu thieu san pham moi,
+    dang tu Du lieu cua hang truoc roi Tai lai danh muc.
+    Trang gao.html?category=gao-lai chi hien san pham thuoc danh muc Gao lai.
+    Tim kiem tren trang nay chi tim trong danh muc hien tai.
+    Trang Tat ca gao va trang tung danh muc co hang nut danh muc tren san pham.
+    Nut dang chon to xanh; chuyen danh muc giu tu khoa tim kiem neu co.
+    Tao danh muc moi them lien ket o cuoi dropdown va hien day du trong Menu.
+    Quan ly Menu la nguon duy nhat cua dropdown: ten, lien ket, thu tu trung khop.
+    Xoa muc trong Menu khong xoa danh muc va khong tu them lai khi tai trang.
+    Nang cap tu ban cu giu cac muc danh muc truoc day bi chen ngam vao dropdown.
+    Trong Menu, dung Chon danh muc san pham de tu dien ten va lien ket.
+    Xoa danh muc khong xoa san pham. Doi duong dan/xoa danh muc: sua lien ket
+    da gan vao menu tuy chinh neu co. Du lieu danh muc luu truc tiep may chu,
+    khong phai ban nhap localStorage va khong nam trong tep xuat san pham/voucher.
+    Luu xong quay ve danh sach gon: moi danh muc co Sua/Xoa va len/xuong.
+    Sua mo trinh chinh sua rieng; Huy bo ban nhap, khong thay doi danh muc da luu.
+    Xoa va sap xep luu truc tiep len may chu sau thao tac (Xoa co xac nhan).
+11. Danh muc bai viet: admin > Danh muc bai viet (/admin-danh-muc-bai-viet.html).
+    Tao ten va duong dan, luu xong hien danh sach Sua/Xoa/len/xuong.
+    Trong Bai viet, chon danh muc tu danh sach khi soan/sua bai roi luu bai.
+    Cac chuyen muc cu duoc giu lai; doi ten danh muc khong lam mat nhom bai.
+    Xoa danh muc khong xoa bai, bai chuyen sang Chua phan loai.
+    Trang bai-viet-danh-sach.html?category=meo-nau-com chi hien bai da dang
+    thuoc danh muc do. Co cac nut danh muc tren trang danh sach bai viet.
+    Menu co lua chon danh muc bai viet de tu dien ten va lien ket.
+    Bai viet va danh muc bai viet VAN luu localStorage tren trinh duyet/origin
+    hien tai; chua dong bo may chu hay SEO cong khai. Dung cung cong 8002.
+    Lien ket menu luu may chu nhung bai/danh muc local khong tu sang thiet bi khac.
+    Trong tao/sua danh muc bai viet, co anh, tim kiem va tich chon bai truc tiep.
+    Moi bai thuoc mot danh muc: chon bai o nhom khac se chuyen sang nhom hien tai.
+    Bo chon dua bai ve Chua phan loai. Tat ca chi ap dung sau khi Luu danh muc.

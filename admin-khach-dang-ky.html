@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow"><title>Khách đăng ký — Gạo Thiên Mạnh</title>
+  <link rel="icon" href="logo.png"><link rel="stylesheet" href="order-pages.css"><link rel="stylesheet" href="admin-contacts.css">
+</head>
+<body>
+  <div class="admin-layout">
+    <aside class="sidebar" aria-label="Quản trị cửa hàng">
+      <a class="brand" href="index.html"><img src="logo.png" alt="Gạo Thiên Mạnh"><span><strong>Thiên Mạnh</strong><small>Quản trị cửa hàng</small></span></a>
+      <div class="side-label">Cửa hàng</div>
+      <a class="side-link" href="admin.html"><span class="side-icon" aria-hidden="true">▦</span>Sản phẩm</a>
+      <a class="side-link" href="admin-danh-muc.html"><span class="side-icon" aria-hidden="true">▤</span>Danh mục sản phẩm</a>
+      <a class="side-link" href="admin-blog.html"><span class="side-icon" aria-hidden="true">✎</span>Bài viết</a>
+      <a class="side-link" href="admin-danh-muc-bai-viet.html"><span class="side-icon" aria-hidden="true">▤</span>Danh mục bài viết</a>
+      <a class="side-link" href="admin-voucher.html"><span class="side-icon" aria-hidden="true">%</span>Voucher</a>
+      <a class="side-link" href="admin-don-hang.html"><span class="side-icon" aria-hidden="true">☷</span>Đơn hàng</a>
+      <a class="side-link" href="admin-menu.html"><span class="side-icon" aria-hidden="true">≡</span>Menu</a>
+      <a class="side-link active" href="admin-khach-dang-ky.html" aria-current="page"><span class="side-icon" aria-hidden="true">✉</span>Khách đăng ký</a>
+      <a class="side-link" href="admin-giao-dien.html"><span class="side-icon" aria-hidden="true">▧</span>Giao diện cửa hàng</a>
+      <a class="side-link" href="index.html"><span class="side-icon" aria-hidden="true">↗</span>Xem cửa hàng</a>
+    </aside>
+    <main class="main">
+      <header class="topbar"><span>Quản trị / <strong>Khách đăng ký</strong></span><a href="index.html">↗ Xem cửa hàng</a></header>
+      <div class="content">
+        <span class="eyebrow">Kết nối khách hàng</span><h1>Khách đăng ký</h1>
+        <section class="panel" id="loginPanel" hidden><h2>Đăng nhập quản trị</h2><form id="loginForm"><label>Mật khẩu<input name="password" type="password" required autocomplete="current-password" maxlength="256"></label><button class="primary">Đăng nhập</button></form></section>
+        <p class="message" id="status" role="status" aria-live="polite"></p>
+        <div id="adminContent" hidden>
+          <div class="orders-toolbar"><div><h2>Danh sách đăng ký</h2><span id="count" class="order-meta"></span></div><button id="refresh" type="button">↻ Làm mới</button></div>
+          <div id="contacts"></div>
+          <div class="order-pagination"><button id="previous" type="button">← Trang trước</button><span id="pageLabel"></span><button id="next" type="button">Trang sau →</button></div>
+        </div>
+      </div>
+    </main>
+  </div>
+  <script src="orders-api.js"></script><script src="admin-contacts.js"></script>
+</body>
+</html>

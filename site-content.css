@@ -1,0 +1,14 @@
+.hero-copy h1, .hero-copy p, .story-copy h2, .story-copy p, .newsletter-copy h2, .newsletter-copy p, .footer-grid > div, .copyright { overflow-wrap: anywhere; }
+.brand-title { min-width: 0; max-width: 230px; }
+.brand-title strong, .brand-title small, .brand strong, .brand small, .shop-brand strong, .shop-brand small, .store-footer-copy { overflow-wrap: anywhere; }
+.footer-grid > div { min-width: 0; }
+.benefit > span:last-child { min-width: 0; overflow-wrap: anywhere; }
+.utility-links { min-width: 0; }
+.utility-links > span, .utility-links > a { overflow-wrap: anywhere; }
+.main-nav-row .nav-contact { min-width: 0; flex-wrap: wrap; white-space: normal; }
+.nav-contact a { overflow-wrap: anywhere; }
+.footer .footer-about { width: 100%; max-width: 300px; text-align: center; }
+.footer .footer-about .brand { display: flex; justify-content: center; }
+.footer .footer-about .brand-logo { width: 136px; height: 136px; object-fit: contain; }
+.footer .footer-about p { max-width: 100%; margin: 18px auto 0; }
+@media (max-width: 650px) { .brand-title { max-width: 150px; } }

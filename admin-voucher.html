@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#173d2c">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Quản lý voucher — Gạo Thiên Mạnh</title>
+  <link rel="icon" href="logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root { --green: #173d2c; --gold: #d3a650; --line: #e8e7dc; --serif: "Playfair Display", Georgia, serif; --sans: "DM Sans", Arial, sans-serif; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #f7f6f1; color: #233329; font-family: var(--sans); -webkit-font-smoothing: antialiased; }
+    a { color: inherit; text-decoration: none; }
+    .admin-layout { min-height: 100vh; display: grid; grid-template-columns: 248px minmax(0, 1fr); }
+    .sidebar { position: sticky; top: 0; display: flex; height: 100vh; flex-direction: column; padding: 25px 17px; background: var(--green); color: white; }
+    .sidebar { overflow-y: auto; }
+    .sidebar > * { flex-shrink: 0; }
+    .brand { display: flex; align-items: center; gap: 12px; padding: 0 8px 28px; border-bottom: 1px solid rgba(255,255,255,.14); }
+    .brand img { width: 58px; height: 58px; object-fit: contain; border-radius: 4px; background: #fdf9ed; }
+    .brand strong { display: block; font-family: var(--serif); font-size: 17px; font-weight: 600; }
+    .brand small { display: block; margin-top: 4px; color: rgba(255,255,255,.62); font-size: 9px; letter-spacing: .12em; text-transform: uppercase; }
+    .side-label { padding: 25px 11px 10px; color: #d9c28f; font-size: 9px; font-weight: 700; letter-spacing: .15em; text-transform: uppercase; }
+    .side-link { display: flex; align-items: center; gap: 11px; min-height: 43px; margin: 2px 0; padding: 0 12px; border-radius: 5px; color: rgba(255,255,255,.73); font-size: 12px; font-weight: 500; }
+    .side-link.active { background: rgba(255,255,255,.12); color: white; }
+    .side-link:hover { background: rgba(255,255,255,.08); color: white; }
+    .side-icon { width: 18px; color: #e8c46f; font-size: 16px; text-align: center; }
+    .sidebar-note { margin-top: auto; padding: 14px 12px; border: 1px solid rgba(255,255,255,.15); border-radius: 5px; color: rgba(255,255,255,.64); font-size: 10px; line-height: 1.7; }
+    .main { min-width: 0; }
+    .topbar { display: flex; min-height: 73px; align-items: center; justify-content: space-between; gap: 20px; padding: 0 38px; border-bottom: 1px solid var(--line); background: #fffefa; }
+    .breadcrumb { color: #748075; font-size: 11px; }
+    .breadcrumb strong { color: var(--green); font-weight: 600; }
+    .store-link { display: inline-flex; align-items: center; gap: 8px; color: var(--green); font-size: 11px; font-weight: 700; }
+    .store-link:hover { color: #98722d; }
+    .content { width: min(1120px, calc(100% - 76px)); margin: 0 auto; padding: 39px 0 65px; }
+    .eyebrow { color: #98722d; font-size: 11px; font-weight: bold; letter-spacing: .1em; text-transform: uppercase; }
+    h1 { margin: 10px 0 12px; color: var(--green); font-family: var(--serif); font-size: 37px; font-weight: 500; letter-spacing: -.02em; }
+    .intro { max-width: 760px; margin: 0 0 25px; color: #6b786d; font-size: 13px; line-height: 1.7; }
+    .panel { margin-bottom: 24px; border: 1px solid var(--line); border-radius: 10px; background: #fffefa; box-shadow: 0 6px 24px #173d2c06; }
+    .panel-heading { padding: 20px 24px; border-bottom: 1px solid var(--line); }
+    h2 { margin: 0; color: var(--green); font-size: 17px; }
+    form { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; padding: 24px; }
+    label { display: grid; gap: 9px; font-size: 13px; font-weight: bold; }
+    input, select { width: 100%; height: 45px; padding: 0 12px; border: 1px solid #d9ded3; border-radius: 6px; background: white; color: #233329; font: inherit; font-weight: normal; }
+    input:focus, select:focus { outline: 2px solid var(--gold); outline-offset: 1px; }
+    small { color: #748075; font-size: 11px; font-weight: normal; line-height: 1.5; }
+    .actions, #formStatus { grid-column: 1 / -1; }
+    .actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 10px; }
+    button { min-height: 44px; padding: 10px 16px; border: 1px solid #d8ddd2; border-radius: 6px; background: white; color: var(--green); font-family: var(--sans); font-size: 13px; font-weight: 600; cursor: pointer; }
+    button:hover { background: #edf2e9; }
+    .primary { background: var(--green); color: white; border-color: var(--green); }
+    .primary:hover { background: #24543b; }
+    .delete { color: #964a3d; background: #fcf8f5; border-color: #e7d7d2; }
+    [hidden] { display: none !important; }
+    #formStatus { margin: 0; font-size: 13px; line-height: 1.6; }
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; }
+    th { padding: 14px 18px; background: #faf9f4; color: #748075; font-size: 11px; }
+    td { padding: 16px 18px; border-top: 1px solid var(--line); }
+    td:first-child { color: var(--green); font-weight: bold; }
+    .row-actions { display: flex; gap: 8px; }
+    .empty { padding: 30px; text-align: center; color: #748075; }
+    @media (max-width: 1000px) { form { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @media (max-width: 900px) {
+      .admin-layout { grid-template-columns: 205px minmax(0, 1fr); }
+      .topbar { padding: 0 24px; }
+      .content { width: calc(100% - 48px); }
+    }
+    @media (max-width: 650px) {
+      .admin-layout { display: block; }
+      .sidebar { position: static; height: auto; padding: 12px 16px; }
+      .brand { padding: 0; border: 0; }
+      .brand img { width: 46px; height: 46px; }
+      .brand strong { font-size: 15px; }
+      .side-label, .sidebar-note { display: none; }
+      .side-link { display: inline-flex; min-height: 44px; margin: 8px 3px 0 0; padding: 0 9px; font-size: 10px; }
+      .topbar { min-height: 53px; padding: 0 17px; }
+      .breadcrumb { font-size: 10px; }
+      .content { width: calc(100% - 30px); padding: 28px 0 42px; }
+      form { grid-template-columns: 1fr; padding: 18px; }
+      h1 { font-size: 31px; }
+      .panel-heading { padding: 18px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="admin-layout">
+    <aside class="sidebar" aria-label="Quản trị cửa hàng">
+      <a class="brand" href="index.html"><img src="logo.png" alt="Gạo Thiên Mạnh"><span><strong>Thiên Mạnh</strong><small>Quản trị cửa hàng</small></span></a>
+      <div class="side-label">Cửa hàng</div>
+      <a class="side-link" href="admin.html"><span class="side-icon" aria-hidden="true">▦</span>Sản phẩm</a>
+      <a class="side-link" href="admin-danh-muc.html"><span class="side-icon" aria-hidden="true">▤</span>Danh mục sản phẩm</a>
+      <a class="side-link" href="admin-blog.html"><span class="side-icon" aria-hidden="true">✎</span>Bài viết</a>
+      <a class="side-link" href="admin-danh-muc-bai-viet.html"><span class="side-icon" aria-hidden="true">▤</span>Danh mục bài viết</a>
+      <a class="side-link active" href="admin-voucher.html" aria-current="page"><span class="side-icon" aria-hidden="true">%</span>Voucher</a>
+      <a class="side-link" href="admin-don-hang.html"><span class="side-icon" aria-hidden="true">☷</span>Đơn hàng</a>
+      <a class="side-link" href="admin-menu.html"><span class="side-icon" aria-hidden="true">≡</span>Menu</a>
+      <a class="side-link" href="admin-khach-dang-ky.html"><span class="side-icon" aria-hidden="true">✉</span>Khách đăng ký</a>
+      <a class="side-link" href="admin-giao-dien.html"><span class="side-icon" aria-hidden="true">▧</span>Giao diện cửa hàng</a>
+      <a class="side-link" href="index.html"><span class="side-icon" aria-hidden="true">↗</span>Xem cửa hàng</a>
+      <div class="sidebar-note">Voucher lưu thành bản nháp trên trình duyệt.<br>Sau khi sửa, vào Dữ liệu cửa hàng để đăng lên máy chủ.</div>
+    </aside>
+    <main class="main">
+      <header class="topbar"><div class="breadcrumb">Quản trị&nbsp; / &nbsp;<strong>Voucher</strong></div><a class="store-link" href="gio-hang.html"><span aria-hidden="true">↗</span> Xem giỏ hàng</a></header>
+      <div class="content">
+    <span class="eyebrow">Ưu đãi cửa hàng</span><h1>Quản lý voucher</h1>
+    <p class="intro">Tạo mã giảm giá theo phần trăm hoặc số tiền. Mỗi giỏ áp dụng một mã; ngày hết hạn tính đến hết ngày đã chọn theo giờ thiết bị. Đây là bản nháp trên trình duyệt: sau khi lưu, vào <a href="admin-du-lieu.html"><strong>Dữ liệu cửa hàng → Đăng dữ liệu lên máy chủ</strong></a> để khách sử dụng mã. Chưa giới hạn lượt sử dụng voucher.</p>
+    <section class="panel"><div class="panel-heading"><h2 id="formTitle">Tạo voucher mới</h2></div>
+      <form id="voucherForm">
+        <label>Mã voucher<input name="code" required minlength="3" maxlength="30" pattern="[A-Za-z0-9_\-]{3,30}" placeholder="Ví dụ: GAONGON10"><small>3–30 ký tự: chữ không dấu, số, dấu - hoặc _.</small></label>
+        <label>Loại giảm giá<select name="type"><option value="percent">Giảm theo phần trăm (%)</option><option value="fixed">Giảm số tiền (đồng)</option></select></label>
+        <label><span id="valueLabel">Mức giảm (%)</span><input name="value" type="number" required min="1" max="100" step="1" placeholder="10"></label>
+        <label>Đơn tối thiểu (đồng)<input name="minimum" type="number" required min="0" max="100000000" step="1" value="0"><small>Nhập 0 nếu không yêu cầu mức đơn tối thiểu.</small></label>
+        <label>Ngày hết hạn<input name="expires" type="date"><small>Để trống nếu không có ngày hết hạn.</small></label>
+        <label>Trạng thái<select name="active"><option value="true">Đang áp dụng</option><option value="false">Tạm ngừng</option></select></label>
+        <div class="actions"><button type="button" id="cancelEdit" hidden>Hủy chỉnh sửa</button><button type="submit" class="primary">Lưu voucher</button></div>
+        <p id="formStatus" role="status" aria-live="polite"></p>
+      </form>
+    </section>
+    <section class="panel"><div class="panel-heading"><h2>Danh sách voucher</h2></div><div class="table-wrap"><table><thead><tr><th>Mã</th><th>Giảm giá</th><th>Đơn tối thiểu</th><th>Hết hạn</th><th>Trạng thái</th><th>Thao tác</th></tr></thead><tbody id="voucherList"></tbody></table></div></section>
+      </div>
+    </main>
+  </div>
+  <script src="vouchers.js"></script>
+  <script>
+    const form = document.getElementById("voucherForm");
+    const list = document.getElementById("voucherList");
+    const status = document.getElementById("formStatus");
+    let editingCode = null;
+    function showStatus(message, error = false) {
+      status.textContent = message;
+      status.style.color = error ? "#964a3d" : "#24543b";
+    }
+    function updateType() {
+      const percent = form.elements.type.value === "percent";
+      form.elements.value.max = percent ? "100" : "100000000";
+      document.getElementById("valueLabel").textContent = percent ? "Mức giảm (%)" : "Mức giảm (đồng)";
+    }
+    function resetForm() {
+      form.reset();
+      editingCode = null;
+      updateType();
+      document.getElementById("formTitle").textContent = "Tạo voucher mới";
+      document.getElementById("cancelEdit").hidden = true;
+    }
+    function renderList() {
+      const vouchers = RiceVouchers.getVouchers();
+      list.replaceChildren();
+      if (!vouchers.length) {
+        const row = list.insertRow();
+        const cell = row.insertCell();
+        cell.colSpan = 6;
+        cell.className = "empty";
+        cell.textContent = "Chưa có voucher. Tạo mã đầu tiên ở phía trên.";
+      }
+      vouchers.forEach((voucher) => {
+        const row = list.insertRow();
+        [voucher.code, voucher.type === "percent" ? `${voucher.value}%` : `${voucher.value.toLocaleString("vi-VN")}đ`, `${voucher.minimum.toLocaleString("vi-VN")}đ`, voucher.expires || "Không giới hạn", voucher.active ? "Đang áp dụng" : "Tạm ngừng"].forEach((text) => { row.insertCell().textContent = text; });
+        const actions = document.createElement("div");
+        actions.className = "row-actions";
+        [["edit", "Chỉnh sửa"], ["delete", "Xóa"]].forEach(([action, text]) => {
+          const button = document.createElement("button");
+          button.type = "button";
+          button.dataset.action = action;
+          button.dataset.code = voucher.code;
+          button.textContent = text;
+          button.setAttribute("aria-label", `${text} voucher ${voucher.code}`);
+          if (action === "delete") button.className = "delete";
+          actions.append(button);
+        });
+        row.insertCell().append(actions);
+      });
+    }
+    function reportError(error) {
+      console.error("Không thể cập nhật voucher.", error);
+      showStatus(error.message || "Không thể cập nhật voucher. Hãy kiểm tra bộ nhớ trình duyệt.", true);
+    }
+    form.elements.type.addEventListener("change", updateType);
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      try {
+        const vouchers = RiceVouchers.getVouchers();
+        const code = RiceVouchers.normalizeCode(form.elements.code.value);
+        if (vouchers.some((voucher) => voucher.code === code && voucher.code !== editingCode)) throw new RangeError("Mã voucher này đã tồn tại.");
+        const voucher = { code, type: form.elements.type.value, value: Number(form.elements.value.value), minimum: Number(form.elements.minimum.value), expires: form.elements.expires.value, active: form.elements.active.value === "true" };
+        RiceVouchers.saveVouchers(editingCode ? vouchers.map((item) => item.code === editingCode ? voucher : item) : [...vouchers, voucher]);
+        resetForm();
+        renderList();
+        showStatus(`Đã lưu voucher ${code}.`);
+      } catch (error) { reportError(error); }
+    });
+    list.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-action]");
+      if (!button) return;
+      try {
+        const vouchers = RiceVouchers.getVouchers();
+        const voucher = vouchers.find((item) => item.code === button.dataset.code);
+        if (!voucher) throw new RangeError("Voucher không còn tồn tại. Hãy tải lại danh sách.");
+        if (button.dataset.action === "delete") {
+          if (!window.confirm(`Xóa voucher ${voucher.code}?`)) return;
+          RiceVouchers.saveVouchers(vouchers.filter((item) => item.code !== voucher.code));
+          if (editingCode === voucher.code) resetForm();
+          renderList();
+          showStatus(`Đã xóa voucher ${voucher.code}.`);
+          return;
+        }
+        editingCode = voucher.code;
+        Object.keys(voucher).forEach((key) => { form.elements[key].value = String(voucher[key]); });
+        updateType();
+        document.getElementById("formTitle").textContent = `Chỉnh sửa ${voucher.code}`;
+        document.getElementById("cancelEdit").hidden = false;
+        form.scrollIntoView({ behavior: "smooth", block: "start" });
+        form.elements.code.focus({ preventScroll: true });
+      } catch (error) { reportError(error); }
+    });
+    document.getElementById("cancelEdit").addEventListener("click", () => { resetForm(); showStatus("Đã hủy chỉnh sửa."); });
+    window.addEventListener("storage", (event) => {
+      if (event.key !== RiceVouchers.storageKey && event.key !== null) return;
+      resetForm();
+      try { renderList(); showStatus("Danh sách voucher đã cập nhật."); } catch (error) { reportError(error); }
+    });
+    try { renderList(); } catch (error) { reportError(error); }
+  </script>
+</body>
+</html>

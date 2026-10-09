@@ -1,0 +1,678 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#173d2c">
+  <meta name="description" content="Xem chi tiết sản phẩm gạo ngon Gạo Thiên Mạnh, thông tin vùng trồng, giá bán và liên hệ đặt hàng.">
+  <title>Chi tiết sản phẩm — Gạo Thiên Mạnh</title>
+  <script src="seo.js"></script>
+  <link rel="icon" type="image/png" href="logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root { --green: #173d2c; --cream: #f8f6ef; --paper: #fffefa; --gold: #d3a650; --ink: #233329; --muted: #748075; --line: #e8e7dc; --serif: "Playfair Display", Georgia, serif; --sans: "DM Sans", Arial, sans-serif; }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; background: var(--cream); color: var(--ink); font-family: var(--sans); -webkit-font-smoothing: antialiased; }
+    a { color: inherit; text-decoration: none; }
+    button { color: inherit; font: inherit; }
+    img { display: block; max-width: 100%; }
+    .header { position: sticky; top: 0; z-index: 20; background: #fdf9ed; box-shadow: 0 3px 14px rgba(24,45,32,.08); }
+    .utility-bar { background: #122f22; color: rgba(255,255,255,.83); font-size: 10px; }
+    .utility-inner, .store-tools, .main-nav-row { display: flex; width: min(1180px, calc(100% - 48px)); margin: auto; }
+    .utility-inner { min-height: 29px; align-items: center; justify-content: space-between; gap: 20px; }
+    .utility-inner strong { color: #edca78; }
+    .utility-links { display: flex; gap: 19px; }
+    .utility-links a:hover, .nav-contact a:hover { color: #edca78; }
+    .store-tools { min-height: 78px; align-items: center; justify-content: space-between; gap: 34px; }
+    .brand { display: inline-flex; flex-shrink: 0; align-items: center; gap: 10px; }
+    .brand-logo { display: block; width: 66px; height: 66px; object-fit: contain; }
+    .brand-title { display: grid; gap: 3px; color: var(--green); }
+    .brand-title strong { font-family: var(--serif); font-size: 19px; font-weight: 600; }
+    .brand-title small { color: #8b7955; font-size: 9px; letter-spacing: .12em; text-transform: uppercase; }
+    .store-search { display: flex; flex: 1; max-width: 610px; min-width: 120px; height: 42px; overflow: hidden; border: 1px solid #dedbd1; border-radius: 24px; background: #fff; }
+    .store-search input { flex: 1; min-width: 0; padding: 0 16px; border: 0; outline: none; background: transparent; color: var(--ink); font: inherit; font-size: 12px; }
+    .store-search input::placeholder { color: #92968d; }
+    .store-search button { display: grid; width: 46px; flex: 0 0 46px; place-items: center; border: 0; background: transparent; color: var(--green); cursor: pointer; }
+    .search-icon { width: 19px; height: 19px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-width: 1.8; }
+    .store-actions { display: flex; align-items: center; }
+    .icon-button { position: relative; display: grid; width: 40px; height: 40px; place-items: center; border: 0; background: transparent; cursor: pointer; }
+    .cart-icon { display: block; width: 22px; height: 22px; fill: none; stroke: var(--green); stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.65; }
+    .cart-count { position: absolute; top: 0; right: -2px; display: grid; width: 17px; height: 17px; place-items: center; border-radius: 50%; background: var(--gold); color: var(--green); font-size: 10px; font-weight: 700; }
+    .main-nav-band { background: var(--green); color: #fffefa; }
+    .main-nav-row { min-height: 49px; align-items: stretch; }
+    .nav-dropdown { position: relative; flex: 0 0 248px; }
+    .category-toggle { display: inline-flex; width: 100%; height: 100%; min-height: 49px; align-items: center; justify-content: space-between; gap: 13px; padding: 0 17px; border: 0; background: #24543b; color: #fffefa; font-size: 13px; font-weight: 700; letter-spacing: .025em; text-transform: uppercase; cursor: pointer; }
+    .category-toggle:hover, .nav-dropdown.open .category-toggle { background: #2c6245; }
+    .category-label { display: inline-flex; align-items: center; gap: 11px; }
+    .category-menu-icon { font-size: 17px; line-height: 1; }
+    .dropdown-chevron { width: 12px; height: 12px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.7; transition: transform .2s; }
+    .nav-dropdown.open .dropdown-chevron { transform: rotate(180deg); }
+    .dropdown-panel { position: absolute; top: calc(100% + 1px); left: 0; z-index: 30; width: 345px; padding: 12px; border: 1px solid #d8d2c0; border-top: 3px solid var(--gold); background: var(--paper); box-shadow: 0 18px 44px rgba(25,45,32,.18); opacity: 0; visibility: hidden; transform: translateY(8px); transition: opacity .18s, transform .18s; }
+    .nav-dropdown.open .dropdown-panel { opacity: 1; visibility: visible; transform: translateY(0); }
+    .dropdown-heading { padding: 11px 12px 10px; border-bottom: 1px solid #e9e4d7; color: #846320; font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+    .dropdown-link { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 13px 12px; border-bottom: 1px solid #efede5; }
+    .dropdown-link:hover { background: var(--cream); }
+    .dropdown-link strong { display: block; margin-bottom: 5px; color: var(--green); font-size: 14px; }
+    .dropdown-link small { display: block; color: #69736a; font-size: 12px; line-height: 1.5; }
+    .dropdown-arrow { color: #a27b32; font-size: 18px; }
+    .nav-links { display: flex; flex: 1; align-items: stretch; font-size: 13px; font-weight: 600; }
+    .nav-links > a { display: inline-flex; align-items: center; padding: 0 12px; color: rgba(255,255,255,.9); letter-spacing: .025em; text-transform: uppercase; }
+    .nav-links > a:hover, .nav-links > a[aria-current="page"] { background: #24543b; color: #f0d18e; }
+    .nav-contact { display: flex; align-items: center; gap: 17px; margin-left: auto; padding-left: 14px; color: rgba(255,255,255,.87); font-size: 11px; white-space: nowrap; }
+    .nav-contact span { color: #edca78; }
+    .menu-toggle { display: none; }
+    .page-container { width: min(1120px, calc(100% - 48px)); min-height: 62vh; margin: auto; padding: 52px 0 78px; }
+    .breadcrumb { margin-bottom: 28px; color: #8a8e80; font-size: 11px; }
+    .breadcrumb a { color: var(--green); }
+    .product-detail { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, .92fr); align-items: center; gap: clamp(32px, 6vw, 78px); }
+    .detail-gallery { min-width: 0; }
+    .detail-image { position: relative; min-width: 0; overflow: hidden; background: #efede3; }
+    .detail-image img { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; }
+    .detail-gallery-image { display: block; width: 100%; padding: 0; border: 0; background: transparent; cursor: zoom-in; }
+    .detail-image.zoomed .detail-gallery-image { position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; padding: 56px; background: rgba(13,28,19,.94); cursor: zoom-out; }
+    .detail-image.zoomed .detail-gallery-image img { width: auto; max-width: min(1100px, 100%); height: auto; max-height: 100%; aspect-ratio: auto; object-fit: contain; box-shadow: 0 18px 70px rgba(0,0,0,.4); }
+    .image-zoom-hint { position: absolute; right: 16px; bottom: 16px; padding: 7px 10px; border-radius: 18px; background: rgba(23,61,44,.78); color: white; font-size: 10px; font-weight: 600; pointer-events: none; }
+    .detail-image.zoomed .image-zoom-hint { display: none; }
+    .gallery-arrow { position: absolute; top: 50%; display: grid; width: 42px; height: 42px; place-items: center; border: 1px solid rgba(255,255,255,.7); border-radius: 50%; background: rgba(23,61,44,.76); color: white; font-size: 25px; line-height: 1; cursor: pointer; transform: translateY(-50%); transition: background .2s, transform .2s; }
+    .gallery-arrow:hover { background: var(--green); transform: translateY(-50%) scale(1.06); }
+    .gallery-arrow.previous { left: 16px; }
+    .gallery-arrow.next { right: 16px; }
+    .gallery-count { position: absolute; right: 16px; bottom: 15px; padding: 6px 10px; border-radius: 20px; background: rgba(23,61,44,.78); color: white; font-size: 11px; font-weight: 600; }
+    .gallery-thumbnails { display: flex; gap: 10px; overflow-x: auto; padding: 12px 2px 3px; scrollbar-width: thin; }
+    .gallery-thumbnail { width: 72px; height: 72px; flex: 0 0 72px; overflow: hidden; padding: 0; border: 2px solid transparent; border-radius: 4px; background: #efede3; cursor: pointer; opacity: .76; transition: border-color .2s, opacity .2s; }
+    .gallery-thumbnail:hover { opacity: 1; }
+    .gallery-thumbnail[aria-current="true"] { border-color: #98722d; opacity: 1; }
+    .gallery-thumbnail img { width: 100%; height: 100%; object-fit: cover; }
+    .tag { position: absolute; top: 18px; left: 18px; padding: 9px 12px; background: #f8f3e5; color: var(--green); font-family: Arial, Tahoma, sans-serif; font-size: 11px; font-weight: 700; line-height: 1.4; letter-spacing: normal; text-transform: uppercase; }
+    .eyebrow { color: #98722d; font-size: 10px; font-weight: 700; letter-spacing: .15em; text-transform: uppercase; }
+    h1 { margin: 12px 0; color: var(--green); font-family: Arial, Tahoma, sans-serif; font-size: clamp(34px, 4.2vw, 52px); font-weight: 700; line-height: 1.25; }
+    .origin { margin: 0 0 13px; color: #747d72; font-size: 12px; letter-spacing: .05em; text-transform: uppercase; }
+    .rating { margin-bottom: 20px; color: #a47b30; font-size: 13px; letter-spacing: .08em; }
+    .rating span { margin-left: 5px; color: var(--muted); font-size: 11px; letter-spacing: 0; }
+    .price { margin: 0 0 22px; color: #c62828; font-size: 24px; font-weight: 700; }
+    .price small { font-size: 14px; font-weight: 500; }
+    .description { position: relative; margin: 0 0 26px; padding: 17px 20px; border: 1px solid #e7e8df; border-left: 3px solid #c8a65b; border-radius: 0 7px 7px 0; background: linear-gradient(110deg, #f8f8f3, #fffefa); color: #263d30; font-size: 16px; font-weight: 700; line-height: 1.9; white-space: pre-line; }
+    .description > * { margin: .35em 0; }
+    .description > :first-child { margin-top: 0; }
+    .description > :last-child { margin-bottom: 0; }
+    .long-description { position: relative; overflow: hidden; margin-top: clamp(38px, 5vw, 62px); padding: clamp(25px, 4vw, 42px) clamp(25px, 5vw, 58px) clamp(28px, 4vw, 46px); border: 1px solid #e6e4d9; border-radius: 12px; background: linear-gradient(135deg, #fffefa 0%, #fff 72%, #faf8f0 100%); box-shadow: 0 14px 38px rgba(23,61,44,.07); }
+    .long-description::before { position: absolute; inset: 0 auto 0 0; width: 4px; background: linear-gradient(180deg, #d3a650 0%, #b58c42 50%, #173d2c 100%); content: ""; }
+    .long-description-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; padding-bottom: 23px; border-bottom: 1px solid #e9e6dc; }
+    .long-description-heading-main { display: grid; gap: 8px; }
+    .long-description-kicker { display: inline-flex; align-items: center; gap: 8px; color: #98722d; font-size: 9px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; }
+    .long-description-kicker::before { width: 20px; height: 2px; border-radius: 2px; background: #d3a650; content: ""; }
+    .long-description h2 { margin: 0; color: var(--green); font-family: var(--serif); font-size: clamp(27px, 3vw, 35px); font-weight: 500; line-height: 1.2; }
+    .long-description-heading .long-description-subtitle { max-width: 250px; margin: 0 0 3px; color: #798379; font-size: 11px; line-height: 1.7; text-align: right; }
+    .long-description-copy { position: relative; margin-top: 22px; padding: 21px 25px; border: 1px solid #eeece3; border-radius: 8px; background: #faf9f5; }
+    .long-description-copy::before { position: absolute; top: 19px; bottom: 19px; left: 0; width: 2px; border-radius: 2px; background: #d8c28e; content: ""; }
+    .long-description-copy { color: #4b5a4f; font-size: 15px; line-height: 1.95; white-space: pre-line; }
+    .long-description-copy > * { max-width: 850px; }
+    .long-description-copy p { margin: 0 0 .8em; }
+    .long-description-copy > :last-child { margin-bottom: 0; }
+    .detail-quantity { display: grid; justify-items: start; gap: 9px; margin: 0 0 15px; }
+    .detail-quantity label { color: var(--green); font-size: 17px; font-weight: 700; line-height: 1.5; }
+    .stock-status { margin: 0 0 15px; color: #24543b; font-size: 13px; font-weight: 600; }
+    .stock-status.out-of-stock { color: #9b4534; }
+    .product-action:disabled, .product-action[aria-disabled="true"], .quantity-picker button:disabled { opacity: .45; cursor: not-allowed; }
+    .quantity-picker { display: inline-flex; height: 52px; align-items: center; overflow: hidden; border: 1px solid #c9d2c6; border-radius: 6px; background: var(--paper); }
+    .quantity-picker button { width: 48px; height: 50px; border: 0; background: #f8f7f1; color: var(--green); font-size: 25px; font-weight: 600; cursor: pointer; }
+    .quantity-picker button:hover { background: #efede3; }
+    .quantity-picker input { width: 70px; height: 50px; padding: 0 5px; border: 0; border-right: 1px solid #e8e7dc; border-left: 1px solid #e8e7dc; background: white; color: var(--green); font: inherit; font-size: 20px; font-weight: 700; text-align: center; outline: none; appearance: textfield; -moz-appearance: textfield; }
+    .quantity-picker:focus-within { border-color: #98722d; box-shadow: 0 0 0 3px rgba(211,166,80,.15); }
+    .quantity-picker input::-webkit-inner-spin-button, .quantity-picker input::-webkit-outer-spin-button { margin: 0; appearance: none; }
+    .quantity-unit { padding: 0 14px; color: #526055; font-size: 15px; font-weight: 600; }
+    .detail-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 11px; }
+    .product-action { display: inline-flex; min-width: 0; min-height: 48px; align-items: center; justify-content: center; padding: 8px 12px; border: 1px solid var(--green); border-radius: 2px; font-family: var(--sans); font-size: 12px; font-weight: 700; line-height: 1.3; text-align: center; cursor: pointer; transition: background .2s, color .2s, transform .2s; }
+    .quick-add { background: var(--paper); color: var(--green); }
+    .quick-add:hover { background: #edf2eb; }
+    .buy-now { border-color: var(--gold); background: var(--gold); color: var(--green); }
+    .buy-now:hover { transform: translateY(-1px); background: #e4bd6e; }
+    .detail-actions .product-action { min-height: 56px; font-size: 16px; font-weight: 700; letter-spacing: .01em; }
+    .detail-actions .quick-add { font-family: Arial, Tahoma, sans-serif; border-radius: 6px; }
+    .detail-benefits { display: grid; gap: 10px; margin-top: 25px; padding-top: 20px; border-top: 1px solid var(--line); color: #526055; font-size: 12px; }
+    .detail-benefits span::before { margin-right: 9px; color: #98722d; content: "✓"; font-weight: 700; }
+    .not-found { padding: 65px 24px; background: var(--paper); text-align: center; }
+    .not-found h1 { font-size: clamp(30px, 4vw, 42px); }
+    .not-found p { color: var(--muted); font-size: 14px; }
+    .back-link { display: inline-flex; min-height: 44px; align-items: center; justify-content: center; margin-top: 12px; padding: 0 18px; background: var(--green); color: white; font-size: 12px; font-weight: 700; }
+    .related { margin-top: 76px; }
+    .related-heading { margin-bottom: 24px; color: var(--green); font-family: var(--serif); font-size: 30px; font-weight: 500; }
+    .related-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px; }
+    .related-card { display: block; min-width: 0; }
+    .related-card img { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; }
+    .related-card h2 { margin: 11px 0 6px; color: var(--green); font-family: Arial, Tahoma, sans-serif; font-size: 17px; font-weight: 700; line-height: 1.4; }
+    .related-card p { margin: 0; color: #c62828; font-size: 12px; font-weight: 700; }
+    .footer { padding: 57px 0 25px; background: #122f22; color: #fffefa; }
+    .footer .container { width: min(1180px, calc(100% - 48px)); margin: auto; }
+    .footer-grid { display: grid; grid-template-columns: 1.5fr 1fr 1fr 1.2fr; gap: 45px; padding-bottom: 42px; }
+    .footer-about p { max-width: 270px; margin: 18px 0 0; color: rgba(255,255,255,.65); font-size: 11px; line-height: 1.8; }
+    .footer-about .brand-logo { width: 108px; height: 108px; }
+    .footer h4 { margin: 0 0 16px; color: #edca78; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; }
+    .footer-links, .footer-contact { display: grid; gap: 11px; color: rgba(255,255,255,.72); font-size: 11px; }
+    .footer-links a:hover { color: #edca78; }
+    .footer-contact { line-height: 1.6; }
+    .copyright { display: flex; justify-content: space-between; gap: 20px; padding-top: 19px; border-top: 1px solid rgba(255,255,255,.14); color: rgba(255,255,255,.48); font-size: 10px; }
+    .toast { position: fixed; top: 50%; left: 50%; z-index: 110; width: min(460px, calc(100% - 32px)); padding: 25px 28px; border: 1px solid #d3a650; border-radius: 12px; background: var(--green); color: white; box-shadow: 0 18px 60px rgba(0,0,0,.28); font-size: 18px; font-weight: 600; line-height: 1.6; text-align: center; overflow-wrap: anywhere; opacity: 0; pointer-events: none; transform: translate(-50%, -50%) scale(.96); transition: opacity .2s, transform .2s; }
+    .toast.show { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    @media (prefers-reduced-motion: reduce) { .toast { transition: none; } }
+    @media (max-width: 900px) {
+      .utility-inner, .store-tools, .main-nav-row, .page-container, .footer .container { width: calc(100% - 36px); }
+      .nav-dropdown { flex-basis: 215px; }
+      .nav-links > a { padding: 0 9px; font-size: 11px; }
+      .nav-contact { gap: 9px; padding-left: 8px; font-size: 9px; }
+      .product-detail { gap: 30px; }
+      .related-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .footer-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 650px) {
+      .utility-inner { width: calc(100% - 28px); min-height: 27px; justify-content: center; font-size: 9px; }
+      .utility-links { display: none; }
+      .store-tools { width: calc(100% - 28px); min-height: 70px; gap: 10px; }
+      .brand { gap: 6px; }
+      .brand-logo { width: 49px; height: 49px; }
+      .brand-title strong { font-size: 14px; }
+      .brand-title small { font-size: 7px; letter-spacing: .08em; }
+      .store-search { height: 37px; }
+      .store-search input { padding: 0 10px; font-size: 10px; }
+      .store-search button { width: 36px; flex-basis: 36px; }
+      .main-nav-row { position: relative; width: 100%; min-height: 47px; padding: 0 14px; }
+      .menu-toggle { display: inline-grid; width: 45px; flex: 0 0 45px; place-items: center; padding: 0; background: transparent; color: white; font-size: 19px; }
+      .nav-dropdown { flex: 1 1 auto; min-width: 0; }
+      .category-toggle { min-height: 47px; padding: 0 12px; }
+      .category-menu-icon { display: none; }
+      .nav-links { position: absolute; top: 100%; right: 0; left: 0; display: none; flex: none; align-items: stretch; padding: 6px 14px 12px; border-bottom: 1px solid var(--line); background: #fdf9ed; box-shadow: 0 10px 18px rgba(24,45,32,.12); }
+      .nav-links.open { display: flex; flex-direction: column; }
+      .nav-links > a { min-height: 43px; padding: 0 10px; border-bottom: 1px solid var(--line); color: var(--green); font-size: 13px; }
+      .nav-contact { display: none; }
+      .dropdown-panel { width: min(345px, calc(100vw - 75px)); padding: 7px; }
+      .dropdown-link { padding: 11px 9px; }
+      .page-container { width: calc(100% - 36px); padding: 36px 0 54px; }
+      .product-detail { grid-template-columns: 1fr; gap: 26px; }
+      .detail-image img { aspect-ratio: 1 / .88; }
+      .detail-copy { padding: 0 2px; }
+      .description { margin-bottom: 22px; padding: 16px 17px; font-size: 15px; line-height: 1.9; }
+      .long-description { margin-top: 36px; padding: 23px 18px 19px 21px; border-radius: 10px; }
+      .long-description-heading { display: block; padding-bottom: 17px; }
+      .long-description-heading-main { gap: 7px; }
+      .long-description h2 { font-size: 29px; }
+      .long-description-heading .long-description-subtitle { max-width: none; margin-top: 8px; font-size: 10px; text-align: left; }
+      .long-description-copy { margin-top: 16px; padding: 16px 16px 16px 18px; }
+      .long-description-copy::before { top: 15px; bottom: 15px; }
+      .long-description p { font-size: 14px; line-height: 1.9; }
+      .detail-actions { gap: 8px; }
+      .product-action { min-height: 46px; padding: 7px 8px; font-size: 11px; }
+      .related { margin-top: 53px; }
+      .related-heading { font-size: 26px; }
+      .related-grid { gap: 20px 13px; }
+      .related-card h2 { font-size: 15px; }
+      .footer .container { width: calc(100% - 36px); }
+      .footer-grid { grid-template-columns: 1fr 1fr; gap: 30px 20px; }
+      .footer-about { grid-column: 1 / -1; }
+      .footer-about .brand-logo { width: 120px; height: 120px; }
+      .copyright { flex-direction: column; gap: 8px; }
+    }
+    @media (max-width: 380px) {
+      .brand-title { display: none; }
+      .store-tools { gap: 8px; }
+      .store-search { min-width: 0; }
+    }
+  </style>
+  <link rel="stylesheet" href="site-menu.css">
+  <link rel="stylesheet" href="site-content.css">
+</head>
+<body>
+  <header class="header">
+    <div class="utility-bar"><div class="utility-inner"><span>GẠO MỚI MỖI NGÀY · GIAO HÀNG TẬN NHÀ</span><div class="utility-links"><span>Hotline: <strong>0901 234 567</strong></span><a href="index.html#cau-chuyen">Giới thiệu</a></div></div></div>
+    <div class="store-tools">
+      <a class="brand" href="index.html" aria-label="Gạo Thiên Mạnh - Trang chủ"><img class="brand-logo" src="logo.png" alt="Gạo Thiên Mạnh"><span class="brand-title"><strong>Gạo Thiên Mạnh</strong><small>Gạo ngon · Cơm lành</small></span></a>
+      <form class="store-search" id="productSearchForm" action="gao.html" method="get" role="search"><input id="productSearchInput" name="search" type="search" aria-label="Tìm gạo" placeholder="Tìm loại gạo bạn yêu thích..." autocomplete="off"><button type="submit" aria-label="Tìm kiếm"><svg class="search-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"></circle><path d="m16 16 5 5"></path></svg></button></form>
+      <div class="store-actions"><a class="icon-button" id="cartButton" href="gio-hang.html" aria-label="Giỏ hàng" title="Giỏ hàng"><svg class="cart-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h14l1 13H4L5 8Z"></path><path d="M9 9V6a3 3 0 0 1 6 0v3"></path></svg><span class="cart-count" id="cartCount">0</span></a></div>
+    </div>
+    <div class="main-nav-band"><div class="main-nav-row">
+      <button class="icon-button menu-toggle" id="menuToggle" aria-label="Mở menu" aria-expanded="false" type="button">☰</button>
+      <div class="nav-dropdown" id="riceDropdown">
+        <button class="category-toggle" id="riceDropdownToggle" aria-expanded="false" aria-controls="riceDropdownPanel" type="button"><span class="category-label"><span class="category-menu-icon" aria-hidden="true">☰</span>Danh mục gạo ngon</span><svg class="dropdown-chevron" viewBox="0 0 12 12" aria-hidden="true"><path d="m2 4 4 4 4-4"></path></svg></button>
+        <div class="dropdown-panel" id="riceDropdownPanel" aria-label="Danh mục gạo"><div class="dropdown-heading">Chọn gạo theo khẩu vị</div></div>
+      </div>
+      <nav class="nav-links" id="navLinks" aria-label="Điều hướng chính"><a href="index.html">Trang chủ</a><a href="gao.html" aria-current="page">Đặt gạo</a><a href="index.html#cau-chuyen">Về chúng tôi</a><a href="bai-viet-danh-sach.html">Bài viết</a><a href="index.html#lien-he">Liên hệ</a></nav>
+      <div class="nav-contact"><a href="mailto:hello@nhamua.vn"><span aria-hidden="true">✉</span> EMAIL</a><a href="tel:0901234567"><span aria-hidden="true">☎</span> HOTLINE: 0901 234 567</a></div>
+    </div></div>
+  </header>
+  <main class="page-container">
+    <div class="breadcrumb"><a href="index.html">Trang chủ</a> &nbsp;›&nbsp; <a href="gao.html">Danh mục gạo ngon</a> &nbsp;›&nbsp; <span id="breadcrumbProduct">Chi tiết sản phẩm</span></div>
+    <section id="productDetails" aria-live="polite"></section>
+    <section class="related" id="relatedSection" hidden>
+      <h2 class="related-heading">Có thể bạn cũng thích</h2>
+      <div class="related-grid" id="relatedProducts"></div>
+    </section>
+  </main>
+  <footer class="footer" id="lien-he">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-about"><a class="brand" href="index.html" aria-label="Gạo Thiên Mạnh - Trang chủ"><img class="brand-logo" src="logo.png" alt="Gạo Thiên Mạnh"></a><p>Gạo ngon tuyển chọn từ những mùa vàng Việt Nam. Gửi đến nhà bạn hạt gạo lành, thơm vị quê hương.</p></div>
+        <div><h4>Khám phá</h4><div class="footer-links"><a href="gao.html">Danh mục gạo ngon</a><a href="index.html#cau-chuyen">Về chúng tôi</a><a href="bai-viet-danh-sach.html">Bài viết</a><a href="index.html#cam-nang">Chính sách đổi trả</a></div></div>
+        <div><h4>Hỗ trợ</h4><div class="footer-links"><a href="index.html#lien-he">Hướng dẫn mua hàng</a><a href="index.html#lien-he">Vận chuyển & giao hàng</a><a href="index.html#lien-he">Câu hỏi thường gặp</a><a href="mailto:hello@nhamua.vn">Liên hệ với Gạo Thiên Mạnh</a><a href="admin.html">Quản lý sản phẩm</a><a href="admin-blog.html">Quản lý bài viết</a></div></div>
+        <div class="footer-contact"><h4>Ghé thăm Gạo Thiên Mạnh</h4><span>☎ &nbsp; 0901 234 567</span><span>✉ &nbsp; hello@nhamua.vn</span><span>⌖ &nbsp; Quận 3, TP. Hồ Chí Minh</span><span>Thứ 2 – Thứ 7 · 8:00 – 18:00</span></div>
+      </div>
+      <div class="copyright"><span>© 2025 Gạo Thiên Mạnh. Gạo ngon, cơm lành.</span><span>Chăm chút từ hạt gạo, thương nhau từ bữa cơm.</span></div>
+    </div>
+  </footer>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="products.js"></script>
+  <script src="cart.js"></script>
+  <script>
+    const productDetails = document.getElementById("productDetails");
+    const relatedSection = document.getElementById("relatedSection");
+    const relatedProducts = document.getElementById("relatedProducts");
+    const breadcrumbProduct = document.getElementById("breadcrumbProduct");
+    const cartCount = document.getElementById("cartCount");
+    const toast = document.getElementById("toast");
+    const riceDropdown = document.getElementById("riceDropdown");
+    const riceDropdownToggle = document.getElementById("riceDropdownToggle");
+    const riceDropdownPanel = document.getElementById("riceDropdownPanel");
+    const navLinks = document.getElementById("navLinks");
+    const menuToggle = document.getElementById("menuToggle");
+    let products = [];
+    let toastTimer;
+    let galleryTimer = 0;
+    let galleryAdvance = null;
+
+    function stopGalleryTimer() {
+      window.clearInterval(galleryTimer);
+      galleryTimer = 0;
+    }
+
+    function startGalleryTimer() {
+      stopGalleryTimer();
+      if (galleryAdvance && document.visibilityState === "visible") {
+        galleryTimer = window.setInterval(galleryAdvance, 3000);
+      }
+    }
+
+    function textElement(tag, className, text) {
+      const element = document.createElement(tag);
+      if (className) element.className = className;
+      element.textContent = text;
+      return element;
+    }
+
+    function notify(message) {
+      toast.textContent = message;
+      toast.classList.add("show");
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toast.classList.remove("show"), 3500);
+    }
+
+    function updateCartCount() {
+      try {
+        cartCount.textContent = String(RiceCart.getItemCount());
+      } catch (error) {
+        console.error("Không thể đọc số lượng giỏ hàng.", error);
+        cartCount.textContent = "!";
+      }
+    }
+
+    function renderProductMenu() {
+      if (riceDropdownPanel.dataset.managed) return;
+      riceDropdownPanel.querySelectorAll(".dropdown-link").forEach((link) => link.remove());
+      products.forEach((product) => {
+        const link = document.createElement("a");
+        link.className = "dropdown-link";
+        link.href = `chi-tiet-gao.html?id=${encodeURIComponent(product.id)}`;
+        const details = document.createElement("span");
+        details.append(textElement("strong", "", product.name), textElement("small", "", product.origin));
+        link.append(details, textElement("span", "dropdown-arrow", "→"));
+        riceDropdownPanel.append(link);
+      });
+      riceDropdownToggle.hidden = products.length === 0;
+    }
+
+    function renderRelated(currentProduct) {
+      relatedProducts.replaceChildren();
+      products.filter((product) => product.id !== currentProduct.id).slice(0, 4).forEach((product) => {
+        const link = document.createElement("a");
+        link.className = "related-card";
+        link.href = `chi-tiet-gao.html?id=${encodeURIComponent(product.id)}`;
+        const image = document.createElement("img");
+        image.src = product.image;
+        image.alt = product.alt || product.name;
+        image.loading = "lazy";
+        link.append(image, textElement("h2", "", product.name), textElement("p", "", `${product.price.toLocaleString("vi-VN")}đ / kg`));
+        relatedProducts.append(link);
+      });
+      relatedSection.hidden = relatedProducts.childElementCount === 0;
+    }
+
+    function renderNotFound(message) {
+      productDetails.replaceChildren();
+      const state = document.createElement("div");
+      state.className = "not-found";
+      state.append(
+        textElement("span", "eyebrow", "Danh mục gạo ngon"),
+        textElement("h1", "", "Không tìm thấy sản phẩm"),
+        textElement("p", "", message)
+      );
+      const back = textElement("a", "back-link", "Xem danh sách gạo");
+      back.href = "gao.html";
+      state.append(back);
+      productDetails.append(state);
+      breadcrumbProduct.textContent = "Không tìm thấy sản phẩm";
+      relatedSection.hidden = true;
+      document.title = "Không tìm thấy sản phẩm — Gạo Thiên Mạnh";
+    }
+
+    function renderProduct() {
+      stopGalleryTimer();
+      galleryAdvance = null;
+      const productId = new URLSearchParams(location.search).get("id");
+      const product = products.find((item) => item.id === productId);
+      if (!product) {
+        renderNotFound(productId ? "Sản phẩm này có thể đã được gỡ khỏi danh mục." : "Hãy chọn một sản phẩm trong danh mục gạo để xem thông tin chi tiết.");
+        return;
+      }
+
+      breadcrumbProduct.textContent = product.name;
+      productDetails.replaceChildren();
+      const layout = document.createElement("div");
+      layout.className = "product-detail";
+      const imageWrap = document.createElement("div");
+      imageWrap.className = "detail-gallery";
+      const imageFrame = document.createElement("div");
+      imageFrame.className = "detail-image";
+      const galleryImages = [product.image, ...(Array.isArray(product.gallery) ? product.gallery : [])];
+      const image = document.createElement("img");
+      image.src = product.image;
+      image.alt = product.alt || product.name;
+      image.fetchPriority = "high";
+      const zoomableImage = textElement("button", "detail-gallery-image", "");
+      zoomableImage.type = "button";
+      zoomableImage.setAttribute("aria-label", `Phóng to ảnh ${product.alt || product.name}`);
+      zoomableImage.append(image);
+      zoomableImage.addEventListener("click", () => {
+        imageFrame.classList.toggle("zoomed");
+        const isZoomed = imageFrame.classList.contains("zoomed");
+        zoomableImage.setAttribute("aria-label", isZoomed ? "Thu nhỏ ảnh sản phẩm" : `Phóng to ảnh ${product.alt || product.name}`);
+      });
+      imageFrame.append(zoomableImage);
+      imageFrame.append(textElement("span", "image-zoom-hint", "Nhấn ảnh để phóng to"));
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") imageFrame.classList.remove("zoomed");
+      }, { once: true });
+      if (product.tag) imageFrame.append(textElement("span", "tag", product.tag));
+      if (galleryImages.length > 1) {
+        let activeImageIndex = 0;
+        const thumbnails = document.createElement("div");
+        thumbnails.className = "gallery-thumbnails";
+        thumbnails.setAttribute("aria-label", "Chọn ảnh sản phẩm");
+        const counter = textElement("span", "gallery-count", `1 / ${galleryImages.length}`);
+        const thumbnailButtons = galleryImages.map((source, index) => {
+          const thumbnail = document.createElement("button");
+          thumbnail.className = "gallery-thumbnail";
+          thumbnail.type = "button";
+          thumbnail.setAttribute("aria-label", `Xem ảnh ${index + 1} của ${product.name}`);
+          thumbnail.setAttribute("aria-current", index === 0 ? "true" : "false");
+          const thumbnailImage = document.createElement("img");
+          thumbnailImage.src = source;
+          thumbnailImage.alt = "";
+          thumbnail.append(thumbnailImage);
+          thumbnail.addEventListener("click", () => showGalleryImage(index));
+          thumbnails.append(thumbnail);
+          return thumbnail;
+        });
+        function showGalleryImage(index) {
+          activeImageIndex = (index + galleryImages.length) % galleryImages.length;
+          image.src = galleryImages[activeImageIndex];
+          image.alt = `${product.alt || product.name} — ảnh ${activeImageIndex + 1}`;
+          zoomableImage.setAttribute("aria-label", `Phóng to ${image.alt}`);
+          counter.textContent = `${activeImageIndex + 1} / ${galleryImages.length}`;
+          thumbnailButtons.forEach((thumbnail, thumbnailIndex) => {
+            thumbnail.setAttribute("aria-current", thumbnailIndex === activeImageIndex ? "true" : "false");
+          });
+        }
+        galleryAdvance = () => showGalleryImage(activeImageIndex + 1);
+        startGalleryTimer();
+        imageFrame.addEventListener("mouseenter", stopGalleryTimer);
+        imageFrame.addEventListener("mouseleave", startGalleryTimer);
+        imageFrame.addEventListener("focusin", stopGalleryTimer);
+        imageFrame.addEventListener("focusout", (event) => {
+          if (!imageFrame.contains(event.relatedTarget)) startGalleryTimer();
+        });
+        [["previous", "‹", -1], ["next", "›", 1]].forEach(([direction, label, offset]) => {
+          const arrow = textElement("button", `gallery-arrow ${direction}`, label);
+          arrow.type = "button";
+          arrow.setAttribute("aria-label", direction === "previous" ? "Xem ảnh trước" : "Xem ảnh tiếp theo");
+          arrow.addEventListener("click", () => {
+            showGalleryImage(activeImageIndex + offset);
+            startGalleryTimer();
+          });
+          imageFrame.append(arrow);
+        });
+        thumbnails.addEventListener("click", () => {
+          startGalleryTimer();
+        });
+        imageFrame.append(counter);
+        imageWrap.append(imageFrame, thumbnails);
+      } else {
+        imageWrap.append(imageFrame);
+      }
+
+      const copy = document.createElement("div");
+      copy.className = "detail-copy";
+      copy.append(textElement("span", "eyebrow", "Gạo ngon nhà chọn"));
+      copy.append(textElement("h1", "", product.name));
+      copy.append(textElement("p", "origin", product.origin));
+      const rating = document.createElement("div");
+      rating.className = "rating";
+      rating.append(document.createTextNode(`${"★".repeat(product.rating || 5)}${"☆".repeat(5 - (product.rating || 5))}`));
+      if (product.reviews) rating.append(textElement("span", "", `(${product.reviews} đánh giá)`));
+      copy.append(rating);
+      const price = textElement("p", "price", `${product.price.toLocaleString("vi-VN")}đ`);
+      price.append(textElement("small", "", " / kg"));
+      copy.append(price);
+      const description = product.description.trim() || `${product.name} được tuyển chọn kỹ lưỡng từ ${product.origin}. Hạt gạo thơm ngon, phù hợp để chuẩn bị những bữa cơm ấm áp cho gia đình.`;
+      const descriptionContent = textElement("div", "description", "");
+      descriptionContent.innerHTML = RiceCatalog.sanitizeRichText(description);
+      copy.append(descriptionContent);
+      copy.append(textElement("p", product.stock === 0 ? "stock-status out-of-stock" : "stock-status", RiceCatalog.getAvailabilityLabel(product)));
+
+      const actions = document.createElement("div");
+      actions.className = "detail-actions";
+      const quantityLimit = product.stock === undefined || product.stock === null ? 99 : Math.min(99, product.stock);
+      const quantityField = document.createElement("div");
+      quantityField.className = "detail-quantity";
+      const quantityLabel = textElement("label", "", "Số lượng");
+      quantityLabel.htmlFor = "productQuantity";
+      const quantityPicker = document.createElement("div");
+      quantityPicker.className = "quantity-picker";
+      const decreaseQuantity = textElement("button", "", "−");
+      decreaseQuantity.type = "button";
+      decreaseQuantity.setAttribute("aria-label", "Giảm số lượng");
+      const quantityInput = document.createElement("input");
+      quantityInput.id = "productQuantity";
+      quantityInput.type = "number";
+      quantityInput.min = "1";
+      quantityInput.max = String(Math.max(1, quantityLimit));
+      quantityInput.disabled = product.stock === 0;
+      quantityInput.step = "1";
+      quantityInput.value = "1";
+      quantityInput.inputMode = "numeric";
+      quantityInput.setAttribute("aria-label", `Số kg ${product.name}`);
+      const increaseQuantity = textElement("button", "", "+");
+      increaseQuantity.type = "button";
+      increaseQuantity.setAttribute("aria-label", "Tăng số lượng");
+      decreaseQuantity.disabled = product.stock === 0;
+      increaseQuantity.disabled = product.stock === 0;
+      const quantityUnit = textElement("span", "quantity-unit", "kg");
+      quantityPicker.append(decreaseQuantity, quantityInput, increaseQuantity, quantityUnit);
+      quantityField.append(quantityLabel, quantityPicker);
+      copy.append(quantityField);
+      decreaseQuantity.addEventListener("click", () => {
+        const quantity = Number(quantityInput.value);
+        quantityInput.value = String(Math.max(1, (Number.isSafeInteger(quantity) ? quantity : 1) - 1));
+      });
+      increaseQuantity.addEventListener("click", () => {
+        const quantity = Number(quantityInput.value);
+        quantityInput.value = String(Math.min(quantityLimit, (Number.isSafeInteger(quantity) ? quantity : 0) + 1));
+      });
+      function addCurrentProductToCart() {
+        const quantity = Number(quantityInput.value);
+        if (!Number.isSafeInteger(quantity) || quantity < 1 || quantity > quantityLimit) {
+          quantityInput.focus();
+          throw new RangeError(product.stock === 0 ? "Sản phẩm đã hết hàng." : !Number.isSafeInteger(quantity) || quantity < 1 || quantity > 99 ? "Vui lòng chọn số lượng từ 1 đến 99 kg." : "Số lượng vượt quá tồn kho. Vui lòng giảm số lượng.");
+        }
+        RiceCart.addItem(product.id, quantity);
+        updateCartCount();
+      }
+      const addButton = textElement("button", "product-action quick-add", "Thêm vào giỏ hàng");
+      addButton.type = "button";
+      addButton.dataset.productId = product.id;
+      addButton.disabled = product.stock === 0;
+      if (product.stock === 0) addButton.textContent = "Hết hàng";
+      addButton.addEventListener("click", () => {
+        try {
+          addCurrentProductToCart();
+          notify(`${product.name} đã được thêm vào giỏ.`);
+        } catch (error) {
+          console.error("Không thể thêm sản phẩm vào giỏ.", error);
+          notify(error.message || "Không thể thêm sản phẩm vào giỏ.");
+        }
+      });
+      const buyButton = textElement("a", "product-action buy-now", "Mua ngay");
+      buyButton.href = "gio-hang.html";
+      buyButton.setAttribute("aria-label", `Thêm ${product.name} vào giỏ và tiếp tục đặt hàng`);
+      if (product.stock === 0) {
+        buyButton.setAttribute("aria-disabled", "true");
+        buyButton.removeAttribute("href");
+        buyButton.tabIndex = -1;
+      }
+      buyButton.addEventListener("click", (event) => {
+        event.preventDefault();
+        try {
+          addCurrentProductToCart();
+          location.href = buyButton.href;
+        } catch (error) {
+          console.error("Không thể bắt đầu đặt hàng.", error);
+          notify(error.message || "Không thể bắt đầu đặt hàng.");
+        }
+      });
+      actions.append(addButton, buyButton);
+      copy.append(actions);
+
+      const benefits = document.createElement("div");
+      benefits.className = "detail-benefits";
+      benefits.append(
+        textElement("span", "", "Gạo được tuyển chọn, rõ nguồn gốc"),
+        textElement("span", "", "Đóng gói sạch, giao hàng tận nhà"),
+        textElement("span", "", "Liên hệ trực tiếp để được tư vấn đặt gạo")
+      );
+      copy.append(benefits);
+      layout.append(imageWrap, copy);
+      productDetails.append(layout);
+      if (product.details && product.details.trim()) {
+        const detailsSection = document.createElement("section");
+        detailsSection.className = "long-description";
+        detailsSection.setAttribute("aria-labelledby", "longDescriptionTitle");
+        const detailsHeading = document.createElement("div");
+        detailsHeading.className = "long-description-heading";
+        const detailsHeadingMain = document.createElement("div");
+        detailsHeadingMain.className = "long-description-heading-main";
+        detailsHeadingMain.append(
+          textElement("span", "long-description-kicker", "Thông tin sản phẩm"),
+          textElement("h2", "", "Chi tiết sản phẩm")
+        );
+        detailsHeadingMain.querySelector("h2").id = "longDescriptionTitle";
+        detailsHeading.append(
+          detailsHeadingMain,
+          textElement("p", "long-description-subtitle", "Tìm hiểu thêm về đặc điểm và cách sử dụng sản phẩm.")
+        );
+        const detailsCopy = document.createElement("div");
+        detailsCopy.className = "long-description-copy";
+        detailsCopy.innerHTML = RiceCatalog.sanitizeRichText(product.details.trim());
+        detailsSection.append(detailsHeading, detailsCopy);
+        productDetails.append(detailsSection);
+      }
+      document.title = `${product.name} — Gạo Thiên Mạnh`;
+      document.querySelector('meta[name="description"]').content = `${product.name}, ${product.origin}. Xem giá bán và liên hệ Gạo Thiên Mạnh để đặt gạo giao tận nhà.`;
+      renderRelated(product);
+    }
+
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "hidden") stopGalleryTimer();
+      else startGalleryTimer();
+    });
+
+    document.getElementById("productSearchForm").addEventListener("submit", (event) => {
+      event.preventDefault();
+      const query = document.getElementById("productSearchInput").value.trim();
+      const destination = new URL("gao.html", location.href);
+      if (query) destination.searchParams.set("search", query);
+      location.href = destination;
+    });
+
+    riceDropdownToggle.addEventListener("click", () => {
+      const isOpen = riceDropdown.classList.toggle("open");
+      riceDropdownToggle.setAttribute("aria-expanded", String(isOpen));
+    });
+    document.addEventListener("click", (event) => {
+      if (!riceDropdown.contains(event.target)) {
+        riceDropdown.classList.remove("open");
+        riceDropdownToggle.setAttribute("aria-expanded", "false");
+      }
+    });
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && riceDropdown.classList.contains("open")) {
+        riceDropdown.classList.remove("open");
+        riceDropdownToggle.setAttribute("aria-expanded", "false");
+        riceDropdownToggle.focus();
+      }
+    });
+    menuToggle.addEventListener("click", () => {
+      const isOpen = navLinks.classList.toggle("open");
+      menuToggle.setAttribute("aria-expanded", String(isOpen));
+      menuToggle.setAttribute("aria-label", isOpen ? "Đóng menu" : "Mở menu");
+      menuToggle.textContent = isOpen ? "×" : "☰";
+    });
+    navLinks.querySelectorAll("a").forEach((link) => {
+      link.addEventListener("click", () => {
+        navLinks.classList.remove("open");
+        menuToggle.setAttribute("aria-expanded", "false");
+        menuToggle.setAttribute("aria-label", "Mở menu");
+        menuToggle.textContent = "☰";
+      });
+    });
+    window.addEventListener("ricecartchange", updateCartCount);
+    window.addEventListener("storage", (event) => {
+      if (event.key === RiceCart.storageKey) updateCartCount();
+      if (event.key !== RiceCatalog.storageKey) return;
+      try {
+        products = RiceCatalog.getProducts();
+        updateCartCount();
+        renderProductMenu();
+        renderProduct();
+      } catch (error) {
+        console.error("Không thể đồng bộ danh sách sản phẩm.", error);
+        renderNotFound("Danh sách gạo chưa thể cập nhật. Vui lòng tải lại trang.");
+      }
+    });
+
+    try {
+      products = RiceCatalog.getProducts();
+      renderProductMenu();
+      renderProduct();
+    } catch (error) {
+      console.error("Không thể đọc dữ liệu sản phẩm đã lưu.", error);
+      renderNotFound("Đã xảy ra lỗi khi tải sản phẩm. Vui lòng thử tải lại trang.");
+    }
+  </script>
+  <script src="vouchers.js"></script>
+  <script src="orders-api.js"></script>
+  <script src="store-sync.js"></script>
+  <script src="menu-model.js"></script>
+  <script src="site-content-model.js"></script><script src="site-content.js"></script>
+  <script src="categories-model.js"></script>
+  <script src="site-menu.js"></script>
+</body>
+</html>

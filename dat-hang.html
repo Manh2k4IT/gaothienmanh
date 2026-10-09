@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#173d2c">
+  <title>Thông tin đặt hàng — Gạo Thiên Mạnh</title>
+  <link rel="icon" href="logo.png">
+  <link rel="stylesheet" href="order-pages.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="checkout-brand.css">
+  <link rel="stylesheet" href="site-content.css">
+</head>
+<body class="checkout-page">
+  <div class="checkout-header">
+  <div class="store-topline">GẠO MỚI MỖI NGÀY · GIAO HÀNG TẬN NHÀ &nbsp; <strong>Hotline: 0901 234 567</strong></div>
+  <header class="shop-header"><a class="shop-brand" href="index.html" aria-label="Gạo Thiên Mạnh - Trang chủ"><img src="logo.png" alt=""><span><strong>Gạo Thiên Mạnh</strong><small>Gạo ngon · Cơm lành</small></span></a><a class="back-to-cart" href="gio-hang.html">← Quay lại giỏ hàng</a></header>
+  </div>
+  <main class="checkout">
+    <span class="eyebrow">Hoàn tất đơn hàng</span><h1>Thông tin giao hàng</h1>
+    <p class="intro">Nhập thông tin để cửa hàng liên hệ xác nhận đơn và phí giao hàng. Chưa thanh toán trực tuyến; gửi đơn chưa giữ chỗ hoặc trừ tồn kho.</p>
+    <div class="checkout-grid" id="checkoutContent">
+      <section class="panel"><h2>Thông tin khách hàng</h2>
+        <form id="checkoutForm">
+          <label>Họ và tên<input name="name" autocomplete="name" required minlength="2" maxlength="100" placeholder="Nhập họ và tên người nhận"></label>
+          <label>Số điện thoại<input name="phone" autocomplete="tel" type="tel" required maxlength="20" placeholder="Ví dụ: 0901 234 567"></label>
+          <label>Địa chỉ giao hàng<textarea name="address" autocomplete="street-address" required minlength="10" maxlength="500" rows="3" placeholder="Số nhà, đường, phường/xã, tỉnh/thành phố"></textarea></label>
+          <label>Ghi chú (không bắt buộc)<textarea name="note" maxlength="1000" rows="3" placeholder="Thời gian nhận hàng hoặc yêu cầu thêm"></textarea></label>
+          <label class="check-label"><input name="accepted" type="checkbox" required><span>Tôi xác nhận thông tin trên và đồng ý cung cấp cho cửa hàng để xử lý, liên hệ giao đơn này.</span></label>
+          <p class="message" id="formStatus" role="status" aria-live="polite"></p>
+          <button class="primary" id="submitOrder" disabled>Gửi đơn đặt hàng →</button>
+        </form>
+      </section>
+      <aside class="panel order-summary"><h2>Đơn hàng của bạn</h2><div id="items"></div><div class="summary-row"><span>Tạm tính</span><strong id="subtotal">—</strong></div><div class="summary-row"><span>Giảm giá <small id="voucherLabel"></small></span><strong id="discount">—</strong></div><div class="summary-row"><span>Phí giao hàng</span><strong>Chờ xác nhận</strong></div><div class="summary-row total"><span>Tổng tiền hàng</span><strong id="total">—</strong></div><button id="retryQuote" type="button" hidden>Thử lại</button><button id="dropVoucher" type="button" hidden>Bỏ voucher</button><p id="quoteStatus" class="message" role="status" hidden></p></aside>
+    </div>
+    <section class="panel success" id="success" hidden tabindex="-1"><span class="eyebrow">Đã gửi thành công</span><h2>Cảm ơn bạn đã đặt gạo!</h2><p id="receipt"></p><p>Cửa hàng đã nhận thông tin và sẽ liên hệ xác nhận đơn, phí giao hàng. Bạn chưa cần thanh toán tại bước này.</p><a class="button primary" href="index.html">Tiếp tục mua sắm</a></section>
+  </main>
+  <footer class="store-footer"><div class="store-footer-inner"><img class="store-footer-logo" src="logo.png" alt=""><div class="store-footer-copy"><strong>Gạo Thiên Mạnh</strong><p>Chăm chút từ hạt gạo, thương nhau từ bữa cơm.</p></div></div></footer>
+  <script src="products.js"></script><script src="cart.js"></script><script src="orders-api.js"></script><script src="checkout.js"></script>
+  <script src="menu-model.js"></script><script src="site-content-model.js"></script><script src="site-content.js"></script>
+</body>
+</html>

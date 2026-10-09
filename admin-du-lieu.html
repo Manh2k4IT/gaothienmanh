@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Dữ liệu cửa hàng — Gạo Thiên Mạnh</title>
+  <link rel="icon" href="logo.png">
+  <link rel="stylesheet" href="order-pages.css">
+</head>
+<body>
+  <header class="shop-header"><a class="shop-brand" href="admin.html"><img src="logo.png" alt=""><strong>Thiên Mạnh · Quản trị</strong></a><a href="admin-don-hang.html">← Quay lại đơn hàng</a></header>
+  <main class="checkout">
+    <span class="eyebrow">Công cụ quản trị</span><h1>Dữ liệu cửa hàng</h1>
+    <p class="intro">Các công cụ đăng sản phẩm, voucher và chuyển dữ liệu được tách riêng khỏi trang nhận đơn.</p>
+    <section class="panel" id="loginPanel" hidden><h2>Đăng nhập quản trị</h2><form id="loginForm"><label>Mật khẩu<input name="password" type="password" autocomplete="current-password" required maxlength="256"></label><button class="primary">Đăng nhập</button></form></section>
+    <p id="status" class="message" role="status" aria-live="polite"></p>
+    <section class="panel"><h2>Chuyển dữ liệu từ bản website cũ</h2><p class="intro">Mở trang này trên cổng 8001 hoặc bản tệp HTML để xuất sản phẩm, ảnh và voucher. Sau đó mở trang này trên cổng 8002 để nhập tệp. Không bao gồm thông tin khách hoặc đơn hàng.</p><div class="toolbar"><button id="exportDraft" type="button">Xuất bản nháp sản phẩm & voucher</button><label>Nhập tệp và đăng lên máy chủ<input id="importDraft" type="file" accept=".json,application/json" disabled></label></div></section>
+    <section class="panel" id="dataContent" hidden><h2>Dữ liệu bán hàng trên máy chủ</h2><p class="intro">Sau khi chỉnh Sản phẩm hoặc Voucher, đăng bản nháp lên máy chủ để khách thấy dữ liệu mới. Khi dùng thiết bị quản trị khác, tải dữ liệu máy chủ về trước khi sửa. Bài viết chưa được đồng bộ bằng công cụ này.</p><div class="toolbar"><button id="publish" type="button">Đăng dữ liệu lên máy chủ</button><button id="download" type="button">Tải dữ liệu về trình chỉnh sửa</button><button id="logout" type="button">Đăng xuất</button></div></section>
+  </main>
+  <script src="products.js"></script><script src="vouchers.js"></script><script src="orders-api.js"></script><script src="admin-data.js"></script>
+</body>
+</html>

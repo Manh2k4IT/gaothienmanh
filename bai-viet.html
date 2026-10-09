@@ -1,0 +1,362 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#173d2c">
+  <meta name="description" content="Góc bếp và những câu chuyện về hạt gạo Việt từ Gạo Thiên Mạnh.">
+  <title>Bài viết — Gạo Thiên Mạnh</title>
+  <script src="seo.js"></script>
+  <link rel="icon" type="image/png" href="logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root { --green: #173d2c; --cream: #f8f6ef; --paper: #fffefa; --gold: #d3a650; --ink: #233329; --muted: #748075; --line: #e8e7dc; --serif: "Playfair Display", Georgia, serif; --sans: "DM Sans", Arial, sans-serif; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--sans); -webkit-font-smoothing: antialiased; }
+    a { color: inherit; text-decoration: none; }
+    button { color: inherit; font: inherit; }
+    .header { position: sticky; top: 0; z-index: 20; background: #fdf9ed; box-shadow: 0 3px 14px rgba(24,45,32,.08); }
+    .utility-bar { background: #122f22; color: rgba(255,255,255,.83); font-size: 10px; }
+    .utility-inner { display: flex; width: min(1180px, calc(100% - 48px)); min-height: 29px; align-items: center; justify-content: space-between; gap: 20px; margin: auto; }
+    .utility-inner strong { color: #edca78; font-weight: 700; }
+    .utility-links { display: flex; gap: 19px; }
+    .utility-links a:hover { color: #edca78; }
+    .store-tools { display: flex; width: min(1180px, calc(100% - 48px)); min-height: 78px; align-items: center; justify-content: space-between; gap: 34px; margin: auto; }
+    .brand { display: inline-flex; flex-shrink: 0; align-items: center; gap: 10px; }
+    .brand-logo { display: block; width: 66px; height: 66px; object-fit: contain; }
+    .brand-title { display: grid; gap: 3px; color: var(--green); }
+    .brand-title strong { font-family: var(--serif); font-size: 19px; font-weight: 600; }
+    .brand-title small { color: #8b7955; font-size: 9px; letter-spacing: .12em; text-transform: uppercase; }
+    .store-search { display: flex; flex: 1; max-width: 610px; min-width: 120px; height: 42px; overflow: hidden; border: 1px solid #dedbd1; border-radius: 24px; background: #fff; }
+    .store-search input { flex: 1; min-width: 0; padding: 0 16px; border: 0; outline: none; background: transparent; color: var(--ink); font: inherit; font-size: 12px; }
+    .store-search input::placeholder { color: #92968d; }
+    .store-search button { display: grid; width: 46px; flex: 0 0 46px; place-items: center; border: 0; background: transparent; color: var(--green); cursor: pointer; }
+    .store-search button:hover { background: #f2eee3; }
+    .search-icon { width: 19px; height: 19px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-width: 1.8; }
+    .store-actions { display: flex; align-items: center; gap: 12px; }
+    .main-nav-band { background: var(--green); color: #fffefa; }
+    .main-nav-row { display: flex; width: min(1180px, calc(100% - 48px)); min-height: 49px; align-items: stretch; gap: 0; margin: auto; }
+    .main-nav-row > .nav-dropdown { flex: 0 0 248px; }
+    .category-toggle { display: inline-flex; width: 100%; height: 100%; min-height: 49px; align-items: center; justify-content: space-between; gap: 13px; padding: 0 17px; border: 0; background: #24543b; color: #fffefa; font-size: 13px; font-weight: 700; letter-spacing: .025em; text-transform: uppercase; cursor: pointer; }
+    .category-toggle:hover, .nav-dropdown.open .category-toggle { background: #2c6245; }
+    .category-label { display: inline-flex; align-items: center; gap: 11px; }
+    .category-menu-icon { font-size: 17px; line-height: 1; }
+    .nav-links { display: flex; flex: 1; align-items: stretch; gap: 0; font-size: 13px; font-weight: 600; }
+    .nav-links > a, .dropdown-link { transition: color .2s, background .2s; }
+    .nav-links > a { display: inline-flex; align-items: center; padding: 0 12px; color: rgba(255,255,255,.9); letter-spacing: .025em; text-transform: uppercase; }
+    .nav-links > a:hover, .nav-links > a[aria-current="page"] { background: #24543b; color: #f0d18e; }
+    .nav-contact { display: flex; align-items: center; gap: 17px; margin-left: auto; padding-left: 14px; color: rgba(255,255,255,.87); font-size: 11px; white-space: nowrap; }
+    .nav-contact a:hover { color: #f0d18e; }
+    .nav-contact span { color: #edca78; }
+    .nav-dropdown { position: relative; }
+    .dropdown-trigger { display: inline-flex; width: 100%; height: 100%; align-items: center; justify-content: space-between; gap: 9px; padding: 0; border: 0; background: transparent; color: inherit; font-size: inherit; font-weight: inherit; letter-spacing: inherit; text-transform: inherit; cursor: pointer; }
+    .dropdown-trigger:focus-visible, .dropdown-link:focus-visible { outline: 2px solid #edca78; outline-offset: -3px; }
+    .dropdown-chevron { width: 12px; height: 12px; flex: 0 0 auto; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.7; transition: transform .2s; }
+    .nav-dropdown.open .dropdown-chevron { transform: rotate(180deg); }
+    .dropdown-panel { position: absolute; top: calc(100% + 1px); left: 0; z-index: 30; width: 345px; padding: 12px; border: 1px solid #d8d2c0; border-top: 3px solid var(--gold); border-radius: 0 0 7px 7px; background: var(--paper); box-shadow: 0 18px 44px rgba(25,45,32,.18); opacity: 0; visibility: hidden; transform: translateY(8px); transition: opacity .18s, transform .18s; }
+    .dropdown-panel::before { position: absolute; top: -5px; right: 0; left: 0; height: 5px; content: ""; }
+    .nav-dropdown.open .dropdown-panel { opacity: 1; visibility: visible; transform: translateY(0); }
+    .dropdown-heading { padding: 11px 12px 10px; border-bottom: 1px solid #e9e4d7; color: #846320; font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+    .dropdown-link { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 13px 12px; border-bottom: 1px solid #efede5; border-radius: 3px; }
+    .dropdown-link:last-child { border-bottom: 0; }
+    .dropdown-link:hover, .dropdown-link:focus-visible { background: var(--cream); }
+    .dropdown-link strong { display: block; margin-bottom: 5px; color: var(--green); font-size: 14px; font-weight: 700; }
+    .dropdown-link small { display: block; color: #69736a; font-size: 12px; font-weight: 400; line-height: 1.5; }
+    .dropdown-arrow { flex: 0 0 auto; color: #a27b32; font-size: 18px; }
+    .nav-actions { display: flex; align-items: center; gap: 15px; }
+    .icon-button { position: relative; padding: 8px; border: 0; background: transparent; cursor: pointer; }
+    .cart-icon { display: block; width: 22px; height: 22px; fill: none; stroke: var(--green); stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.65; }
+    .cart-count { position: absolute; top: 0; right: -2px; display: grid; width: 17px; height: 17px; place-items: center; border-radius: 50%; background: var(--gold); color: var(--green); font-size: 10px; font-weight: 700; }
+    .menu-toggle { display: none; font-size: 19px; }
+    .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; clip-path: inset(50%); }
+    .article-container { width: min(790px, calc(100% - 40px)); min-height: 64vh; margin: auto; padding: 52px 0 74px; }
+    .back-link { color: #846320; font-size: 11px; font-weight: 700; }
+    .article-meta { margin: 27px 0 12px; color: #98722d; font-size: 10px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+    h1 { margin: 0 0 15px; color: var(--green); font-family: var(--serif); font-size: clamp(35px, 6vw, 54px); font-weight: 500; letter-spacing: -.03em; line-height: 1.15; }
+    .summary { margin: 0 0 24px; color: #667168; font-size: 15px; line-height: 1.8; }
+    .cover { width: 100%; max-height: 430px; margin: 27px 0 36px; border-radius: 4px; background: var(--cream); object-fit: cover; }
+    .article-content { color: #39473d; font-size: 15px; line-height: 1.95; }
+    .article-content p { margin: 0 0 20px; }
+    .article-content h2, .article-content h3 { margin: 30px 0 12px; color: var(--green); font-family: var(--serif); font-weight: 600; line-height: 1.35; }
+    .article-content h2 { font-size: 27px; }
+    .article-content h3 { font-size: 22px; }
+    .article-content ul, .article-content ol { margin: 0 0 20px; padding-left: 25px; }
+    .article-content blockquote { margin: 22px 0; padding: 13px 18px; border-left: 3px solid var(--gold); background: var(--cream); color: #5c675e; }
+    .article-content a { color: #846320; text-decoration: underline; text-underline-offset: 2px; }
+    .article-content img { display: block; width: auto; max-width: 100%; max-height: 560px; margin: 26px auto; border-radius: 4px; object-fit: contain; }
+    .table-of-contents { margin: 28px 0; padding: 20px 24px; border: 1px solid var(--line); border-left: 3px solid var(--gold); border-radius: 3px; background: var(--cream); }
+    .table-of-contents h2 { margin: 0 0 11px; color: var(--green); font-family: var(--serif); font-size: 19px; font-weight: 600; }
+    .table-of-contents ol { display: grid; gap: 8px; margin: 0; padding-left: 21px; color: #846320; }
+    .table-of-contents li { padding-left: 3px; }
+    .table-of-contents a { color: #435548; font-size: 13px; line-height: 1.6; text-decoration: none; }
+    .table-of-contents a:hover { color: #92702f; text-decoration: underline; text-underline-offset: 2px; }
+    .article-content [id] { scroll-margin-top: 100px; }
+    .not-found { padding: 60px 0; text-align: center; }
+    .not-found h1 { font-size: 36px; }
+    .not-found p { margin: 14px 0 22px; color: var(--muted); font-size: 13px; }
+    .footer { padding: 57px 0 25px; background: #122f22; color: #fffefa; }
+    .footer .container { width: min(1180px, calc(100% - 48px)); margin: auto; }
+    .footer-grid { display: grid; grid-template-columns: 1.5fr 1fr 1fr 1.2fr; gap: 45px; padding-bottom: 42px; }
+    .footer-about p { max-width: 270px; margin: 18px 0 0; color: rgba(255,255,255,.65); font-size: 11px; line-height: 1.8; }
+    .footer-about .brand-logo { width: 108px; height: 108px; }
+    .footer h4 { margin: 0 0 16px; color: #edca78; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; }
+    .footer-links { display: grid; gap: 11px; color: rgba(255,255,255,.72); font-size: 11px; }
+    .footer-links a:hover { color: #edca78; }
+    .footer-contact { display: grid; gap: 11px; color: rgba(255,255,255,.72); font-size: 11px; line-height: 1.6; }
+    .copyright { display: flex; justify-content: space-between; gap: 20px; padding-top: 19px; border-top: 1px solid rgba(255,255,255,.14); color: rgba(255,255,255,.48); font-size: 10px; }
+    @media (max-width: 900px) { .store-tools, .main-nav-row, .utility-inner { width: calc(100% - 36px); } .nav-links > a { padding: 0 10px; font-size: 10px; } .main-nav-row > .nav-dropdown { flex-basis: 215px; } .category-toggle { padding: 0 13px; } .nav-contact { gap: 10px; padding-left: 8px; font-size: 9px; } }
+    @media (max-width: 650px) {
+      .utility-inner { min-height: 27px; justify-content: center; font-size: 9px; }
+      .utility-links { display: none; }
+      .store-tools { width: calc(100% - 28px); min-height: 70px; gap: 10px; }
+      .brand { gap: 6px; }
+      .brand-logo { width: 49px; height: 49px; }
+      .brand-title strong { font-size: 14px; }
+      .brand-title small { font-size: 7px; letter-spacing: .08em; }
+      .store-search { height: 37px; }
+      .store-search input { padding: 0 10px; font-size: 10px; }
+      .store-search button { width: 36px; flex-basis: 36px; }
+      .store-actions { gap: 1px; }
+      .main-nav-row { position: relative; display: flex; width: 100%; min-height: 47px; padding: 0 14px; }
+      .menu-toggle { display: inline-grid; width: 45px; flex: 0 0 45px; place-items: center; padding: 0; background: transparent; color: white; }
+      .main-nav-row > .nav-dropdown { flex: 1 1 auto; min-width: 0; }
+      .category-toggle { min-height: 47px; padding: 0 12px; }
+      .category-menu-icon { display: none; }
+      .nav-links { position: absolute; top: 100%; right: 0; left: 0; display: none; flex: none; align-items: stretch; padding: 6px 14px 12px; border-bottom: 1px solid var(--line); background: #fdf9ed; box-shadow: 0 10px 18px rgba(24,45,32,.12); }
+      .nav-links.open { display: flex; flex-direction: column; }
+      .nav-links > a { min-height: 43px; padding: 0 10px; border-bottom: 1px solid var(--line); color: var(--green); font-size: 13px; }
+      .nav-links > a:hover, .nav-links > a[aria-current="page"] { background: #f5f0e3; color: #846320; }
+      .nav-contact { display: none; }
+      .dropdown-panel { position: absolute; top: calc(100% + 1px); left: 0; width: min(345px, calc(100vw - 75px)); padding: 7px; }
+      .dropdown-heading { padding: 10px 9px; }
+      .dropdown-link { padding: 11px 9px; }
+      .dropdown-link strong { font-size: 13px; }
+      .dropdown-link small { font-size: 11px; }
+      .article-container { padding: 38px 0 55px; }
+      .article-content, .summary { font-size: 14px; }
+      .footer .container { width: calc(100% - 36px); }
+      .footer-grid { grid-template-columns: 1fr 1fr; gap: 30px 20px; }
+      .footer-about { grid-column: 1 / -1; }
+      .footer-about .brand-logo { width: 120px; height: 120px; }
+      .copyright { flex-direction: column; gap: 8px; }
+    }
+    @media (max-width: 380px) {
+      .brand-title { display: none; }
+      .store-tools { gap: 8px; }
+      .store-search { min-width: 0; }
+    }
+  </style>
+  <link rel="stylesheet" href="site-menu.css">
+  <link rel="stylesheet" href="site-content.css">
+</head>
+<body>
+  <header class="header">
+    <div class="utility-bar"><div class="utility-inner"><span>GẠO MỚI MỖI NGÀY · GIAO HÀNG TẬN NHÀ</span><div class="utility-links"><span>Hotline: <strong>0901 234 567</strong></span><a href="index.html#cau-chuyen">Giới thiệu</a></div></div></div>
+    <div class="store-tools">
+      <a class="brand" href="index.html" aria-label="Gạo Thiên Mạnh - Trang chủ"><img class="brand-logo" src="logo.png" alt="Gạo Thiên Mạnh"><span class="brand-title"><strong>Gạo Thiên Mạnh</strong><small>Gạo ngon · Cơm lành</small></span></a>
+      <form class="store-search" action="gao.html" method="get" role="search"><input name="search" type="search" aria-label="Tìm gạo" placeholder="Tìm loại gạo bạn yêu thích..." autocomplete="off"><button type="submit" aria-label="Tìm kiếm"><svg class="search-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"></circle><path d="m16 16 5 5"></path></svg></button></form>
+      <div class="store-actions"><a class="icon-button" id="cartButton" href="gao.html" aria-label="Mua gạo" title="Mua gạo"><svg class="cart-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h14l1 13H4L5 8Z"></path><path d="M9 9V6a3 3 0 0 1 6 0v3"></path></svg></a></div>
+    </div>
+    <div class="main-nav-band"><div class="main-nav-row">
+      <button class="icon-button menu-toggle" id="menuToggle" type="button" aria-label="Mở menu" aria-expanded="false">☰</button>
+      <div class="nav-dropdown" id="riceDropdown">
+        <button class="category-toggle" id="riceDropdownToggle" type="button" aria-expanded="false" aria-controls="riceDropdownPanel"><span class="category-label"><span class="category-menu-icon" aria-hidden="true">☰</span>Danh mục gạo ngon</span><svg class="dropdown-chevron" viewBox="0 0 12 12" aria-hidden="true"><path d="m2 4 4 4 4-4"></path></svg></button>
+        <div class="dropdown-panel" id="riceDropdownPanel" aria-label="Danh mục gạo"><div class="dropdown-heading">Chọn gạo theo khẩu vị</div></div>
+      </div>
+      <nav class="nav-links" id="navLinks" aria-label="Điều hướng chính"><a href="index.html">Trang chủ</a><a href="gao.html">Đặt gạo</a><a href="index.html#cau-chuyen">Về chúng tôi</a><a href="bai-viet-danh-sach.html">Bài viết</a><a href="index.html#lien-he">Liên hệ</a></nav>
+      <div class="nav-contact"><a href="mailto:hello@nhamua.vn"><span aria-hidden="true">✉</span> EMAIL</a><a href="tel:0901234567"><span aria-hidden="true">☎</span> HOTLINE: 0901 234 567</a></div>
+    </div></div>
+  </header>
+  <span class="sr-only" id="menuNotice" role="status" aria-live="polite"></span>
+  <main class="article-container" id="articleContainer" aria-live="polite"></main>
+  <footer class="footer" id="lien-he">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-about"><a class="brand" href="index.html" aria-label="Gạo Thiên Mạnh - Trang chủ"><img class="brand-logo" src="logo.png" alt="Gạo Thiên Mạnh"></a><p>Gạo ngon tuyển chọn từ những mùa vàng Việt Nam. Gửi đến nhà bạn hạt gạo lành, thơm vị quê hương.</p></div>
+        <div><h4>Khám phá</h4><div class="footer-links"><a href="gao.html">Gạo ngon</a><a href="index.html#cau-chuyen">Về chúng tôi</a><a href="bai-viet-danh-sach.html">Bài viết</a><a href="index.html#cam-nang">Chính sách đổi trả</a></div></div>
+        <div><h4>Hỗ trợ</h4><div class="footer-links"><a href="index.html#lien-he">Hướng dẫn mua hàng</a><a href="index.html#lien-he">Vận chuyển & giao hàng</a><a href="index.html#lien-he">Câu hỏi thường gặp</a><a href="mailto:hello@nhamua.vn">Liên hệ với Gạo Thiên Mạnh</a><a href="admin.html">Quản lý sản phẩm</a><a href="admin-blog.html">Quản lý bài viết</a></div></div>
+        <div class="footer-contact"><h4>Ghé thăm Gạo Thiên Mạnh</h4><span>☎ &nbsp; 0901 234 567</span><span>✉ &nbsp; hello@nhamua.vn</span><span>⌖ &nbsp; Quận 3, TP. Hồ Chí Minh</span><span>Thứ 2 – Thứ 7 · 8:00 – 18:00</span></div>
+      </div>
+      <div class="copyright"><span>© 2025 Gạo Thiên Mạnh. Gạo ngon, cơm lành.</span><span>Chăm chút từ hạt gạo, thương nhau từ bữa cơm.</span></div>
+    </div>
+  </footer>
+  <script src="products.js"></script>
+  <script src="blogs.js"></script>
+  <script>
+    const navLinks = document.getElementById("navLinks");
+    const menuToggle = document.getElementById("menuToggle");
+    const riceDropdown = document.getElementById("riceDropdown");
+    const riceDropdownToggle = document.getElementById("riceDropdownToggle");
+    const riceDropdownPanel = document.getElementById("riceDropdownPanel");
+    const menuNotice = document.getElementById("menuNotice");
+    const container = document.getElementById("articleContainer");
+    const slug = new URLSearchParams(location.search).get("slug");
+
+    function setRiceDropdownOpen(isOpen) {
+      riceDropdown.classList.toggle("open", isOpen);
+      riceDropdownToggle.setAttribute("aria-expanded", String(isOpen));
+    }
+
+    try {
+      RiceCatalog.getProducts().forEach((product) => {
+        const link = document.createElement("a");
+        link.className = "dropdown-link";
+        link.href = `gao.html#${encodeURIComponent(product.id)}`;
+        const details = document.createElement("span");
+        const name = document.createElement("strong");
+        name.textContent = product.name;
+        const origin = document.createElement("small");
+        origin.textContent = product.origin;
+        details.append(name, origin);
+        const arrow = document.createElement("span");
+        arrow.className = "dropdown-arrow";
+        arrow.setAttribute("aria-hidden", "true");
+        arrow.textContent = "→";
+        link.append(details, arrow);
+        riceDropdownPanel.append(link);
+      });
+      riceDropdownToggle.hidden = riceDropdownPanel.querySelectorAll(".dropdown-link").length === 0;
+    } catch (error) {
+      console.error("Không thể tải danh mục gạo cho menu.", error);
+      const message = document.createElement("small");
+      message.textContent = "Danh mục gạo hiện chưa tải được.";
+      riceDropdownPanel.append(message);
+    }
+
+    riceDropdownToggle.addEventListener("click", () => {
+      setRiceDropdownOpen(!riceDropdown.classList.contains("open"));
+    });
+
+    document.addEventListener("click", (event) => {
+      if (!riceDropdown.contains(event.target)) setRiceDropdownOpen(false);
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && riceDropdown.classList.contains("open")) {
+        setRiceDropdownOpen(false);
+        riceDropdownToggle.focus();
+      }
+    });
+
+    menuToggle.addEventListener("click", () => {
+      const isOpen = navLinks.classList.toggle("open");
+      menuToggle.setAttribute("aria-expanded", String(isOpen));
+      menuToggle.setAttribute("aria-label", isOpen ? "Đóng menu" : "Mở menu");
+      menuToggle.textContent = isOpen ? "×" : "☰";
+      if (!isOpen) setRiceDropdownOpen(false);
+    });
+
+    navLinks.querySelectorAll("a").forEach((link) => {
+      link.addEventListener("click", () => {
+        setRiceDropdownOpen(false);
+        navLinks.classList.remove("open");
+        menuToggle.setAttribute("aria-expanded", "false");
+        menuToggle.setAttribute("aria-label", "Mở menu");
+        menuToggle.textContent = "☰";
+      });
+    });
+
+    function textElement(tag, className, text) {
+      const element = document.createElement(tag);
+      if (className) element.className = className;
+      element.textContent = text;
+      return element;
+    }
+
+    function showNotFound(message) {
+      container.className = "article-container not-found";
+      container.append(textElement("h1", "", "Không tìm thấy bài viết"));
+      container.append(textElement("p", "", message));
+      const link = textElement("a", "nav-link", "← Quay về cửa hàng");
+      link.href = "bai-viet-danh-sach.html";
+      container.append(link);
+    }
+
+    try {
+      const article = RiceArticles.getArticles().find((item) => item.id === slug && item.status === "published");
+      if (!article) {
+        showNotFound("Bài viết có thể đã được gỡ hoặc chưa được đăng.");
+      } else {
+        document.title = article.seoTitle || article.title;
+        document.querySelector('meta[name="description"]').content = article.seoDescription;
+        const canonical = document.createElement("link");
+        canonical.rel = "canonical";
+        canonical.href = location.href;
+        document.head.append(canonical);
+
+        container.append(textElement("a", "back-link", "← Tất cả bài viết"));
+        container.querySelector(".back-link").href = "bai-viet-danh-sach.html";
+        const categoryLink = textElement("a", "article-meta", article.category);
+        const category = RiceArticles.getCategories().find((item) => item.id === article.categoryId);
+        categoryLink.href = category ? RiceArticles.categoryHref(category) : "bai-viet-danh-sach.html";
+        container.append(categoryLink);
+        container.append(textElement("h1", "", article.title));
+        container.append(textElement("p", "summary", article.summary));
+        const image = document.createElement("img");
+        image.className = "cover";
+        image.src = article.image;
+        image.alt = article.alt || article.title;
+        container.append(image);
+        const content = document.createElement("div");
+        content.className = "article-content";
+        if (article.content.includes("<")) {
+          content.innerHTML = RiceArticles.sanitizeContent(article.content);
+        } else {
+          article.content.split(/\n\s*\n/).map((paragraph) => paragraph.trim()).filter(Boolean).forEach((paragraph) => {
+            content.append(textElement("p", "", paragraph));
+          });
+        }
+        const headings = [...content.querySelectorAll("h2, h3")];
+        if (headings.length >= 2) {
+          const tableOfContents = document.createElement("nav");
+          tableOfContents.className = "table-of-contents";
+          tableOfContents.setAttribute("aria-label", "Mục lục bài viết");
+          tableOfContents.append(textElement("h2", "", "Mục lục"));
+          const list = document.createElement("ol");
+          let currentHeadingItem = null;
+          let headingIndex = 0;
+          headings.forEach((heading) => {
+            const baseId = heading.textContent.trim().toLocaleLowerCase("vi")
+              .normalize("NFD")
+              .replace(/[\u0300-\u036f]/g, "")
+              .replace(/đ/g, "d")
+              .replace(/[^a-z0-9]+/g, "-")
+              .replace(/^-+|-+$/g, "") || "muc";
+            heading.id = `${baseId}-${++headingIndex}`;
+            const item = document.createElement("li");
+            const link = textElement("a", "", heading.textContent.trim());
+            link.href = `#${heading.id}`;
+            item.append(link);
+            if (heading.tagName === "H2") {
+              list.append(item);
+              currentHeadingItem = item;
+            } else if (currentHeadingItem) {
+              let sublist = currentHeadingItem.querySelector(":scope > ol");
+              if (!sublist) {
+                sublist = document.createElement("ol");
+                currentHeadingItem.append(sublist);
+              }
+              sublist.append(item);
+            } else {
+              list.append(item);
+            }
+          });
+          tableOfContents.append(list);
+          container.append(tableOfContents);
+        }
+        container.append(content);
+      }
+    } catch (error) {
+      console.error("Không thể tải bài viết.", error);
+      showNotFound("Không thể đọc dữ liệu bài viết đã lưu trên trình duyệt này.");
+    }
+  </script>
+  <script src="orders-api.js"></script>
+  <script src="menu-model.js"></script>
+  <script src="site-content-model.js"></script><script src="site-content.js"></script>
+  <script src="categories-model.js"></script>
+  <script src="site-menu.js"></script>
+</body>
+</html>

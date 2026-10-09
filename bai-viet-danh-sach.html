@@ -1,0 +1,401 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#173d2c">
+  <meta name="description" content="Mẹo chọn gạo, nấu cơm ngon và những câu chuyện về hạt gạo Việt từ Gạo Thiên Mạnh.">
+  <title>Bài viết — Gạo Thiên Mạnh</title>
+  <script src="seo.js"></script>
+  <link rel="icon" type="image/png" href="logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root { --green: #173d2c; --cream: #f8f6ef; --paper: #fffefa; --gold: #d3a650; --ink: #233329; --muted: #748075; --line: #e8e7dc; --serif: "Playfair Display", Georgia, serif; --sans: "DM Sans", Arial, sans-serif; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--cream); color: var(--ink); font-family: var(--sans); -webkit-font-smoothing: antialiased; }
+    button { color: inherit; font: inherit; }
+    a { color: inherit; text-decoration: none; }
+    .header { position: sticky; top: 0; z-index: 20; background: #fdf9ed; box-shadow: 0 3px 14px rgba(24,45,32,.08); }
+    .utility-bar { background: #122f22; color: rgba(255,255,255,.83); font-size: 10px; }
+    .utility-inner { display: flex; width: min(1180px, calc(100% - 48px)); min-height: 29px; align-items: center; justify-content: space-between; gap: 20px; margin: auto; }
+    .utility-inner strong { color: #edca78; font-weight: 700; }
+    .utility-links { display: flex; gap: 19px; }
+    .utility-links a:hover { color: #edca78; }
+    .store-tools { display: flex; width: min(1180px, calc(100% - 48px)); min-height: 78px; align-items: center; justify-content: space-between; gap: 34px; margin: auto; }
+    .brand { display: inline-flex; flex-shrink: 0; align-items: center; gap: 10px; }
+    .brand-logo { display: block; width: 66px; height: 66px; object-fit: contain; }
+    .brand-title { display: grid; gap: 3px; color: var(--green); }
+    .brand-title strong { font-family: var(--serif); font-size: 19px; font-weight: 600; }
+    .brand-title small { color: #8b7955; font-size: 9px; letter-spacing: .12em; text-transform: uppercase; }
+    .store-search { display: flex; flex: 1; max-width: 610px; min-width: 120px; height: 42px; overflow: hidden; border: 1px solid #dedbd1; border-radius: 24px; background: #fff; }
+    .store-search input { flex: 1; min-width: 0; padding: 0 16px; border: 0; outline: none; background: transparent; color: var(--ink); font: inherit; font-size: 12px; }
+    .store-search input::placeholder { color: #92968d; }
+    .store-search button { display: grid; width: 46px; flex: 0 0 46px; place-items: center; border: 0; background: transparent; color: var(--green); cursor: pointer; }
+    .store-search button:hover { background: #f2eee3; }
+    .search-icon { width: 19px; height: 19px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-width: 1.8; }
+    .store-actions { display: flex; align-items: center; gap: 12px; }
+    .main-nav-band { background: var(--green); color: #fffefa; }
+    .main-nav-row { display: flex; width: min(1180px, calc(100% - 48px)); min-height: 49px; align-items: stretch; gap: 0; margin: auto; }
+    .main-nav-row > .nav-dropdown { flex: 0 0 248px; }
+    .category-toggle { display: inline-flex; width: 100%; height: 100%; min-height: 49px; align-items: center; justify-content: space-between; gap: 13px; padding: 0 17px; border: 0; background: #24543b; color: #fffefa; font-size: 13px; font-weight: 700; letter-spacing: .025em; text-transform: uppercase; cursor: pointer; }
+    .category-toggle:hover, .nav-dropdown.open .category-toggle { background: #2c6245; }
+    .category-label { display: inline-flex; align-items: center; gap: 11px; }
+    .category-menu-icon { font-size: 17px; line-height: 1; }
+    .nav-links { display: flex; flex: 1; align-items: stretch; gap: 0; font-size: 13px; font-weight: 600; }
+    .nav-links > a, .dropdown-link { transition: color .2s, background .2s; }
+    .nav-links > a { display: inline-flex; align-items: center; padding: 0 12px; color: rgba(255,255,255,.9); letter-spacing: .025em; text-transform: uppercase; }
+    .nav-links > a:hover, .nav-links > a[aria-current="page"] { background: #24543b; color: #f0d18e; }
+    .nav-contact { display: flex; align-items: center; gap: 17px; margin-left: auto; padding-left: 14px; color: rgba(255,255,255,.87); font-size: 11px; white-space: nowrap; }
+    .nav-contact a:hover { color: #f0d18e; }
+    .nav-contact span { color: #edca78; }
+    .nav-dropdown { position: relative; }
+    .dropdown-trigger { display: inline-flex; width: 100%; height: 100%; align-items: center; justify-content: space-between; gap: 9px; padding: 0; border: 0; background: transparent; color: inherit; font-size: inherit; font-weight: inherit; letter-spacing: inherit; text-transform: inherit; cursor: pointer; }
+    .dropdown-trigger:focus-visible, .dropdown-link:focus-visible { outline: 2px solid #edca78; outline-offset: -3px; }
+    .dropdown-chevron { width: 12px; height: 12px; flex: 0 0 auto; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.7; transition: transform .2s; }
+    .nav-dropdown.open .dropdown-chevron { transform: rotate(180deg); }
+    .dropdown-panel { position: absolute; top: calc(100% + 1px); left: 0; z-index: 30; width: 345px; padding: 12px; border: 1px solid #d8d2c0; border-top: 3px solid var(--gold); border-radius: 0 0 7px 7px; background: var(--paper); box-shadow: 0 18px 44px rgba(25,45,32,.18); opacity: 0; visibility: hidden; transform: translateY(8px); transition: opacity .18s, transform .18s; }
+    .dropdown-panel::before { position: absolute; top: -5px; right: 0; left: 0; height: 5px; content: ""; }
+    .nav-dropdown.open .dropdown-panel { opacity: 1; visibility: visible; transform: translateY(0); }
+    .dropdown-heading { padding: 11px 12px 10px; border-bottom: 1px solid #e9e4d7; color: #846320; font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+    .dropdown-link { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 13px 12px; border-bottom: 1px solid #efede5; border-radius: 3px; }
+    .dropdown-link:last-child { border-bottom: 0; }
+    .dropdown-link:hover, .dropdown-link:focus-visible { background: var(--cream); }
+    .dropdown-link strong { display: block; margin-bottom: 5px; color: var(--green); font-size: 14px; font-weight: 700; }
+    .dropdown-link small { display: block; color: #69736a; font-size: 12px; font-weight: 400; line-height: 1.5; }
+    .dropdown-arrow { flex: 0 0 auto; color: #a27b32; font-size: 18px; }
+    .nav-actions { display: flex; align-items: center; gap: 15px; }
+    .icon-button { position: relative; padding: 8px; border: 0; background: transparent; cursor: pointer; }
+    .cart-icon { display: block; width: 22px; height: 22px; fill: none; stroke: var(--green); stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.65; }
+    .cart-count { position: absolute; top: 0; right: -2px; display: grid; width: 17px; height: 17px; place-items: center; border-radius: 50%; background: var(--gold); color: var(--green); font-size: 10px; font-weight: 700; }
+    .menu-toggle { display: none; font-size: 19px; }
+    .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; clip-path: inset(50%); }
+    .page-container { width: min(1120px, calc(100% - 40px)); min-height: 70vh; margin: auto; padding: 64px 0 76px; }
+    .page-heading { display: flex; align-items: end; justify-content: space-between; gap: 28px; margin-bottom: 32px; }
+    .eyebrow { color: #98722d; font-size: 10px; font-weight: 700; letter-spacing: .15em; text-transform: uppercase; }
+    h1 { margin: 10px 0 0; color: var(--green); font-family: var(--serif); font-size: clamp(34px, 5vw, 48px); font-weight: 500; letter-spacing: -.025em; }
+    .intro { max-width: 360px; margin: 0 0 3px; color: var(--muted); font-size: 13px; line-height: 1.75; }
+    .article-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px 22px; }
+    .article-card { display: block; min-width: 0; background: var(--paper); color: inherit; text-decoration: none; }
+    .article-card:focus-visible { outline: 2px solid var(--green); outline-offset: 4px; }
+    .article-card:hover h2 { color: #92702f; }
+    .article-card img { display: block; width: 100%; aspect-ratio: 1.58 / 1; object-fit: cover; background: #efede3; }
+    .article-copy { padding: 20px 21px 23px; }
+    .article-meta { margin-bottom: 11px; color: #92702f; font-size: 10px; font-weight: 600; letter-spacing: .11em; text-transform: uppercase; }
+    .article-card h2 { margin: 0 0 11px; color: var(--green); font-family: var(--serif); font-size: 20px; font-weight: 600; line-height: 1.35; transition: color .2s; }
+    .article-card p { margin: 0 0 16px; color: var(--muted); font-size: 12px; line-height: 1.75; }
+    .read-link { color: var(--green); font-size: 11px; font-weight: 700; }
+    .article-controls { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 12px; margin-top: 30px; }
+    .article-controls[hidden] { display: none; }
+    .page-button { min-height: 40px; padding: 0 15px; border: 1px solid #d8d5c9; border-radius: 2px; background: var(--paper); color: var(--green); font: inherit; font-size: 11px; font-weight: 700; cursor: pointer; }
+    .page-button:first-child { justify-self: start; }
+    .page-button:last-child { justify-self: end; }
+    .page-button:hover:not(:disabled) { border-color: var(--green); background: var(--green); color: white; }
+    .page-button:disabled { color: #9a9d94; cursor: not-allowed; }
+    .page-status { min-width: 90px; color: var(--muted); font-size: 11px; text-align: center; }
+    .empty-state { grid-column: 1 / -1; padding: 48px 20px; background: var(--paper); color: var(--muted); font-size: 13px; text-align: center; }
+    .footer { padding: 57px 0 25px; background: #122f22; color: #fffefa; }
+    .footer .container { width: min(1180px, calc(100% - 48px)); margin: auto; }
+    .footer-grid { display: grid; grid-template-columns: 1.5fr 1fr 1fr 1.2fr; gap: 45px; padding-bottom: 42px; }
+    .footer-about p { max-width: 270px; margin: 18px 0 0; color: rgba(255,255,255,.65); font-size: 11px; line-height: 1.8; }
+    .footer-about .brand-logo { width: 108px; height: 108px; }
+    .footer h4 { margin: 0 0 16px; color: #edca78; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; }
+    .footer-links { display: grid; gap: 11px; color: rgba(255,255,255,.72); font-size: 11px; }
+    .footer-links a:hover { color: #edca78; }
+    .footer-contact { display: grid; gap: 11px; color: rgba(255,255,255,.72); font-size: 11px; line-height: 1.6; }
+    .copyright { display: flex; justify-content: space-between; gap: 20px; padding-top: 19px; border-top: 1px solid rgba(255,255,255,.14); color: rgba(255,255,255,.48); font-size: 10px; }
+    @media (max-width: 900px) { .store-tools, .main-nav-row, .utility-inner { width: calc(100% - 36px); } .nav-links > a { padding: 0 10px; font-size: 10px; } .main-nav-row > .nav-dropdown { flex-basis: 215px; } .category-toggle { padding: 0 13px; } .nav-contact { gap: 10px; padding-left: 8px; font-size: 9px; } .article-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @media (max-width: 650px) {
+      .utility-inner { min-height: 27px; justify-content: center; font-size: 9px; }
+      .utility-links { display: none; }
+      .store-tools { width: calc(100% - 28px); min-height: 70px; gap: 10px; }
+      .brand { gap: 6px; }
+      .brand-logo { width: 49px; height: 49px; }
+      .brand-title strong { font-size: 14px; }
+      .brand-title small { font-size: 7px; letter-spacing: .08em; }
+      .store-search { height: 37px; }
+      .store-search input { padding: 0 10px; font-size: 10px; }
+      .store-search button { width: 36px; flex-basis: 36px; }
+      .store-actions { gap: 1px; }
+      .main-nav-row { position: relative; display: flex; width: 100%; min-height: 47px; padding: 0 14px; }
+      .menu-toggle { display: inline-grid; width: 45px; flex: 0 0 45px; place-items: center; padding: 0; background: transparent; color: white; }
+      .main-nav-row > .nav-dropdown { flex: 1 1 auto; min-width: 0; }
+      .category-toggle { min-height: 47px; padding: 0 12px; }
+      .category-menu-icon { display: none; }
+      .nav-links { position: absolute; top: 100%; right: 0; left: 0; display: none; flex: none; align-items: stretch; padding: 6px 14px 12px; border-bottom: 1px solid var(--line); background: #fdf9ed; box-shadow: 0 10px 18px rgba(24,45,32,.12); }
+      .nav-links.open { display: flex; flex-direction: column; }
+      .nav-links > a { min-height: 43px; padding: 0 10px; border-bottom: 1px solid var(--line); color: var(--green); font-size: 13px; }
+      .nav-links > a:hover, .nav-links > a[aria-current="page"] { background: #f5f0e3; color: #846320; }
+      .nav-contact { display: none; }
+      .dropdown-panel { position: absolute; top: calc(100% + 1px); left: 0; width: min(345px, calc(100vw - 75px)); padding: 7px; }
+      .dropdown-heading { padding: 10px 9px; }
+      .dropdown-link { padding: 11px 9px; }
+      .dropdown-link strong { font-size: 13px; }
+      .dropdown-link small { font-size: 11px; }
+      .page-container { padding: 42px 0 55px; }
+      .page-heading { display: block; margin-bottom: 24px; }
+      .intro { margin-top: 12px; font-size: 12px; }
+      .article-grid { grid-template-columns: 1fr; gap: 17px; }
+      .article-card { display: grid; grid-template-columns: 38% 1fr; }
+      .article-card img { height: 100%; min-height: 170px; aspect-ratio: auto; }
+      .article-copy { padding: 14px; }
+      .article-card h2 { font-size: 17px; }
+      .article-card p { font-size: 11px; }
+      .article-meta { font-size: 9px; }
+      .page-button { min-height: 38px; padding: 0 10px; font-size: 10px; }
+      .footer .container { width: calc(100% - 36px); }
+      .footer-grid { grid-template-columns: 1fr 1fr; gap: 30px 20px; }
+      .footer-about { grid-column: 1 / -1; }
+      .footer-about .brand-logo { width: 120px; height: 120px; }
+      .copyright { flex-direction: column; gap: 8px; }
+    }
+    @media (max-width: 380px) {
+      .brand-title { display: none; }
+      .store-tools { gap: 8px; }
+      .store-search { min-width: 0; }
+    }
+  </style>
+  <link rel="stylesheet" href="site-menu.css">
+  <link rel="stylesheet" href="blog-categories.css">
+  <link rel="stylesheet" href="site-content.css">
+</head>
+<body>
+  <header class="header">
+    <div class="utility-bar"><div class="utility-inner"><span>GẠO MỚI MỖI NGÀY · GIAO HÀNG TẬN NHÀ</span><div class="utility-links"><span>Hotline: <strong>0901 234 567</strong></span><a href="index.html#cau-chuyen">Giới thiệu</a></div></div></div>
+    <div class="store-tools">
+      <a class="brand" href="index.html" aria-label="Gạo Thiên Mạnh - Trang chủ"><img class="brand-logo" src="logo.png" alt="Gạo Thiên Mạnh"><span class="brand-title"><strong>Gạo Thiên Mạnh</strong><small>Gạo ngon · Cơm lành</small></span></a>
+      <form class="store-search" action="gao.html" method="get" role="search"><input name="search" type="search" aria-label="Tìm gạo" placeholder="Tìm loại gạo bạn yêu thích..." autocomplete="off"><button type="submit" aria-label="Tìm kiếm"><svg class="search-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"></circle><path d="m16 16 5 5"></path></svg></button></form>
+      <div class="store-actions"><a class="icon-button" id="cartButton" href="gao.html" aria-label="Mua gạo" title="Mua gạo"><svg class="cart-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h14l1 13H4L5 8Z"></path><path d="M9 9V6a3 3 0 0 1 6 0v3"></path></svg></a></div>
+    </div>
+    <div class="main-nav-band"><div class="main-nav-row">
+      <button class="icon-button menu-toggle" id="menuToggle" type="button" aria-label="Mở menu" aria-expanded="false">☰</button>
+      <div class="nav-dropdown" id="riceDropdown">
+        <button class="category-toggle" id="riceDropdownToggle" type="button" aria-expanded="false" aria-controls="riceDropdownPanel"><span class="category-label"><span class="category-menu-icon" aria-hidden="true">☰</span>Danh mục gạo ngon</span><svg class="dropdown-chevron" viewBox="0 0 12 12" aria-hidden="true"><path d="m2 4 4 4 4-4"></path></svg></button>
+        <div class="dropdown-panel" id="riceDropdownPanel" aria-label="Danh mục gạo"><div class="dropdown-heading">Chọn gạo theo khẩu vị</div></div>
+      </div>
+      <nav class="nav-links" id="navLinks" aria-label="Điều hướng chính"><a href="index.html">Trang chủ</a><a href="gao.html">Đặt gạo</a><a href="index.html#cau-chuyen">Về chúng tôi</a><a href="bai-viet-danh-sach.html" aria-current="page">Bài viết</a><a href="index.html#lien-he">Liên hệ</a></nav>
+      <div class="nav-contact"><a href="mailto:hello@nhamua.vn"><span aria-hidden="true">✉</span> EMAIL</a><a href="tel:0901234567"><span aria-hidden="true">☎</span> HOTLINE: 0901 234 567</a></div>
+    </div></div>
+  </header>
+  <span class="sr-only" id="menuNotice" role="status" aria-live="polite"></span>
+  <main class="page-container">
+    <header class="page-heading">
+      <div><span class="eyebrow">Góc bếp nhà mình</span><h1 id="blogCategoryTitle">Bài viết về gạo</h1></div>
+      <p class="intro">Mẹo nhỏ chọn gạo, nấu cơm ngon và những câu chuyện thú vị từ hạt gạo Việt.</p>
+    </header>
+    <nav id="blogCategoryLinks" class="blog-category-links" aria-label="Danh mục bài viết"></nav>
+    <section class="article-grid" id="articleGrid" aria-label="Danh sách bài viết" aria-live="polite"></section>
+    <nav class="article-controls" id="articleControls" aria-label="Chuyển trang bài viết" hidden>
+      <button class="page-button" id="newerArticles" type="button">← Bài mới hơn</button>
+      <span class="page-status" id="pageStatus" aria-live="polite"></span>
+      <button class="page-button" id="olderArticles" type="button">Bài cũ hơn →</button>
+    </nav>
+  </main>
+  <footer class="footer" id="lien-he">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-about"><a class="brand" href="index.html" aria-label="Gạo Thiên Mạnh - Trang chủ"><img class="brand-logo" src="logo.png" alt="Gạo Thiên Mạnh"></a><p>Gạo ngon tuyển chọn từ những mùa vàng Việt Nam. Gửi đến nhà bạn hạt gạo lành, thơm vị quê hương.</p></div>
+        <div><h4>Khám phá</h4><div class="footer-links"><a href="gao.html">Gạo ngon</a><a href="index.html#cau-chuyen">Về chúng tôi</a><a href="bai-viet-danh-sach.html">Bài viết</a><a href="index.html#cam-nang">Chính sách đổi trả</a></div></div>
+        <div><h4>Hỗ trợ</h4><div class="footer-links"><a href="index.html#lien-he">Hướng dẫn mua hàng</a><a href="index.html#lien-he">Vận chuyển & giao hàng</a><a href="index.html#lien-he">Câu hỏi thường gặp</a><a href="mailto:hello@nhamua.vn">Liên hệ với Gạo Thiên Mạnh</a><a href="admin.html">Quản lý sản phẩm</a><a href="admin-blog.html">Quản lý bài viết</a></div></div>
+        <div class="footer-contact"><h4>Ghé thăm Gạo Thiên Mạnh</h4><span>☎ &nbsp; 0901 234 567</span><span>✉ &nbsp; hello@nhamua.vn</span><span>⌖ &nbsp; Quận 3, TP. Hồ Chí Minh</span><span>Thứ 2 – Thứ 7 · 8:00 – 18:00</span></div>
+      </div>
+      <div class="copyright"><span>© 2025 Gạo Thiên Mạnh. Gạo ngon, cơm lành.</span><span>Chăm chút từ hạt gạo, thương nhau từ bữa cơm.</span></div>
+    </div>
+  </footer>
+  <script src="products.js"></script>
+  <script src="blogs.js"></script>
+  <script>
+    const navLinks = document.getElementById("navLinks");
+    const menuToggle = document.getElementById("menuToggle");
+    const riceDropdown = document.getElementById("riceDropdown");
+    const riceDropdownToggle = document.getElementById("riceDropdownToggle");
+    const riceDropdownPanel = document.getElementById("riceDropdownPanel");
+    const menuNotice = document.getElementById("menuNotice");
+    const articleGrid = document.getElementById("articleGrid");
+    const articleControls = document.getElementById("articleControls");
+    const pageStatus = document.getElementById("pageStatus");
+    const newerArticles = document.getElementById("newerArticles");
+    const olderArticles = document.getElementById("olderArticles");
+    let articles = [];
+    let page = 0;
+    const blogCategorySlug = new URLSearchParams(location.search).get("category");
+    let blogCategories = [];
+
+    function setRiceDropdownOpen(isOpen) {
+      riceDropdown.classList.toggle("open", isOpen);
+      riceDropdownToggle.setAttribute("aria-expanded", String(isOpen));
+    }
+
+    try {
+      RiceCatalog.getProducts().forEach((product) => {
+        const link = document.createElement("a");
+        link.className = "dropdown-link";
+        link.href = `gao.html#${encodeURIComponent(product.id)}`;
+        const details = document.createElement("span");
+        const name = document.createElement("strong");
+        name.textContent = product.name;
+        const origin = document.createElement("small");
+        origin.textContent = product.origin;
+        details.append(name, origin);
+        const arrow = document.createElement("span");
+        arrow.className = "dropdown-arrow";
+        arrow.setAttribute("aria-hidden", "true");
+        arrow.textContent = "→";
+        link.append(details, arrow);
+        riceDropdownPanel.append(link);
+      });
+      riceDropdownToggle.hidden = riceDropdownPanel.querySelectorAll(".dropdown-link").length === 0;
+    } catch (error) {
+      console.error("Không thể tải danh mục gạo cho menu.", error);
+      const message = document.createElement("small");
+      message.textContent = "Danh mục gạo hiện chưa tải được.";
+      riceDropdownPanel.append(message);
+    }
+
+    riceDropdownToggle.addEventListener("click", () => {
+      setRiceDropdownOpen(!riceDropdown.classList.contains("open"));
+    });
+
+    document.addEventListener("click", (event) => {
+      if (!riceDropdown.contains(event.target)) setRiceDropdownOpen(false);
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && riceDropdown.classList.contains("open")) {
+        setRiceDropdownOpen(false);
+        riceDropdownToggle.focus();
+      }
+    });
+
+    menuToggle.addEventListener("click", () => {
+      const isOpen = navLinks.classList.toggle("open");
+      menuToggle.setAttribute("aria-expanded", String(isOpen));
+      menuToggle.setAttribute("aria-label", isOpen ? "Đóng menu" : "Mở menu");
+      menuToggle.textContent = isOpen ? "×" : "☰";
+      if (!isOpen) setRiceDropdownOpen(false);
+    });
+
+    navLinks.querySelectorAll("a").forEach((link) => {
+      link.addEventListener("click", () => {
+        setRiceDropdownOpen(false);
+        navLinks.classList.remove("open");
+        menuToggle.setAttribute("aria-expanded", "false");
+        menuToggle.setAttribute("aria-label", "Mở menu");
+        menuToggle.textContent = "☰";
+      });
+    });
+
+    function textElement(tag, className, text) {
+      const element = document.createElement(tag);
+      if (className) element.className = className;
+      element.textContent = text;
+      return element;
+    }
+
+    function renderArticles() {
+      articleGrid.replaceChildren();
+      blogCategories = RiceArticles.getCategories();
+      const selectedCategory = blogCategories.find((category) => category.slug === blogCategorySlug);
+      const categoryLinks = document.getElementById("blogCategoryLinks");
+      categoryLinks.replaceChildren();
+      [{ name: "Tất cả bài viết", href: "bai-viet-danh-sach.html", active: blogCategorySlug === null },
+        ...blogCategories.map((category) => ({ name: category.name, href: RiceArticles.categoryHref(category), active: category.id === selectedCategory?.id }))].forEach((item) => {
+        const link = textElement("a", "", item.name);
+        link.href = item.href;
+        if (item.active) link.setAttribute("aria-current", "page");
+        categoryLinks.append(link);
+      });
+      document.getElementById("blogCategoryTitle").textContent = blogCategorySlug === null ? "Bài viết về gạo" : selectedCategory?.name || "Không tìm thấy danh mục";
+      document.title = `${document.getElementById("blogCategoryTitle").textContent} — Gạo Thiên Mạnh`;
+      if (blogCategorySlug !== null && !selectedCategory) {
+        articleControls.hidden = true;
+        articleGrid.append(textElement("p", "empty-state", "Danh mục không tồn tại hoặc đã bị xóa. Hãy chọn danh mục khác."));
+        return;
+      }
+      const published = articles
+        .filter((article) => article.status === "published" && (!selectedCategory || article.categoryId === selectedCategory.id))
+        .sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt) || Date.parse(b.updatedAt) - Date.parse(a.updatedAt));
+      if (published.length === 0) {
+        articleControls.hidden = true;
+        articleGrid.append(textElement("p", "empty-state", selectedCategory ? "Danh mục này chưa có bài viết đã đăng." : "Chưa có bài viết nào. Hãy ghé lại sau nhé."));
+        return;
+      }
+
+      const pageSize = window.matchMedia("(max-width: 650px)").matches ? 1 : window.matchMedia("(max-width: 900px)").matches ? 2 : 6;
+      const pageCount = Math.ceil(published.length / pageSize);
+      page = Math.min(page, pageCount - 1);
+      const start = page * pageSize;
+      const visibleArticles = published.slice(start, start + pageSize);
+      articleControls.hidden = published.length <= pageSize;
+      pageStatus.textContent = `${start + 1}–${start + visibleArticles.length} / ${published.length} bài`;
+      newerArticles.disabled = page === 0;
+      olderArticles.disabled = page >= pageCount - 1;
+
+      visibleArticles.forEach((article) => {
+        const card = document.createElement("a");
+        card.className = "article-card";
+        card.href = `bai-viet.html?slug=${encodeURIComponent(article.id)}`;
+        card.setAttribute("aria-label", `Đọc bài viết: ${article.title}`);
+        const image = document.createElement("img");
+        image.src = article.image;
+        image.alt = article.alt || article.title;
+        image.loading = "lazy";
+        const copy = document.createElement("div");
+        copy.className = "article-copy";
+        const minutes = Math.max(1, Math.ceil(article.content.trim().split(/\s+/).length / 200));
+        copy.append(textElement("div", "article-meta", `${article.category} · ${minutes} phút đọc`));
+        copy.append(textElement("h2", "", article.title));
+        copy.append(textElement("p", "", article.summary));
+        copy.append(textElement("span", "read-link", "Đọc bài viết  →"));
+        card.append(image, copy);
+        articleGrid.append(card);
+      });
+    }
+
+    newerArticles.addEventListener("click", () => {
+      if (page === 0) return;
+      page -= 1;
+      renderArticles();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+
+    olderArticles.addEventListener("click", () => {
+      page += 1;
+      renderArticles();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+
+    window.addEventListener("resize", () => {
+      page = 0;
+      renderArticles();
+    });
+
+    try {
+      articles = RiceArticles.getArticles();
+      renderArticles();
+    } catch (error) {
+      console.error("Không thể tải danh sách bài viết.", error);
+      articleControls.hidden = true;
+      articleGrid.append(textElement("p", "empty-state", "Hiện chưa thể tải danh sách bài viết."));
+    }
+
+    window.addEventListener("storage", (event) => {
+      if (![RiceArticles.storageKey, RiceArticles.categoriesKey, null].includes(event.key)) return;
+      try {
+        articles = RiceArticles.getArticles();
+        page = 0;
+        renderArticles();
+      } catch (error) {
+        console.error("Không thể đồng bộ danh sách bài viết.", error);
+        articleGrid.replaceChildren(textElement("p", "empty-state", "Không thể cập nhật danh sách bài viết."));
+      }
+    });
+  </script>
+  <script src="orders-api.js"></script>
+  <script src="menu-model.js"></script>
+  <script src="site-content-model.js"></script><script src="site-content.js"></script>
+  <script src="categories-model.js"></script>
+  <script src="site-menu.js"></script>
+</body>
+</html>

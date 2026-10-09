@@ -1,0 +1,5 @@
+.blog-category-links, .product-category-links { display: flex; flex-wrap: wrap; gap: 10px; margin: 0 0 24px; font: 700 14px Arial, Tahoma, sans-serif; }
+.blog-category-links a, .product-category-links a { display: inline-flex; align-items: center; min-height: 44px; max-width: 100%; padding: 10px 16px; border: 1px solid #dfe5db; border-radius: 6px; background: #fffefa; color: #173d2c; overflow-wrap: anywhere; }
+.blog-category-links a:hover, .blog-category-links a[aria-current="page"], .product-category-links a:hover, .product-category-links a[aria-current="page"] { background: #173d2c; border-color: #173d2c; color: #fffefa; }
+.blog-category-links a:focus-visible, .product-category-links a:focus-visible { outline: 2px solid #d3a650; outline-offset: 2px; }
+#categoryLinksStatus:empty { display: none; }
