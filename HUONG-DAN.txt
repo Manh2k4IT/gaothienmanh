@@ -62,9 +62,6 @@ Giay phep: https://www.pexels.com/license/
    nhung bai viet do admin luu trong localStorage chi co tren trinh duyet do;
    muon Google va khach thay bai tu moi thiet bi, can chuyen kho bai len WordPress
    hoac may chu. Khong dua trang admin, gio hang hay dat hang vao sitemap.
-   Link bai viet tren may chu: /bai-viet/ten-bai-viet. Link cu
-   /bai-viet.html?slug=ten-bai-viet chuyen huong 301 sang link moi.
-   Mo file HTML truc tiep van dung link cu; noi dung va ban nhap duoc giu nguyen.
    Mui gio het han voucher mac dinh Asia/Ho_Chi_Minh (co the doi bang TZ).
    Bat HTTPS qua reverse proxy, gioi han kich thuoc request 25 MB va backup dinh ky.
    DATABASE_PATH co the tro toi o dia ben vung; khong dung o dia tam/serverless.

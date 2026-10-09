@@ -335,7 +335,7 @@
       visibleArticles.forEach((article) => {
         const card = document.createElement("a");
         card.className = "article-card";
-        card.href = RiceArticles.articleHref(article);
+        card.href = `bai-viet.html?slug=${encodeURIComponent(article.id)}`;
         card.setAttribute("aria-label", `Đọc bài viết: ${article.title}`);
         const image = document.createElement("img");
         image.src = article.image;

@@ -173,11 +173,6 @@
     localStorage.setItem(categoriesKey, JSON.stringify(validateCategories(categories)));
   }
   function categoryHref(category) { return `bai-viet-danh-sach.html?category=${encodeURIComponent(category.slug)}`; }
-  function articleHref(article) {
-    return location.protocol === "file:"
-      ? `bai-viet.html?slug=${encodeURIComponent(article.id)}`
-      : `/bai-viet/${encodeURIComponent(article.id)}`;
-  }
   function getRawArticles() {
     const savedArticles = localStorage.getItem(storageKey);
     if (savedArticles === null) {
@@ -236,5 +231,5 @@
     }
   }
 
-  window.RiceArticles = { storageKey, categoriesKey, getArticles, saveArticles, sanitizeContent, getCategories, saveCategories, validateCategories, slugifyCategory, categoryHref, articleHref, saveCategorySelection };
+  window.RiceArticles = { storageKey, categoriesKey, getArticles, saveArticles, sanitizeContent, getCategories, saveCategories, validateCategories, slugifyCategory, categoryHref, saveCategorySelection };
 })();

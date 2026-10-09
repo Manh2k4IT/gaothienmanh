@@ -192,8 +192,7 @@
     const riceDropdownPanel = document.getElementById("riceDropdownPanel");
     const menuNotice = document.getElementById("menuNotice");
     const container = document.getElementById("articleContainer");
-    const articlePath = /^\/bai-viet\/([^/]+)\/?$/.exec(location.pathname);
-    const slug = articlePath ? decodeURIComponent(articlePath[1]) : new URLSearchParams(location.search).get("slug");
+    const slug = new URLSearchParams(location.search).get("slug");
 
     function setRiceDropdownOpen(isOpen) {
       riceDropdown.classList.toggle("open", isOpen);
@@ -282,6 +281,11 @@
       } else {
         document.title = article.seoTitle || article.title;
         document.querySelector('meta[name="description"]').content = article.seoDescription;
+        const canonical = document.createElement("link");
+        canonical.rel = "canonical";
+        canonical.href = location.href;
+        document.head.append(canonical);
+
         container.append(textElement("a", "back-link", "← Tất cả bài viết"));
         container.querySelector(".back-link").href = "bai-viet-danh-sach.html";
         const categoryLink = textElement("a", "article-meta", article.category);
@@ -323,7 +327,7 @@
             heading.id = `${baseId}-${++headingIndex}`;
             const item = document.createElement("li");
             const link = textElement("a", "", heading.textContent.trim());
-            link.href = `${location.pathname}${location.search}#${heading.id}`;
+            link.href = `#${heading.id}`;
             item.append(link);
             if (heading.tagName === "H2") {
               list.append(item);
