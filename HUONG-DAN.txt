@@ -76,6 +76,11 @@ Giay phep: https://www.pexels.com/license/
    DATABASE_PATH co the tro toi o dia ben vung; khong dung o dia tam/serverless.
    Neu nhieu may chu cung ghi du lieu, can chuyen sang PostgreSQL/MySQL.
 8. Kiem tra: npm test (dung co so du lieu tam, khong thay doi don that).
+   Soan bai: boi den chu > Mau chu > chon o mau co san, hoac nhap ma HEX
+   (vi du #173D2C) va bam Ap dung. Co nut khoi phuc mau chu mac dinh.
+   Dan bai giu danh sach dau dong, chu dam/nghieng va dau nhay tu nguon.
+   Noi dung HTML duoc loc truoc khi chen; van ban thuan co dau dau dong
+   (cham tron, -, *) duoc chuyen thanh danh sach, khong doi dau nhay.
 9. Menu: vao admin > Menu (/admin-menu.html). Them/sua/xoa menu chinh,
    them muc dropdown voi ten va lien ket rieng; dung mui ten len/xuong de sap xep.
    Bam Luu menu de dang truc tiep len may chu, khong can cong cu Du lieu cua hang.

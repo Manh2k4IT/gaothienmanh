@@ -54,15 +54,28 @@
     .field input, .field textarea, .field select { width: 100%; padding: 10px 11px; border: 1px solid #dcded5; border-radius: 4px; background: white; color: var(--ink); font-size: 12px; font-weight: 400; outline: none; }
     .field input, .field select { height: 41px; }
     .field textarea { min-height: 105px; resize: vertical; line-height: 1.65; }
-    .editor-toolbar { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; padding: 8px; border: 1px solid #dcded5; border-bottom: 0; border-radius: 4px 4px 0 0; background: #f7f6f1; }
+    .editor-toolbar { position: relative; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; padding: 8px; border: 1px solid #dcded5; border-bottom: 0; border-radius: 4px 4px 0 0; background: #f7f6f1; }
     .editor-tool { display: inline-flex; min-width: 34px; height: 33px; align-items: center; justify-content: center; padding: 0 9px; border: 1px solid transparent; border-radius: 3px; background: transparent; color: #35463a; font-size: 13px; cursor: pointer; }
     .editor-tool:hover, .editor-tool:focus-visible { border-color: #dcded5; background: white; outline: none; }
     .editor-tool strong { font-weight: 700; }
     .editor-tool em { font-family: Georgia, serif; font-size: 16px; }
     .editor-toolbar select { height: 33px; padding: 0 8px; border: 1px solid #dcded5; border-radius: 3px; background: white; color: #35463a; font-size: 11px; }
     .editor-divider { width: 1px; height: 22px; margin: 0 2px; background: #dcded5; }
-    .editor-color-control { display: inline-flex; height: 33px; align-items: center; gap: 6px; padding: 0 7px; border: 1px solid #dcded5; border-radius: 3px; background: white; color: #35463a; font-size: 13px; font-weight: 700; cursor: pointer; }
-    .editor-color-control input { width: 22px; height: 22px; padding: 0; border: 0; background: transparent; cursor: pointer; }
+    .editor-color-trigger { gap: 7px; border-color: #dcded5; background: white; }
+    .editor-color-indicator { width: 18px; height: 18px; border: 1px solid #0002; border-radius: 4px; background: #233329; }
+    .editor-color-panel { position: absolute; top: calc(100% + 5px); left: 8px; z-index: 10; width: min(280px, calc(100% - 16px)); padding: 16px; border: 1px solid #deded4; border-radius: 10px; background: white; box-shadow: 0 12px 36px #173d2c26; color: var(--ink); }
+    .editor-color-panel[hidden] { display: none; }
+    .editor-color-panel h3 { margin: 0 0 12px; font-size: 13px; }
+    .editor-color-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; }
+    .editor-color-swatch { width: 100%; min-height: 30px; padding: 0; border: 1px solid #0002; border-radius: 5px; background: var(--swatch); cursor: pointer; }
+    .editor-color-swatch:hover, .editor-color-swatch:focus-visible { outline: 2px solid #98722d; outline-offset: 2px; }
+    .editor-color-swatch[aria-pressed="true"] { box-shadow: inset 0 0 0 2px white; outline: 2px solid #173d2c; outline-offset: 1px; }
+    .editor-color-custom { display: flex; align-items: end; gap: 8px; margin: 14px 0 10px; }
+    .editor-color-custom label { flex: 1; display: grid; gap: 5px; min-width: 0; font-size: 11px; }
+    .editor-color-custom input { height: 36px; padding: 7px 9px; font-family: monospace; }
+    .editor-color-custom button, .editor-color-default { min-height: 36px; padding: 7px 10px; border: 1px solid #dcded5; border-radius: 5px; background: #f7f6f1; color: var(--green); font: inherit; font-size: 11px; cursor: pointer; }
+    .editor-color-preview { margin: 10px 0; padding: 8px; border-radius: 5px; background: #f7f6f1; font-size: 14px; }
+    .editor-color-error { margin: 8px 0 0; color: #9b4534; font-size: 11px; line-height: 1.5; }
     .editor-body { min-height: 235px; max-height: 600px; overflow-y: auto; padding: 12px; border: 1px solid #dcded5; border-radius: 0 0 4px 4px; background: white; color: var(--ink); font-size: 14px; font-weight: 400; line-height: 1.75; outline: none; }
     .editor-body:focus { border-color: #b48a3c; box-shadow: 0 0 0 3px rgba(211,166,80,.15); }
     .editor-body:empty::before { color: #a3a99e; content: attr(data-placeholder); pointer-events: none; }
@@ -186,7 +199,17 @@
                   <select id="fontSize" aria-label="Cỡ chữ">
                     <option value="">Cỡ chữ</option><option value="12px">12</option><option value="14px">14</option><option value="16px">16</option><option value="18px">18</option><option value="20px">20</option><option value="24px">24</option><option value="28px">28</option><option value="32px">32</option>
                   </select>
-                  <label class="editor-color-control" for="textColor" title="Đổi màu chữ">A <input id="textColor" type="color" value="#233329" aria-label="Màu chữ"></label>
+                  <div id="textColorControl">
+                    <button class="editor-tool editor-color-trigger" id="textColorToggle" type="button" aria-expanded="false" aria-controls="textColorPanel"><span class="editor-color-indicator" id="textColorIndicator" aria-hidden="true"></span>Màu chữ ▾</button>
+                    <div class="editor-color-panel" id="textColorPanel" role="group" aria-label="Chọn màu chữ" hidden>
+                      <h3>Màu chữ</h3>
+                      <div class="editor-color-grid" id="textColorPalette" role="group" aria-label="Màu có sẵn"></div>
+                      <div class="editor-color-custom"><label for="textColorHex">Mã màu HEX<input id="textColorHex" value="#233329" maxlength="7" spellcheck="false" autocomplete="off" aria-describedby="textColorError"></label><button id="applyTextColor" type="button">Áp dụng</button></div>
+                      <p class="editor-color-preview" id="textColorPreview">Gạo ngon · Cơm lành</p>
+                      <button class="editor-color-default" id="defaultTextColor" type="button">Màu chữ mặc định</button>
+                      <p class="editor-color-error" id="textColorError" role="status" aria-live="polite"></p>
+                    </div>
+                  </div>
                   <span class="editor-divider" aria-hidden="true"></span>
                   <button class="editor-tool" type="button" data-command="bold" aria-label="In đậm" title="In đậm"><strong>B</strong></button>
                   <button class="editor-tool" type="button" data-command="italic" aria-label="In nghiêng" title="In nghiêng"><em>I</em></button>
@@ -249,7 +272,12 @@
     const contentValue = document.getElementById("contentValue");
     const editorToolbar = document.querySelector(".editor-toolbar");
     const fontSize = document.getElementById("fontSize");
-    const textColor = document.getElementById("textColor");
+    const colorControl = document.getElementById("textColorControl");
+    const colorToggle = document.getElementById("textColorToggle");
+    const colorPanel = document.getElementById("textColorPanel");
+    const colorHex = document.getElementById("textColorHex");
+    const colorError = document.getElementById("textColorError");
+    let colorRange = null;
     const contentImage = document.getElementById("contentImage");
     let articles = [];
     let dataReady = false;
@@ -296,6 +324,7 @@
     }
 
     function saveEditorRange() {
+      if (!colorPanel.hidden) return;
       const selection = window.getSelection();
       if (selection.rangeCount && editor.contains(selection.getRangeAt(0).commonAncestorContainer)) {
         editorRange = selection.getRangeAt(0).cloneRange();
@@ -439,6 +468,8 @@
     }
 
     function resetEditor() {
+      closeColorPanel();
+      colorRange = null;
       articleForm.reset();
       articleForm.elements.editingId.value = "";
       articleForm.elements.status.value = "draft";
@@ -523,13 +554,43 @@
 
     editor.addEventListener("paste", (event) => {
       event.preventDefault();
+      saveEditorRange();
+      const html = event.clipboardData.getData("text/html");
       const text = event.clipboardData.getData("text/plain");
-      const fragment = document.createDocumentFragment();
-      text.split(/\r?\n/).forEach((line, index) => {
-        if (index) fragment.append(document.createElement("br"));
-        fragment.append(document.createTextNode(line));
-      });
-      insertAtEditorRange(fragment);
+      try {
+        const template = document.createElement("template");
+        if (html) template.innerHTML = RiceArticles.sanitizeContent(html);
+        if (!template.content.textContent.trim() && !template.content.querySelector("img")) {
+          let list = null;
+          text.split(/\r?\n/).forEach((line) => {
+            const bullet = /^\s*[•●◦▪*-]\s+(.+)$/.exec(line);
+            if (bullet) {
+              if (!list) {
+                list = document.createElement("ul");
+                template.content.append(list);
+              }
+              const item = document.createElement("li");
+              item.textContent = bullet[1];
+              list.append(item);
+            } else {
+              list = null;
+              const paragraph = document.createElement("p");
+              if (line) paragraph.textContent = line;
+              else paragraph.append(document.createElement("br"));
+              template.content.append(paragraph);
+            }
+          });
+        }
+        restoreEditorRange();
+        if (!document.execCommand("insertHTML", false, template.innerHTML)) {
+          throw new Error("Trình duyệt không thể chèn nội dung đã sao chép.");
+        }
+        syncEditorContent();
+        saveEditorRange();
+      } catch (error) {
+        console.error("Không thể dán nội dung bài viết:", error);
+        setStatus("Không thể dán nội dung. Hãy thử sao chép lại đoạn văn bản.", true);
+      }
     });
 
     editorToolbar.addEventListener("mousedown", (event) => {
@@ -539,7 +600,7 @@
 
     editorToolbar.addEventListener("click", (event) => {
       const button = event.target.closest("button");
-      if (!button || button.id === "insertLink" || button.id === "insertImage") return;
+      if (!button || colorControl.contains(button) || button.id === "insertLink" || button.id === "insertImage") return;
       restoreEditorRange();
       if (button.dataset.command) document.execCommand(button.dataset.command, false);
       if (button.dataset.block) document.execCommand("formatBlock", false, `<${button.dataset.block}>`);
@@ -572,27 +633,85 @@
       syncEditorContent();
     });
 
-    textColor.addEventListener("pointerdown", saveEditorRange);
-    textColor.addEventListener("change", () => {
-      restoreEditorRange();
-      const selection = window.getSelection();
-      const range = selection.getRangeAt(0);
-      const span = document.createElement("span");
-      span.style.color = textColor.value;
-      if (range.collapsed) {
-        span.append(document.createTextNode("\u200b"));
-        range.insertNode(span);
-        range.setStart(span.firstChild, 1);
-        range.collapse(true);
-      } else {
-        span.append(range.extractContents());
-        range.insertNode(span);
-        range.selectNodeContents(span);
+    function closeColorPanel() {
+      colorPanel.hidden = true;
+      colorToggle.setAttribute("aria-expanded", "false");
+    }
+    function previewColor(value) {
+      document.getElementById("textColorPreview").style.color = value;
+      document.getElementById("textColorIndicator").style.backgroundColor = value;
+      colorHex.value = value;
+      document.querySelectorAll("[data-text-color]").forEach((swatch) => {
+        swatch.setAttribute("aria-pressed", String(swatch.dataset.textColor === value));
+      });
+    }
+    function applyColor(value) {
+      const color = value.trim().toLowerCase();
+      if (!/^#[0-9a-f]{6}$/.test(color)) {
+        colorError.textContent = "Nhập mã màu gồm # và 6 ký tự, ví dụ #173D2C.";
+        colorHex.setAttribute("aria-invalid", "true");
+        colorHex.focus();
+        return;
       }
-      selection.removeAllRanges();
-      selection.addRange(range);
-      editorRange = range.cloneRange();
+      if (!colorRange || !editor.contains(colorRange.commonAncestorContainer)) {
+        colorError.textContent = "Hãy đặt con trỏ hoặc bôi đen chữ trong bài viết trước khi chọn màu.";
+        return;
+      }
+      editorRange = colorRange.cloneRange();
+      restoreEditorRange();
+      document.execCommand("styleWithCSS", false, true);
+      if (!document.execCommand("foreColor", false, color)) {
+        colorError.textContent = "Không thể đổi màu đoạn này. Hãy bôi đen chữ rồi thử lại.";
+        return;
+      }
+      previewColor(color);
+      closeColorPanel();
       syncEditorContent();
+      saveEditorRange();
+    }
+    const palette = [
+      ["#233329", "Mặc định"], ["#000000", "Đen"], ["#4b5563", "Xám đậm"], ["#9ca3af", "Xám"], ["#d1d5db", "Xám nhạt"], ["#ffffff", "Trắng"],
+      ["#173d2c", "Xanh thương hiệu"], ["#15803d", "Xanh lá"], ["#0d9488", "Xanh ngọc"], ["#0284c7", "Xanh biển"], ["#2563eb", "Xanh dương"], ["#4338ca", "Chàm"],
+      ["#7e22ce", "Tím"], ["#c026d3", "Tím hồng"], ["#db2777", "Hồng"], ["#dc2626", "Đỏ"], ["#ea580c", "Cam"], ["#ca8a04", "Vàng đậm"],
+      ["#d3a650", "Vàng thương hiệu"], ["#854d0e", "Nâu"], ["#bbf7d0", "Xanh lá nhạt"], ["#bae6fd", "Xanh biển nhạt"], ["#e9d5ff", "Tím nhạt"], ["#fecaca", "Đỏ nhạt"]
+    ];
+    palette.forEach(([color, name]) => {
+      const swatch = document.createElement("button");
+      swatch.type = "button";
+      swatch.className = "editor-color-swatch";
+      swatch.style.setProperty("--swatch", color);
+      swatch.dataset.textColor = color;
+      swatch.title = `${name} (${color})`;
+      swatch.setAttribute("aria-label", swatch.title);
+      swatch.addEventListener("click", () => applyColor(color));
+      document.getElementById("textColorPalette").append(swatch);
+    });
+    previewColor("#233329");
+    colorToggle.addEventListener("click", () => {
+      if (!colorPanel.hidden) { closeColorPanel(); return; }
+      saveEditorRange();
+      colorRange = editorRange?.cloneRange() || null;
+      colorError.textContent = "";
+      colorHex.removeAttribute("aria-invalid");
+      colorPanel.hidden = false;
+      colorToggle.setAttribute("aria-expanded", "true");
+      (document.querySelector('[data-text-color][aria-pressed="true"]') || colorHex).focus();
+    });
+    colorHex.addEventListener("input", () => {
+      colorError.textContent = "";
+      colorHex.removeAttribute("aria-invalid");
+      if (/^#[0-9a-f]{6}$/i.test(colorHex.value)) document.getElementById("textColorPreview").style.color = colorHex.value;
+    });
+    colorHex.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") { event.preventDefault(); applyColor(colorHex.value); }
+    });
+    document.getElementById("applyTextColor").addEventListener("click", () => applyColor(colorHex.value));
+    document.getElementById("defaultTextColor").addEventListener("click", () => applyColor("#233329"));
+    document.addEventListener("click", (event) => {
+      if (!colorControl.contains(event.target)) closeColorPanel();
+    });
+    colorControl.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") { event.preventDefault(); closeColorPanel(); colorToggle.focus(); }
     });
 
     document.getElementById("insertLink").addEventListener("click", () => {

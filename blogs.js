@@ -47,6 +47,7 @@
   ];
 
   const allowedContentTags = new Set(["A", "B", "BLOCKQUOTE", "BR", "DIV", "EM", "H2", "H3", "I", "IMG", "LI", "OL", "P", "SPAN", "STRONG", "U", "UL"]);
+  const discardedContentTags = new Set(["SCRIPT", "STYLE", "IFRAME", "OBJECT", "TEMPLATE", "TITLE", "META", "LINK"]);
   const allowedFontSizes = new Set(["12px", "14px", "16px", "18px", "20px", "24px", "28px", "32px"]);
 
   function safeTextColor(value) {
@@ -77,6 +78,7 @@
     function cleanNode(source) {
       if (source.nodeType === Node.TEXT_NODE) return document.createTextNode(source.nodeValue);
       if (source.nodeType !== Node.ELEMENT_NODE) return null;
+      if (discardedContentTags.has(source.tagName)) return null;
       if (!allowedContentTags.has(source.tagName)) {
         const fragment = document.createDocumentFragment();
         source.childNodes.forEach((child) => {
@@ -105,10 +107,10 @@
         return element;
       } else if (source.tagName === "SPAN") {
         const size = source.style.fontSize;
-        const color = safeTextColor(source.style.color);
         if (allowedFontSizes.has(size)) element.style.fontSize = size;
-        if (color) element.style.color = color;
       }
+      const color = safeTextColor(source.style.color);
+      if (color) element.style.color = color;
 
       source.childNodes.forEach((child) => {
         const cleaned = cleanNode(child);
