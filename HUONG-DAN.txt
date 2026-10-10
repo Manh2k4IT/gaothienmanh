@@ -83,7 +83,8 @@ Giay phep: https://www.pexels.com/license/
    (cham tron, -, *) duoc chuyen thanh danh sach, khong doi dau nhay.
    Noi dung bai dung Roboto 17 px, gian dong 30 px. Chu thich anh dung
    Roboto 16 px, gian dong 22 px, mau xam #8f8f8f.
-   Tieu de chinh H1 dung Roboto dam 32 px / 46 px. H2 dung 25 px,
+   Tieu de chinh H1 giu Playfair Display, co chu 35-54 px theo man hinh,
+   mau xanh dam #173d2c nhu giao dien ban dau. H2 dung Roboto 25 px,
    H3 dung 22 px, dam 700 va mac dinh mau den #222; H2/H3 co gian dong 1.3.
    Co the boi den H2/H3 trong noi dung va dung Mau chu de doi mau.
    Anh bia: nhap o Chu thich anh bia. Anh trong bai: sau khi chen, nhap
