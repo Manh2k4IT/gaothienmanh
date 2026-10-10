@@ -20,6 +20,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
     :root { --green: #173d2c; --cream: #f8f6ef; --paper: #fffefa; --gold: #d3a650; --ink: #233329; --muted: #748075; --line: #e8e7dc; --serif: "Playfair Display", Georgia, serif; --sans: "DM Sans", Arial, sans-serif; }
     * { box-sizing: border-box; }
@@ -82,19 +83,27 @@
     .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; clip-path: inset(50%); }
     .article-container { width: min(790px, calc(100% - 40px)); min-height: 64vh; margin: auto; padding: 52px 0 74px; }
     .back-link { color: #846320; font-size: 11px; font-weight: 700; }
-    .article-meta { margin: 27px 0 12px; color: #98722d; font-size: 10px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+    .article-meta { display: block; width: fit-content; margin: 27px 0 12px; color: #98722d; font-size: 10px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
     h1 { margin: 0 0 15px; color: var(--green); font-family: var(--serif); font-size: clamp(35px, 6vw, 54px); font-weight: 500; letter-spacing: -.03em; line-height: 1.15; }
     .summary { margin: 0 0 24px; color: #667168; font-size: 15px; line-height: 1.8; }
     .cover { width: 100%; max-height: 430px; margin: 27px 0 36px; border-radius: 4px; background: var(--cream); object-fit: cover; }
-    .article-content { color: #39473d; font-size: 15px; line-height: 1.95; }
+    .cover.has-caption { display: block; margin-bottom: 0; }
+    .article-content { color: #222; font-family: "Roboto", Arial, sans-serif; font-size: 17px; line-height: 30px; }
+    .article-container > h1 { color: #222; font-family: "Roboto", Arial, sans-serif; font-size: 32px; font-weight: 700; line-height: 46px; letter-spacing: normal; }
     .article-content p { margin: 0 0 20px; }
-    .article-content h2, .article-content h3 { margin: 30px 0 12px; color: var(--green); font-family: var(--serif); font-weight: 600; line-height: 1.35; }
-    .article-content h2 { font-size: 27px; }
+    .article-content h2, .article-content h3 { margin: 24px 0 12px; color: #222; font-family: "Roboto", Arial, sans-serif; font-weight: 700; line-height: 1.3; }
+    .article-content h2 { font-size: 25px; }
     .article-content h3 { font-size: 22px; }
     .article-content ul, .article-content ol { margin: 0 0 20px; padding-left: 25px; }
     .article-content blockquote { margin: 22px 0; padding: 13px 18px; border-left: 3px solid var(--gold); background: var(--cream); color: #5c675e; }
     .article-content a { color: #846320; text-decoration: underline; text-underline-offset: 2px; }
     .article-content img { display: block; width: auto; max-width: 100%; max-height: 560px; margin: 26px auto; border-radius: 4px; object-fit: contain; }
+    .article-content figure { margin: 26px 0; }
+    .article-content figure img { margin: 0 auto; }
+    .article-content figcaption, .cover-caption { margin: 0; padding: 8px 0; border-bottom: 1px solid #f2f2f2; color: #8f8f8f; font-family: "Roboto", Arial, sans-serif; font-size: 16px; line-height: 22px; font-weight: 400; }
+    .article-container > .cover-caption { margin-bottom: 26px; }
+    .article-content figcaption p { margin: 0; }
+    .article-content figcaption:empty { display: none; }
     .table-of-contents { margin: 28px 0; padding: 20px 24px; border: 1px solid var(--line); border-left: 3px solid var(--gold); border-radius: 3px; background: var(--cream); }
     .table-of-contents h2 { margin: 0 0 11px; color: var(--green); font-family: var(--serif); font-size: 19px; font-weight: 600; }
     .table-of-contents ol { display: grid; gap: 8px; margin: 0; padding-left: 21px; color: #846320; }
@@ -144,7 +153,7 @@
       .dropdown-link strong { font-size: 13px; }
       .dropdown-link small { font-size: 11px; }
       .article-container { padding: 38px 0 55px; }
-      .article-content, .summary { font-size: 14px; }
+      .summary { font-size: 14px; }
       .footer .container { width: calc(100% - 36px); }
       .footer-grid { grid-template-columns: 1fr 1fr; gap: 30px 20px; }
       .footer-about { grid-column: 1 / -1; }
@@ -307,10 +316,11 @@
         container.append(textElement("h1", "", article.title));
         container.append(textElement("p", "summary", article.summary));
         const image = document.createElement("img");
-        image.className = "cover";
+        image.className = article.coverCaption ? "cover has-caption" : "cover";
         image.src = article.image;
         image.alt = article.alt || article.title;
         container.append(image);
+        if (article.coverCaption) container.append(textElement("p", "cover-caption", article.coverCaption));
         const content = document.createElement("div");
         content.className = "article-content";
         if (article.content.includes("<")) {
@@ -321,6 +331,9 @@
           });
         }
         const headings = [...content.querySelectorAll("h2, h3")];
+        content.querySelectorAll("figcaption").forEach((caption) => {
+          if (!caption.textContent.trim()) caption.remove();
+        });
         if (headings.length >= 2) {
           const tableOfContents = document.createElement("nav");
           tableOfContents.className = "table-of-contents";

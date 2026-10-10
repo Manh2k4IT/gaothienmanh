@@ -58,6 +58,18 @@ test("Blog text colors allow safe hex and RGB values only", () => {
   }
 });
 
+test("Article cover captions persist and validate without requiring them on older articles", () => {
+  const memory = new Map();
+  const api = context(memory);
+  const articles = api.getArticles();
+  articles[0].coverCaption = 'Gạo ST25 — Ảnh: Thiên Mạnh';
+  api.saveArticles(articles);
+  assert.equal(context(memory).getArticles()[0].coverCaption, articles[0].coverCaption);
+  for (const caption of [null, 12, "x".repeat(501)]) {
+    assert.throws(() => api.saveArticles(articles.map((article) => ({ ...article, coverCaption: caption }))), { name: "TypeError" });
+  }
+});
+
 test("Saving category selections persists article moves and restores both records on storage failure", () => {
   const memory = new Map();
   const api = context(memory);

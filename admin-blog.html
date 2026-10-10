@@ -11,6 +11,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
     :root { --green: #173d2c; --green-soft: #24543b; --cream: #f7f6f1; --paper: #fffefa; --gold: #d3a650; --ink: #233329; --muted: #748075; --line: #e8e7dc; --serif: "Playfair Display", Georgia, serif; --sans: "DM Sans", Arial, sans-serif; }
     * { box-sizing: border-box; }
@@ -62,7 +63,7 @@
     .editor-toolbar select { height: 33px; padding: 0 8px; border: 1px solid #dcded5; border-radius: 3px; background: white; color: #35463a; font-size: 11px; }
     .editor-divider { width: 1px; height: 22px; margin: 0 2px; background: #dcded5; }
     .editor-color-trigger { gap: 7px; border-color: #dcded5; background: white; }
-    .editor-color-indicator { width: 18px; height: 18px; border: 1px solid #0002; border-radius: 4px; background: #233329; }
+    .editor-color-indicator { width: 18px; height: 18px; border: 1px solid #0002; border-radius: 4px; background: #222222; }
     .editor-color-panel { position: absolute; top: calc(100% + 5px); left: 8px; z-index: 10; width: min(280px, calc(100% - 16px)); padding: 16px; border: 1px solid #deded4; border-radius: 10px; background: white; box-shadow: 0 12px 36px #173d2c26; color: var(--ink); }
     .editor-color-panel[hidden] { display: none; }
     .editor-color-panel h3 { margin: 0 0 12px; font-size: 13px; }
@@ -76,15 +77,20 @@
     .editor-color-custom button, .editor-color-default { min-height: 36px; padding: 7px 10px; border: 1px solid #dcded5; border-radius: 5px; background: #f7f6f1; color: var(--green); font: inherit; font-size: 11px; cursor: pointer; }
     .editor-color-preview { margin: 10px 0; padding: 8px; border-radius: 5px; background: #f7f6f1; font-size: 14px; }
     .editor-color-error { margin: 8px 0 0; color: #9b4534; font-size: 11px; line-height: 1.5; }
-    .editor-body { min-height: 235px; max-height: 600px; overflow-y: auto; padding: 12px; border: 1px solid #dcded5; border-radius: 0 0 4px 4px; background: white; color: var(--ink); font-size: 14px; font-weight: 400; line-height: 1.75; outline: none; }
+    .editor-body { min-height: 235px; max-height: 600px; overflow-y: auto; padding: 12px; border: 1px solid #dcded5; border-radius: 0 0 4px 4px; background: white; color: #222; font-family: "Roboto", Arial, sans-serif; font-size: 17px; font-weight: 400; line-height: 30px; outline: none; }
     .editor-body:focus { border-color: #b48a3c; box-shadow: 0 0 0 3px rgba(211,166,80,.15); }
     .editor-body:empty::before { color: #a3a99e; content: attr(data-placeholder); pointer-events: none; }
     .editor-body p { margin: 0 0 12px; }
-    .editor-body h2, .editor-body h3 { margin: 18px 0 9px; color: var(--green); font-family: var(--serif); line-height: 1.35; }
-    .editor-body h2 { font-size: 24px; }
-    .editor-body h3 { font-size: 19px; }
+    .editor-body h2, .editor-body h3 { margin: 24px 0 12px; color: #222; font-family: "Roboto", Arial, sans-serif; font-weight: 700; line-height: 1.3; }
+    .editor-body h2 { font-size: 25px; }
+    .editor-body h3 { font-size: 22px; }
     .editor-body blockquote { margin: 14px 0; padding: 9px 13px; border-left: 3px solid var(--gold); background: #f8f6ef; color: #5c675e; }
     .editor-body img { display: block; width: auto; max-width: 100%; max-height: 420px; margin: 14px auto; object-fit: contain; }
+    .editor-body figure { margin: 20px 0; }
+    .editor-body figure img { margin: 0 auto; }
+    .editor-body figcaption { min-height: 39px; padding: 8px 0; border-bottom: 1px solid #f2f2f2; color: #8f8f8f; font-size: 16px; line-height: 22px; font-weight: 400; }
+    .editor-body figcaption p { margin: 0; }
+    .editor-body figcaption:empty::before { content: "Nhập chú thích ảnh tại đây…"; color: #aaa; }
     .editor-body a { color: #846320; text-decoration: underline; text-underline-offset: 2px; }
     .editor-image-input { display: none; }
     .field input:focus, .field textarea:focus, .field select:focus { border-color: #b48a3c; box-shadow: 0 0 0 3px rgba(211,166,80,.15); }
@@ -204,7 +210,7 @@
                     <div class="editor-color-panel" id="textColorPanel" role="group" aria-label="Chọn màu chữ" hidden>
                       <h3>Màu chữ</h3>
                       <div class="editor-color-grid" id="textColorPalette" role="group" aria-label="Màu có sẵn"></div>
-                      <div class="editor-color-custom"><label for="textColorHex">Mã màu HEX<input id="textColorHex" value="#233329" maxlength="7" spellcheck="false" autocomplete="off" aria-describedby="textColorError"></label><button id="applyTextColor" type="button">Áp dụng</button></div>
+                      <div class="editor-color-custom"><label for="textColorHex">Mã màu HEX<input id="textColorHex" value="#222222" maxlength="7" spellcheck="false" autocomplete="off" aria-describedby="textColorError"></label><button id="applyTextColor" type="button">Áp dụng</button></div>
                       <p class="editor-color-preview" id="textColorPreview">Gạo ngon · Cơm lành</p>
                       <button class="editor-color-default" id="defaultTextColor" type="button">Màu chữ mặc định</button>
                       <p class="editor-color-error" id="textColorError" role="status" aria-live="polite"></p>
@@ -223,6 +229,7 @@
                   <span class="editor-divider" aria-hidden="true"></span>
                   <button class="editor-tool" id="insertLink" type="button" aria-label="Chèn liên kết" title="Chèn liên kết">🔗</button>
                   <button class="editor-tool" id="insertImage" type="button" aria-label="Chèn ảnh vào nội dung" title="Chèn ảnh vào nội dung">▧ Ảnh</button>
+                  <button class="editor-tool" id="editImageCaption" type="button" title="Bấm ảnh trong bài trước, rồi thêm hoặc sửa chú thích">Chú thích ảnh</button>
                   <input class="editor-image-input" id="contentImage" type="file" accept="image/*">
                 </div>
                 <div class="editor-body" id="articleContent" contenteditable="true" role="textbox" aria-labelledby="contentLabel" aria-multiline="true" data-placeholder="Viết bài tại đây. Dùng thanh công cụ để định dạng chữ, thêm ảnh hoặc liên kết."></div>
@@ -238,6 +245,7 @@
                 </span>
                 <span class="field-hint" id="coverHint">Ảnh sẽ được thu nhỏ trước khi lưu. Khi chỉnh sửa, có thể giữ ảnh cũ.</span>
               </label>
+              <label class="field full">Chú thích ảnh bìa<input name="coverCaption" maxlength="500" placeholder="Ví dụ: Gạo ST25 tuyển chọn — Ảnh: Gạo Thiên Mạnh"><span class="field-hint">Hiển thị chữ xám dưới ảnh bìa. Ảnh trong nội dung: nhập trực tiếp dưới ảnh hoặc bấm ảnh rồi chọn Chú thích ảnh.</span></label>
               <label class="field full">Tiêu đề SEO<input name="seoTitle" required maxlength="65" placeholder="Tiêu đề hiển thị trên kết quả tìm kiếm"></label>
               <label class="field full">Mô tả SEO<textarea name="seoDescription" required maxlength="160" rows="2" placeholder="Mô tả nội dung bài viết cho Google và người đọc..."></textarea></label>
               <div class="field full seo-preview"><small>XEM TRƯỚC KẾT QUẢ TÌM KIẾM</small><strong id="seoPreviewTitle">Tiêu đề SEO sẽ hiển thị ở đây</strong><span id="seoPreviewDescription">Mô tả SEO sẽ hiển thị ở đây.</span></div>
@@ -284,6 +292,7 @@
     let blogVersion = null;
     let previewUrl = "";
     let editorRange = null;
+    let selectedContentImage = null;
     function renderCategoryOptions() {
       const selected = articleForm.elements.category.value;
       const select = articleForm.elements.category;
@@ -476,6 +485,7 @@
       editor.replaceChildren();
       contentValue.value = "";
       editorRange = null;
+      selectedContentImage = null;
       articleForm.elements.slug.dataset.touched = "";
       articleForm.elements.seoTitle.dataset.touched = "";
       document.getElementById("editorTitle").textContent = "Viết bài mới";
@@ -495,6 +505,7 @@
       articleForm.elements.category.value = article.categoryId;
       articleForm.elements.slug.value = article.id;
       articleForm.elements.summary.value = article.summary;
+      articleForm.elements.coverCaption.value = article.coverCaption || "";
       editor.innerHTML = article.content.includes("<")
         ? RiceArticles.sanitizeContent(article.content)
         : legacyTextToHtml(article.content);
@@ -600,7 +611,7 @@
 
     editorToolbar.addEventListener("click", (event) => {
       const button = event.target.closest("button");
-      if (!button || colorControl.contains(button) || button.id === "insertLink" || button.id === "insertImage") return;
+      if (!button || colorControl.contains(button) || ["insertLink", "insertImage", "editImageCaption"].includes(button.id)) return;
       restoreEditorRange();
       if (button.dataset.command) document.execCommand(button.dataset.command, false);
       if (button.dataset.block) document.execCommand("formatBlock", false, `<${button.dataset.block}>`);
@@ -670,7 +681,7 @@
       saveEditorRange();
     }
     const palette = [
-      ["#233329", "Mặc định"], ["#000000", "Đen"], ["#4b5563", "Xám đậm"], ["#9ca3af", "Xám"], ["#d1d5db", "Xám nhạt"], ["#ffffff", "Trắng"],
+      ["#222222", "Mặc định"], ["#000000", "Đen"], ["#4b5563", "Xám đậm"], ["#9ca3af", "Xám"], ["#d1d5db", "Xám nhạt"], ["#ffffff", "Trắng"],
       ["#173d2c", "Xanh thương hiệu"], ["#15803d", "Xanh lá"], ["#0d9488", "Xanh ngọc"], ["#0284c7", "Xanh biển"], ["#2563eb", "Xanh dương"], ["#4338ca", "Chàm"],
       ["#7e22ce", "Tím"], ["#c026d3", "Tím hồng"], ["#db2777", "Hồng"], ["#dc2626", "Đỏ"], ["#ea580c", "Cam"], ["#ca8a04", "Vàng đậm"],
       ["#d3a650", "Vàng thương hiệu"], ["#854d0e", "Nâu"], ["#bbf7d0", "Xanh lá nhạt"], ["#bae6fd", "Xanh biển nhạt"], ["#e9d5ff", "Tím nhạt"], ["#fecaca", "Đỏ nhạt"]
@@ -686,7 +697,7 @@
       swatch.addEventListener("click", () => applyColor(color));
       document.getElementById("textColorPalette").append(swatch);
     });
-    previewColor("#233329");
+    previewColor("#222222");
     colorToggle.addEventListener("click", () => {
       if (!colorPanel.hidden) { closeColorPanel(); return; }
       saveEditorRange();
@@ -706,7 +717,7 @@
       if (event.key === "Enter") { event.preventDefault(); applyColor(colorHex.value); }
     });
     document.getElementById("applyTextColor").addEventListener("click", () => applyColor(colorHex.value));
-    document.getElementById("defaultTextColor").addEventListener("click", () => applyColor("#233329"));
+    document.getElementById("defaultTextColor").addEventListener("click", () => applyColor("#222222"));
     document.addEventListener("click", (event) => {
       if (!colorControl.contains(event.target)) closeColorPanel();
     });
@@ -736,6 +747,44 @@
       saveEditorRange();
       contentImage.click();
     });
+    editor.addEventListener("click", (event) => {
+      if (event.target.tagName === "IMG") selectedContentImage = event.target;
+    });
+    function focusCaption(image) {
+      let figure = image.closest("figure");
+      if (!figure) {
+        figure = document.createElement("figure");
+        const paragraph = image.closest("p");
+        if (paragraph) {
+          const afterImage = document.createRange();
+          afterImage.setStartAfter(image);
+          afterImage.setEnd(paragraph, paragraph.childNodes.length);
+          const trailingParagraph = document.createElement("p");
+          trailingParagraph.append(afterImage.extractContents());
+          paragraph.after(figure);
+          if (trailingParagraph.textContent.trim() || trailingParagraph.querySelector("img")) figure.after(trailingParagraph);
+          image.remove();
+          if (!paragraph.textContent.trim() && !paragraph.querySelector("img")) paragraph.remove();
+        } else image.before(figure);
+        figure.append(image);
+      }
+      let caption = figure.querySelector("figcaption");
+      if (!caption) { caption = document.createElement("figcaption"); figure.append(caption); }
+      editor.focus();
+      const range = document.createRange();
+      range.selectNodeContents(caption);
+      range.collapse(false);
+      const selection = window.getSelection();
+      selection.removeAllRanges();
+      selection.addRange(range);
+      editorRange = range.cloneRange();
+      syncEditorContent();
+    }
+    document.getElementById("editImageCaption").addEventListener("click", () => {
+      const image = selectedContentImage && editor.contains(selectedContentImage) ? selectedContentImage : null;
+      if (!image) { setStatus("Bấm vào ảnh trong nội dung trước khi thêm hoặc sửa chú thích.", true); return; }
+      focusCaption(image);
+    });
 
     contentImage.addEventListener("change", async () => {
       const file = contentImage.files[0];
@@ -746,14 +795,16 @@
         const image = document.createElement("img");
         image.src = src;
         image.alt = file.name.replace(/\.[^.]+$/, "").slice(0, 200);
-        const paragraph = document.createElement("p");
-        paragraph.append(image);
+        const figure = document.createElement("figure");
+        figure.append(image, document.createElement("figcaption"));
         const followingParagraph = document.createElement("p");
         followingParagraph.append(document.createElement("br"));
         const fragment = document.createDocumentFragment();
-        fragment.append(paragraph, followingParagraph);
+        fragment.append(figure, followingParagraph);
         insertAtEditorRange(fragment);
-        setStatus("Ảnh đã được chèn vào nội dung bài viết.", false);
+        selectedContentImage = image;
+        focusCaption(image);
+        setStatus("Đã chèn ảnh. Nhập chú thích ngay dưới ảnh; bấm đoạn bên dưới để tiếp tục viết.", false);
       } catch (error) {
         console.error("Không thể chèn ảnh vào nội dung.", error);
         setStatus(error.message || "Không thể chèn ảnh này. Hãy thử ảnh khác.", true);
@@ -846,6 +897,7 @@
         content,
         image,
         alt: title,
+        coverCaption: String(formData.get("coverCaption") || "").trim(),
         seoTitle: String(formData.get("seoTitle")).trim(),
         seoDescription: String(formData.get("seoDescription")).trim(),
         status: String(formData.get("status")),

@@ -46,7 +46,7 @@
     }
   ];
 
-  const allowedContentTags = new Set(["A", "B", "BLOCKQUOTE", "BR", "DIV", "EM", "H2", "H3", "I", "IMG", "LI", "OL", "P", "SPAN", "STRONG", "U", "UL"]);
+  const allowedContentTags = new Set(["A", "B", "BLOCKQUOTE", "BR", "DIV", "EM", "FIGURE", "FIGCAPTION", "H2", "H3", "I", "IMG", "LI", "OL", "P", "SPAN", "STRONG", "U", "UL"]);
   const discardedContentTags = new Set(["SCRIPT", "STYLE", "IFRAME", "OBJECT", "TEMPLATE", "TITLE", "META", "LINK"]);
   const allowedFontSizes = new Set(["12px", "14px", "16px", "18px", "20px", "24px", "28px", "32px"]);
 
@@ -136,6 +136,7 @@
     if (!["published", "draft"].includes(article.status)) return false;
     if (!["createdAt", "updatedAt"].every((key) => typeof article[key] === "string" && !Number.isNaN(Date.parse(article[key])))) return false;
     if (article.alt !== undefined && typeof article.alt !== "string") return false;
+    if (article.coverCaption !== undefined && (typeof article.coverCaption !== "string" || article.coverCaption.length > 500)) return false;
     if (article.categoryId !== undefined && typeof article.categoryId !== "string") return false;
     if (/^data:image\/jpeg;base64,[A-Za-z0-9+/]+=*$/.test(article.image)) return true;
     try {
