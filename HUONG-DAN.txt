@@ -87,6 +87,8 @@ Giay phep: https://www.pexels.com/license/
    mau xanh dam #173d2c nhu giao dien ban dau. H2 dung Roboto 25 px,
    H3 dung 22 px, dam 700 va mac dinh mau den #222; H2/H3 co gian dong 1.3.
    Co the boi den H2/H3 trong noi dung va dung Mau chu de doi mau.
+   In dam: boi den chu hoac dat con tro trong o soan bai, nhan Ctrl+B
+   (Command+B tren Mac) de bat/tat; co the dung nut B tren thanh cong cu.
    Anh bia: nhap o Chu thich anh bia. Anh trong bai: sau khi chen, nhap
    chu thich ngay duoi anh; voi anh cu, bam anh > Chu thich anh de sua.
 9. Menu: vao admin > Menu (/admin-menu.html). Them/sua/xoa menu chinh,

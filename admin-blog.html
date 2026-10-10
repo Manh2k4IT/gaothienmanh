@@ -563,6 +563,24 @@
     editor.addEventListener("focus", saveEditorRange);
     document.addEventListener("selectionchange", saveEditorRange);
 
+    function applyEditorCommand(command, value) {
+      if (command === "bold") document.execCommand("styleWithCSS", false, false);
+      if (!document.execCommand(command, false, value)) {
+        setStatus("Không thể định dạng đoạn này. Hãy đặt con trỏ hoặc bôi đen chữ trong bài rồi thử lại.", true);
+        return;
+      }
+      syncEditorContent();
+      saveEditorRange();
+    }
+    editor.addEventListener("keydown", (event) => {
+      if (!(event.ctrlKey || event.metaKey) || event.altKey || event.shiftKey || event.isComposing || event.key.toLowerCase() !== "b") return;
+      event.preventDefault();
+      if (event.repeat) return;
+      closeColorPanel();
+      saveEditorRange();
+      applyEditorCommand("bold");
+    });
+
     editor.addEventListener("paste", (event) => {
       event.preventDefault();
       saveEditorRange();
@@ -613,10 +631,8 @@
       const button = event.target.closest("button");
       if (!button || colorControl.contains(button) || ["insertLink", "insertImage", "editImageCaption"].includes(button.id)) return;
       restoreEditorRange();
-      if (button.dataset.command) document.execCommand(button.dataset.command, false);
-      if (button.dataset.block) document.execCommand("formatBlock", false, `<${button.dataset.block}>`);
-      syncEditorContent();
-      saveEditorRange();
+      if (button.dataset.command) applyEditorCommand(button.dataset.command);
+      if (button.dataset.block) applyEditorCommand("formatBlock", `<${button.dataset.block}>`);
     });
 
     fontSize.addEventListener("change", () => {
