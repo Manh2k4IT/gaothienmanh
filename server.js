@@ -35,9 +35,15 @@ function createStore({ databasePath, password, publicOrigin = "", allowLocalAdmi
   const catalogContext = { window: {}, localStorage: { getItem: (key) => memory.get(key) ?? null, setItem: (key, value) => memory.set(key, value) }, URL };
   vm.createContext(catalogContext);
   vm.runInContext(fs.readFileSync(path.join(root, "products.js"), "utf8"), catalogContext);
+  const blogMemory = new Map();
+  const blogContext = { window: {}, localStorage: { getItem: (key) => blogMemory.get(key) ?? null, setItem: (key, value) => blogMemory.set(key, value) }, URL };
+  vm.createContext(blogContext);
+  vm.runInContext(fs.readFileSync(path.join(root, "blogs.js"), "utf8"), blogContext);
+  const riceArticles = blogContext.window.RiceArticles;
   if (!getSetting("products")) setSetting("products", JSON.stringify(catalogContext.window.RiceCatalog.getProducts()));
   if (!getSetting("vouchers")) setSetting("vouchers", "[]");
   if (!getSetting("categories")) setSetting("categories", JSON.stringify({ items: [], version: 1 }));
+  if (!getSetting("blog")) setSetting("blog", JSON.stringify({ articles: [], categories: [], version: 1 }));
   if (!getSetting("site-content")) setSetting("site-content", JSON.stringify({ content: siteContent.defaults(), version: 1 }));
   const storedContent = JSON.parse(getSetting("site-content"));
   if (storedContent.content.header === undefined || storedContent.content.benefits === undefined) {
@@ -178,6 +184,11 @@ function createStore({ databasePath, password, publicOrigin = "", allowLocalAdmi
           productUrl.searchParams.set("id", product.id);
           pages.add(productUrl.pathname + productUrl.search);
         }
+        for (const article of JSON.parse(getSetting("blog")).articles.filter((item) => item.status === "published")) {
+          const articleUrl = new URL("/bai-viet.html", origin);
+          articleUrl.searchParams.set("slug", article.id);
+          pages.add(articleUrl.pathname + articleUrl.search);
+        }
         const escapeXml = (value) => value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&apos;");
         const body = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${[...pages].map((page) => `  <url><loc>${escapeXml(new URL(page, origin).href)}</loc></url>`).join("\n")}\n</urlset>\n`;
         res.writeHead(200, { "Content-Type": "application/xml; charset=utf-8", "Cache-Control": "public, max-age=3600" });
@@ -192,6 +203,10 @@ function createStore({ databasePath, password, publicOrigin = "", allowLocalAdmi
         if (route === "/api/catalog" && req.method === "GET") {
           const products = JSON.parse(getSetting("products"));
           return json(res, 200, { products, vouchers: JSON.parse(getSetting("vouchers")).filter((voucher) => voucher.active) });
+        }
+        if (route === "/api/blog" && req.method === "GET") {
+          const blog = JSON.parse(getSetting("blog"));
+          return json(res, 200, { ...blog, articles: blog.articles.filter((article) => article.status === "published") });
         }
         if (route === "/api/menu" && req.method === "GET") return json(res, 200, JSON.parse(getSetting("menu")));
         if (route === "/api/categories" && req.method === "GET") return json(res, 200, JSON.parse(getSetting("categories")));
@@ -237,6 +252,23 @@ function createStore({ databasePath, password, publicOrigin = "", allowLocalAdmi
         if (route.startsWith("/api/admin/")) {
           const token = requireAdmin(req);
           if (route === "/api/admin/session" && req.method === "GET") return json(res, 200, { ok: true, localMode: token === null });
+          if (route === "/api/admin/blog" && req.method === "GET") return json(res, 200, JSON.parse(getSetting("blog")));
+          if (route === "/api/admin/blog" && req.method === "PUT") {
+            const body = await readBody(req, 25 * 1024 * 1024);
+            const current = JSON.parse(getSetting("blog"));
+            if (!body || body.version !== current.version) throw new RequestError(409, "Bài viết đã được sửa ở nơi khác. Hãy tải lại trước khi lưu.");
+            let categories;
+            try {
+              categories = riceArticles.validateCategories(body.categories);
+              riceArticles.validateArticles(body.articles, categories);
+            } catch (error) {
+              if (error?.name === "TypeError") throw new RequestError(400, error.message);
+              throw error;
+            }
+            const result = { articles: body.articles, categories, version: current.version + 1 };
+            setSetting("blog", JSON.stringify(result));
+            return json(res, 200, result);
+          }
           if (route === "/api/admin/contacts" && req.method === "GET") {
             const page = Number(url.searchParams.get("page") || 1);
             if (!Number.isSafeInteger(page) || page < 1 || page > 1000000) throw new RequestError(400, "Trang không hợp lệ.");

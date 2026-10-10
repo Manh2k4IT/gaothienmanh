@@ -61,6 +61,8 @@
     .editor-tool em { font-family: Georgia, serif; font-size: 16px; }
     .editor-toolbar select { height: 33px; padding: 0 8px; border: 1px solid #dcded5; border-radius: 3px; background: white; color: #35463a; font-size: 11px; }
     .editor-divider { width: 1px; height: 22px; margin: 0 2px; background: #dcded5; }
+    .editor-color-control { display: inline-flex; height: 33px; align-items: center; gap: 6px; padding: 0 7px; border: 1px solid #dcded5; border-radius: 3px; background: white; color: #35463a; font-size: 13px; font-weight: 700; cursor: pointer; }
+    .editor-color-control input { width: 22px; height: 22px; padding: 0; border: 0; background: transparent; cursor: pointer; }
     .editor-body { min-height: 235px; max-height: 600px; overflow-y: auto; padding: 12px; border: 1px solid #dcded5; border-radius: 0 0 4px 4px; background: white; color: var(--ink); font-size: 14px; font-weight: 400; line-height: 1.75; outline: none; }
     .editor-body:focus { border-color: #b48a3c; box-shadow: 0 0 0 3px rgba(211,166,80,.15); }
     .editor-body:empty::before { color: #a3a99e; content: attr(data-placeholder); pointer-events: none; }
@@ -184,6 +186,7 @@
                   <select id="fontSize" aria-label="Cỡ chữ">
                     <option value="">Cỡ chữ</option><option value="12px">12</option><option value="14px">14</option><option value="16px">16</option><option value="18px">18</option><option value="20px">20</option><option value="24px">24</option><option value="28px">28</option><option value="32px">32</option>
                   </select>
+                  <label class="editor-color-control" for="textColor" title="Đổi màu chữ">A <input id="textColor" type="color" value="#233329" aria-label="Màu chữ"></label>
                   <span class="editor-divider" aria-hidden="true"></span>
                   <button class="editor-tool" type="button" data-command="bold" aria-label="In đậm" title="In đậm"><strong>B</strong></button>
                   <button class="editor-tool" type="button" data-command="italic" aria-label="In nghiêng" title="In nghiêng"><em>I</em></button>
@@ -230,6 +233,7 @@
       </div>
     </main>
   </div>
+  <script src="orders-api.js"></script>
   <script src="blogs.js"></script>
   <script>
     const articleForm = document.getElementById("articleForm");
@@ -245,9 +249,11 @@
     const contentValue = document.getElementById("contentValue");
     const editorToolbar = document.querySelector(".editor-toolbar");
     const fontSize = document.getElementById("fontSize");
+    const textColor = document.getElementById("textColor");
     const contentImage = document.getElementById("contentImage");
     let articles = [];
     let dataReady = false;
+    let blogVersion = null;
     let previewUrl = "";
     let editorRange = null;
     function renderCategoryOptions() {
@@ -380,15 +386,16 @@
       });
     }
 
-    function saveNextArticles(nextArticles) {
+    async function saveNextArticles(nextArticles) {
       try {
-        RiceArticles.saveArticles(nextArticles);
+        const saved = await RiceArticles.saveBlog(RiceArticles.getCategories(), nextArticles, blogVersion);
+        blogVersion = saved.version;
       } catch (error) {
         console.error("Không thể lưu bài viết.", error);
-        setStatus(error.message || "Không lưu được bài viết. Hãy kiểm tra bộ nhớ của trình duyệt.", true);
+        setStatus(error.message || "Không lưu được bài viết lên máy chủ.", true);
         return false;
       }
-      articles = nextArticles;
+      articles = RiceArticles.getArticles();
       renderArticles();
       return true;
     }
@@ -485,17 +492,28 @@
       return `${base}-${suffix}`;
     }
 
-    try {
-      articles = RiceArticles.getArticles();
-      renderCategoryOptions();
-      dataReady = true;
-      renderArticles();
-    } catch (error) {
-      console.error("Không thể đọc danh sách bài viết.", error);
-      setStatus("Không đọc được dữ liệu bài viết đã lưu. Vui lòng kiểm tra bộ nhớ trình duyệt.", true);
-      articleForm.querySelectorAll("input, textarea, select, button").forEach((control) => { control.disabled = true; });
-      editor.contentEditable = "false";
+    async function loadBlog() {
+      try {
+        let blog = await RiceArticles.fetchBlog(true);
+        if (blog.version === 1 && blog.articles.length === 0) {
+          const localCategories = RiceArticles.getCategories();
+          const localArticles = RiceArticles.getArticles();
+          if (localArticles.length) blog = await RiceArticles.saveBlog(localCategories, localArticles, blog.version);
+        }
+        blogVersion = blog.version;
+        RiceArticles.saveCategorySelection(blog.categories, blog.articles);
+        articles = RiceArticles.getArticles();
+        renderCategoryOptions();
+        dataReady = true;
+        renderArticles();
+      } catch (error) {
+        console.error("Không thể đọc danh sách bài viết.", error);
+        setStatus(error.message || "Không thể tải danh sách bài viết từ máy chủ.", true);
+        articleForm.querySelectorAll("input, textarea, select, button").forEach((control) => { control.disabled = true; });
+        editor.contentEditable = "false";
+      }
     }
+    loadBlog();
 
     editor.addEventListener("input", syncEditorContent);
     editor.addEventListener("keyup", saveEditorRange);
@@ -551,6 +569,29 @@
       selection.addRange(range);
       editorRange = range.cloneRange();
       fontSize.value = "";
+      syncEditorContent();
+    });
+
+    textColor.addEventListener("pointerdown", saveEditorRange);
+    textColor.addEventListener("change", () => {
+      restoreEditorRange();
+      const selection = window.getSelection();
+      const range = selection.getRangeAt(0);
+      const span = document.createElement("span");
+      span.style.color = textColor.value;
+      if (range.collapsed) {
+        span.append(document.createTextNode("\u200b"));
+        range.insertNode(span);
+        range.setStart(span.firstChild, 1);
+        range.collapse(true);
+      } else {
+        span.append(range.extractContents());
+        range.insertNode(span);
+        range.selectNodeContents(span);
+      }
+      selection.removeAllRanges();
+      selection.addRange(range);
+      editorRange = range.cloneRange();
       syncEditorContent();
     });
 
@@ -695,12 +736,12 @@
       const nextArticles = current
         ? articles.map((item) => item.id === current.id ? article : item)
         : [...articles, article];
-      if (!saveNextArticles(nextArticles)) return;
+      if (!await saveNextArticles(nextArticles)) return;
       resetEditor();
       setStatus(article.status === "published" ? "Bài viết đã được đăng lên cửa hàng." : "Bài viết đã được lưu thành bản nháp.", false);
     });
 
-    articleList.addEventListener("click", (event) => {
+    articleList.addEventListener("click", async (event) => {
       const editButton = event.target.closest("[data-edit-id]");
       if (editButton) {
         editArticle(editButton.dataset.editId);
@@ -710,16 +751,19 @@
       if (!deleteButton) return;
       const article = articles.find((item) => item.id === deleteButton.dataset.deleteId);
       if (!article || !window.confirm(`Bạn có chắc muốn xóa bài "${article.title}"?`)) return;
-      if (saveNextArticles(articles.filter((item) => item.id !== article.id))) {
+      if (await saveNextArticles(articles.filter((item) => item.id !== article.id))) {
         if (articleForm.elements.editingId.value === article.id) resetEditor();
         setStatus("Đã xóa bài viết.", false);
       }
     });
 
     cancelEdit.addEventListener("click", resetEditor);
-    window.addEventListener("storage", (event) => {
+    window.addEventListener("storage", async (event) => {
       if (![RiceArticles.storageKey, RiceArticles.categoriesKey, null].includes(event.key)) return;
       try {
+        const blog = await RiceArticles.fetchBlog(true);
+        blogVersion = blog.version;
+        RiceArticles.saveCategorySelection(blog.categories, blog.articles);
         articles = RiceArticles.getArticles();
         renderCategoryOptions();
         dataReady = true;

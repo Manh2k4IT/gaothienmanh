@@ -615,13 +615,13 @@
     }
 
     renderProducts();
-    try {
-      articles = RiceArticles.getArticles();
+    RiceArticles.fetchBlog().then((blog) => {
+      articles = blog.articles;
       renderArticles();
-    } catch (error) {
+    }).catch((error) => {
       console.error("Không thể đọc bài viết đã lưu.", error);
-      articleGrid.append(makeTextElement("p", "product-empty", "Hiện chưa thể tải danh sách bài viết."));
-    }
+      articleGrid.append(makeTextElement("p", "product-empty", "Hiện chưa thể tải danh sách bài viết từ máy chủ."));
+    });
 
     productGrid.addEventListener("click", (event) => {
       const button = event.target.closest(".quick-add, [data-action=\"buy-now\"]");
@@ -664,13 +664,13 @@
         }
       }
       if ([RiceArticles.storageKey, RiceArticles.categoriesKey, null].includes(event.key)) {
-        try {
-          articles = RiceArticles.getArticles();
+        RiceArticles.fetchBlog().then((blog) => {
+          articles = blog.articles;
           renderArticles();
-        } catch (error) {
+        }).catch((error) => {
           console.error("Không thể đồng bộ danh sách bài viết.", error);
-          notify("Không thể cập nhật bài viết từ thẻ trình duyệt khác.");
-        }
+          notify("Không thể cập nhật bài viết từ máy chủ.");
+        });
       }
     });
 

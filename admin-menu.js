@@ -159,9 +159,9 @@
     }
   }
   async function load() {
-    const [data, categories] = await Promise.all([RiceOrders.request("/api/admin/menu"), RiceOrders.request("/api/admin/categories")]);
+    const [data, categories, blog] = await Promise.all([RiceOrders.request("/api/admin/menu"), RiceOrders.request("/api/admin/categories"), RiceArticles.fetchBlog(true)]);
     productCategories = RiceCategories.validateCategories(categories.items);
-    blogCategories = RiceArticles.getCategories();
+    blogCategories = blog.categories;
     items = RiceMenu.validateMenu(data.items);
     category = RiceMenu.validateCategory(data.category);
     version = data.version;

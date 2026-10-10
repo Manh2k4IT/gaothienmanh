@@ -9,6 +9,7 @@
   let autoSlug = false;
   let snapshot = "";
   let articlesSnapshot = "";
+  let blogVersion = null;
   let selectedArticles = new Set();
   function changed() {
     dirty = true;
@@ -88,10 +89,18 @@
     });
     document.getElementById("addCategory").disabled = categories.length >= 100;
   }
-  function load() {
+  async function load() {
     try {
-      categories = RiceArticles.getCategories();
+      let blog = await RiceArticles.fetchBlog(true);
+      if (blog.version === 1 && blog.articles.length === 0) {
+        const localCategories = RiceArticles.getCategories();
+        const localArticles = RiceArticles.getArticles();
+        if (localArticles.length) blog = await RiceArticles.saveBlog(localCategories, localArticles, blog.version);
+      }
+      RiceArticles.saveCategorySelection(blog.categories, blog.articles);
+      categories = blog.categories;
       articles = RiceArticles.getArticles();
+      blogVersion = blog.version;
       snapshot = localStorage.getItem(RiceArticles.categoriesKey);
       articlesSnapshot = localStorage.getItem(RiceArticles.storageKey);
       draft = null;
@@ -101,22 +110,30 @@
       render();
     } catch (error) { errorMessage(error); }
   }
-  function save(next) {
+  async function save(next) {
     try {
       if (localStorage.getItem(RiceArticles.categoriesKey) !== snapshot) throw new Error("Danh mục đã được sửa ở thẻ khác. Hãy tải lại trước khi lưu.");
       if (localStorage.getItem(RiceArticles.storageKey) !== articlesSnapshot) throw new Error("Bài viết đã thay đổi ở thẻ khác. Hãy tải lại trước khi lưu.");
+      let nextArticles = articles;
       if (draft) {
         const selectedCategory = next.find((item) => item.id === draft.id);
-        const nextArticles = articles.map((article) => {
+        nextArticles = articles.map((article) => {
           if (selectedArticles.has(article.id)) return { ...article, categoryId: draft.id, category: selectedCategory.name };
           if (article.categoryId === draft.id) return { ...article, categoryId: "", category: "Chưa phân loại" };
           return article;
         });
-        RiceArticles.saveCategorySelection(next, nextArticles);
-      } else RiceArticles.saveCategories(next);
-      load();
+      }
+      const saved = await RiceArticles.saveBlog(next, nextArticles, blogVersion);
+      blogVersion = saved.version;
+      categories = saved.categories;
+      articles = RiceArticles.getArticles();
+      snapshot = localStorage.getItem(RiceArticles.categoriesKey);
+      articlesSnapshot = localStorage.getItem(RiceArticles.storageKey);
+      draft = null;
+      dirty = false;
+      render();
       status.classList.remove("error");
-      status.textContent = "Đã lưu danh mục bài viết.";
+      status.textContent = "Đã lưu danh mục bài viết lên máy chủ.";
     } catch (error) { errorMessage(error); }
   }
   document.getElementById("addCategory").addEventListener("click", () => {
@@ -134,13 +151,13 @@
     draft.slug = form.elements.slug.value;
     changed();
   });
-  form.addEventListener("submit", (event) => {
+  form.addEventListener("submit", async (event) => {
     event.preventDefault();
     const next = categories.map((item) => ({ ...item }));
     const index = next.findIndex((item) => item.id === draft.id);
     if (index === -1) next.push(draft);
     else next[index] = draft;
-    save(next);
+    await save(next);
   });
   document.getElementById("cancelCategory").addEventListener("click", () => {
     if (dirty && !confirm("Bỏ các thay đổi chưa lưu?")) return;
@@ -183,10 +200,10 @@
     if (dirty && !confirm("Bỏ các thay đổi chưa lưu và tải lại?")) return;
     load();
   });
-  window.addEventListener("storage", (event) => {
+  window.addEventListener("storage", async (event) => {
     if (![RiceArticles.storageKey, RiceArticles.categoriesKey, null].includes(event.key)) return;
     if (draft) { errorMessage(new Error("Dữ liệu đã thay đổi ở thẻ khác. Hủy chỉnh sửa và tải lại trước khi lưu.")); return; }
-    load();
+    await load();
   });
   window.addEventListener("beforeunload", (event) => {
     if (dirty) { event.preventDefault(); event.returnValue = ""; }

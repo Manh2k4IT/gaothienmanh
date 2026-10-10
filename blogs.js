@@ -49,6 +49,15 @@
   const allowedContentTags = new Set(["A", "B", "BLOCKQUOTE", "BR", "DIV", "EM", "H2", "H3", "I", "IMG", "LI", "OL", "P", "SPAN", "STRONG", "U", "UL"]);
   const allowedFontSizes = new Set(["12px", "14px", "16px", "18px", "20px", "24px", "28px", "32px"]);
 
+  function safeTextColor(value) {
+    if (/^#[0-9a-f]{6}$/i.test(value)) return value.toLowerCase();
+    const rgb = /^rgb\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*\)$/i.exec(value);
+    if (!rgb) return "";
+    const channels = rgb.slice(1).map(Number);
+    if (channels.some((channel) => channel > 255)) return "";
+    return `rgb(${channels.join(", ")})`;
+  }
+
   function safeContentUrl(value, allowDataImage) {
     if (!value || /[\u0000-\u001f\u007f]/.test(value) || value.trim() !== value) return "";
     if (allowDataImage && /^data:image\/jpeg;base64,[A-Za-z0-9+/]+=*$/.test(value)) return value;
@@ -96,7 +105,9 @@
         return element;
       } else if (source.tagName === "SPAN") {
         const size = source.style.fontSize;
+        const color = safeTextColor(source.style.color);
         if (allowedFontSizes.has(size)) element.style.fontSize = size;
+        if (color) element.style.color = color;
       }
 
       source.childNodes.forEach((child) => {
@@ -231,5 +242,29 @@
     }
   }
 
-  window.RiceArticles = { storageKey, categoriesKey, getArticles, saveArticles, sanitizeContent, getCategories, saveCategories, validateCategories, slugifyCategory, categoryHref, saveCategorySelection };
+  async function fetchBlog(admin = false) {
+    const path = admin ? "/api/admin/blog" : "/api/blog";
+    const data = window.RiceOrders
+      ? await window.RiceOrders.request(path)
+      : await fetch(path, { credentials: "same-origin" }).then(async (response) => {
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.error || "Không thể tải bài viết từ máy chủ.");
+        return result;
+      });
+    if (!data || !Array.isArray(data.articles) || !Array.isArray(data.categories) || !Number.isSafeInteger(data.version)) {
+      throw new TypeError("Dữ liệu bài viết nhận từ máy chủ không hợp lệ.");
+    }
+    return data;
+  }
+
+  async function saveBlog(categories, articles, version) {
+    const data = await window.RiceOrders.request("/api/admin/blog", {
+      method: "PUT",
+      body: JSON.stringify({ categories, articles, version })
+    });
+    saveCategorySelection(data.categories, data.articles);
+    return data;
+  }
+
+  window.RiceArticles = { storageKey, categoriesKey, getArticles, saveArticles, sanitizeContent, getCategories, saveCategories, validateCategories, validateArticles, safeTextColor, slugifyCategory, categoryHref, saveCategorySelection, fetchBlog, saveBlog };
 })();

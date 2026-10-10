@@ -8,6 +8,63 @@ const { createStore } = require("./server");
 const { defaultMenu, validateMenu, validLink, validateCategory, defaultCategory, syncCategoryLinks } = require("./menu-model");
 const { validateCategories, slugify, filterProducts, href } = require("./categories-model");
 
+test("Blog API shares, validates and persists articles between public pages and admin", async () => {
+  const directory = fs.mkdtempSync(path.join(os.tmpdir(), "rice-blog-test-"));
+  const databasePath = path.join(directory, "test.sqlite");
+  const password = crypto.randomBytes(24).toString("hex");
+  let server;
+  let origin;
+  const start = async () => {
+    server = createStore({ databasePath, password });
+    await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
+    origin = `http://127.0.0.1:${server.address().port}`;
+  };
+  const stop = async () => {
+    server.closeAllConnections();
+    await new Promise((resolve) => server.close(resolve));
+    server = null;
+  };
+  async function api(route, { method = "GET", body, cookie } = {}) {
+    const response = await fetch(origin + route, {
+      method,
+      headers: { "Content-Type": "application/json", Origin: origin, ...(cookie ? { Cookie: cookie } : {}) },
+      ...(body === undefined ? {} : { body: JSON.stringify(body) })
+    });
+    return { status: response.status, body: await response.json(), cookie: response.headers.get("set-cookie")?.split(";")[0] };
+  }
+  try {
+    await start();
+    assert.deepEqual((await api("/api/blog")).body, { articles: [], categories: [], version: 1 });
+    assert.equal((await api("/api/admin/blog")).status, 401);
+    const login = await api("/api/admin/login", { method: "POST", body: { username: "Manh Trinh", password } });
+    const cookie = login.cookie;
+    const categories = [{ id: "bep-nha", name: "Bếp nhà", slug: "bep-nha" }];
+    const articles = Array.from({ length: 4 }, (_, index) => ({
+      id: `article-${index + 1}`, title: `Bài viết ${index + 1}`, categoryId: categories[0].id, category: categories[0].name,
+      summary: "Tóm tắt bài viết.", content: "Nội dung bài viết đầy đủ.", image: "https://example.com/image.jpg", alt: "Ảnh bài viết",
+      seoTitle: `SEO ${index + 1}`, seoDescription: "Mô tả SEO.", status: index === 3 ? "draft" : "published",
+      createdAt: "2026-10-08T00:00:00.000Z", updatedAt: "2026-10-08T00:00:00.000Z"
+    }));
+    assert.equal((await api("/api/admin/blog", { method: "PUT", body: { categories, articles, version: 1 }, cookie })).status, 200);
+    const publicBlog = await api("/api/blog");
+    assert.equal(publicBlog.body.articles.length, 3);
+    assert.ok(publicBlog.body.articles.every((article) => article.status === "published"));
+    assert.deepEqual(publicBlog.body.categories, categories);
+    assert.equal((await api("/api/admin/blog", { cookie })).body.articles.length, 4);
+    assert.equal((await api("/api/admin/blog", { method: "PUT", body: { categories, articles, version: 1 }, cookie })).status, 409);
+    assert.equal((await api("/api/admin/blog", { method: "PUT", body: { categories: [{ ...categories[0], slug: "../bad" }], articles, version: 2 }, cookie })).status, 400);
+    const sitemap = await (await fetch(origin + "/sitemap.xml")).text();
+    assert.match(sitemap, /bai-viet\.html\?slug=article-1/);
+    assert.doesNotMatch(sitemap, /slug=article-4/);
+    await stop();
+    await start();
+    assert.equal((await api("/api/blog")).body.articles.length, 3);
+  } finally {
+    if (server?.listening) await stop();
+    fs.rmSync(directory, { recursive: true, force: true });
+  }
+});
+
 test("Product categories: unique slugs, membership, limits and search within a category", () => {
   const products = [
     { id: "lai-1", name: "Gạo lài 1", origin: "An Giang" },

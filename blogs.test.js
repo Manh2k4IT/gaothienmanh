@@ -49,6 +49,15 @@ test("Blog categories reject duplicate slugs, malformed records and invalid stor
   assert.equal(api.slugifyCategory("Mẹo nấu cơm Đặc biệt"), "meo-nau-com-dac-biet");
 });
 
+test("Blog text colors allow safe hex and RGB values only", () => {
+  const api = context();
+  assert.equal(api.safeTextColor("#A1b2C3"), "#a1b2c3");
+  assert.equal(api.safeTextColor("rgb(1, 20, 255)"), "rgb(1, 20, 255)");
+  for (const value of ["red", "url(javascript:alert(1))", "rgb(256, 0, 0)", "#fff", ""]) {
+    assert.equal(api.safeTextColor(value), "");
+  }
+});
+
 test("Saving category selections persists article moves and restores both records on storage failure", () => {
   const memory = new Map();
   const api = context(memory);

@@ -182,6 +182,7 @@
       <div class="copyright"><span>© 2025 Gạo Thiên Mạnh. Gạo ngon, cơm lành.</span><span>Chăm chút từ hạt gạo, thương nhau từ bữa cơm.</span></div>
     </div>
   </footer>
+  <script src="orders-api.js"></script>
   <script src="products.js"></script>
   <script src="blogs.js"></script>
   <script>
@@ -274,8 +275,10 @@
       container.append(link);
     }
 
+    (async () => {
     try {
-      const article = RiceArticles.getArticles().find((item) => item.id === slug && item.status === "published");
+      const blog = await RiceArticles.fetchBlog();
+      const article = blog.articles.find((item) => item.id === slug);
       if (!article) {
         showNotFound("Bài viết có thể đã được gỡ hoặc chưa được đăng.");
       } else {
@@ -289,7 +292,7 @@
         container.append(textElement("a", "back-link", "← Tất cả bài viết"));
         container.querySelector(".back-link").href = "bai-viet-danh-sach.html";
         const categoryLink = textElement("a", "article-meta", article.category);
-        const category = RiceArticles.getCategories().find((item) => item.id === article.categoryId);
+        const category = blog.categories.find((item) => item.id === article.categoryId);
         categoryLink.href = category ? RiceArticles.categoryHref(category) : "bai-viet-danh-sach.html";
         container.append(categoryLink);
         container.append(textElement("h1", "", article.title));
@@ -350,10 +353,10 @@
       }
     } catch (error) {
       console.error("Không thể tải bài viết.", error);
-      showNotFound("Không thể đọc dữ liệu bài viết đã lưu trên trình duyệt này.");
+      showNotFound("Không thể tải dữ liệu bài viết từ máy chủ.");
     }
+    })();
   </script>
-  <script src="orders-api.js"></script>
   <script src="menu-model.js"></script>
   <script src="site-content-model.js"></script><script src="site-content.js"></script>
   <script src="categories-model.js"></script>

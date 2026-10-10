@@ -61,14 +61,14 @@ Giay phep: https://www.pexels.com/license/
    Dat HOST=0.0.0.0, PORT theo hosting, PUBLIC_ORIGIN=https://ten-mien-cua-ban.
    Sau khi gan ten mien va bat HTTPS, kiem tra /robots.txt va /sitemap.xml,
    khai bao sitemap trong Google Search Console. Trang blog duoc phep index,
-   nhung bai viet do admin luu trong localStorage chi co tren trinh duyet do;
-   muon Google va khach thay bai tu moi thiet bi, can chuyen kho bai len WordPress
-   hoac may chu. Khong dua trang admin, gio hang hay dat hang vao sitemap.
+   bai viet va danh muc blog duoc luu tren may chu trong data\store.sqlite,
+   trang cong khai chi hien bai da dang. Bai blog cu trong localStorage se duoc
+   chuyen len may chu khi mo trang quan tri bai viet sau khi cap nhat.
+   Khong dua trang admin, gio hang hay dat hang vao sitemap.
    Mui gio het han voucher mac dinh Asia/Ho_Chi_Minh (co the doi bang TZ).
    Bat HTTPS qua reverse proxy, gioi han kich thuoc request 25 MB va backup dinh ky.
    DATABASE_PATH co the tro toi o dia ben vung; khong dung o dia tam/serverless.
    Neu nhieu may chu cung ghi du lieu, can chuyen sang PostgreSQL/MySQL.
-   Blog van la du lieu trinh duyet, khong nam trong he thong dong bo nay.
 8. Kiem tra: npm test (dung co so du lieu tam, khong thay doi don that).
 9. Menu: vao admin > Menu (/admin-menu.html). Them/sua/xoa menu chinh,
    them muc dropdown voi ten va lien ket rieng; dung mui ten len/xuong de sap xep.

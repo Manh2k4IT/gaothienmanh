@@ -203,6 +203,7 @@
       <div class="copyright"><span>© 2025 Gạo Thiên Mạnh. Gạo ngon, cơm lành.</span><span>Chăm chút từ hạt gạo, thương nhau từ bữa cơm.</span></div>
     </div>
   </footer>
+  <script src="orders-api.js"></script>
   <script src="products.js"></script>
   <script src="blogs.js"></script>
   <script>
@@ -295,7 +296,6 @@
 
     function renderArticles() {
       articleGrid.replaceChildren();
-      blogCategories = RiceArticles.getCategories();
       const selectedCategory = blogCategories.find((category) => category.slug === blogCategorySlug);
       const categoryLinks = document.getElementById("blogCategoryLinks");
       categoryLinks.replaceChildren();
@@ -371,25 +371,14 @@
       renderArticles();
     });
 
-    try {
-      articles = RiceArticles.getArticles();
+    RiceArticles.fetchBlog().then((blog) => {
+      articles = blog.articles;
+      blogCategories = blog.categories;
       renderArticles();
-    } catch (error) {
+    }).catch((error) => {
       console.error("Không thể tải danh sách bài viết.", error);
       articleControls.hidden = true;
-      articleGrid.append(textElement("p", "empty-state", "Hiện chưa thể tải danh sách bài viết."));
-    }
-
-    window.addEventListener("storage", (event) => {
-      if (![RiceArticles.storageKey, RiceArticles.categoriesKey, null].includes(event.key)) return;
-      try {
-        articles = RiceArticles.getArticles();
-        page = 0;
-        renderArticles();
-      } catch (error) {
-        console.error("Không thể đồng bộ danh sách bài viết.", error);
-        articleGrid.replaceChildren(textElement("p", "empty-state", "Không thể cập nhật danh sách bài viết."));
-      }
+      articleGrid.append(textElement("p", "empty-state", "Hiện chưa thể tải danh sách bài viết từ máy chủ."));
     });
   </script>
   <script src="orders-api.js"></script>
