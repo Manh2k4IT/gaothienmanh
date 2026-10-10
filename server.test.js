@@ -40,12 +40,24 @@ test("Blog API shares, validates and persists articles between public pages and 
     const cookie = login.cookie;
     const categories = [{ id: "bep-nha", name: "Bếp nhà", slug: "bep-nha" }];
     const articles = Array.from({ length: 4 }, (_, index) => ({
-      id: `article-${index + 1}`, title: `Bài viết ${index + 1}`, categoryId: categories[0].id, category: categories[0].name,
-      summary: "Tóm tắt bài viết.", content: "Nội dung bài viết đầy đủ.", image: "https://example.com/image.jpg", alt: "Ảnh bài viết",
+      id: `article-${index + 1}`, title: index === 0 ? 'Bài viết "đặc biệt" & ngon' : `Bài viết ${index + 1}`, categoryId: categories[0].id, category: categories[0].name,
+      summary: "Tóm tắt bài viết.", content: "Nội dung bài viết đầy đủ.",
+      image: index === 0 ? "data:image/jpeg;base64,/9j/2Q==" : "https://example.com/image.jpg", alt: "Ảnh bài viết",
       seoTitle: `SEO ${index + 1}`, seoDescription: "Mô tả SEO.", status: index === 3 ? "draft" : "published",
       createdAt: "2026-10-08T00:00:00.000Z", updatedAt: "2026-10-08T00:00:00.000Z"
     }));
     assert.equal((await api("/api/admin/blog", { method: "PUT", body: { categories, articles, version: 1 }, cookie })).status, 200);
+    const articlePage = await fetch(`${origin}/bai-viet.html?slug=article-1`);
+    const articleHtml = await articlePage.text();
+    assert.match(articleHtml, /<meta property="og:title" content="Bài viết &quot;đặc biệt&quot; &amp; ngon">/);
+    assert.match(articleHtml, /<meta name="twitter:title" content="Bài viết &quot;đặc biệt&quot; &amp; ngon">/);
+    assert.match(articleHtml, /<meta property="og:description" content="Mô tả SEO\.">/);
+    assert.match(articleHtml, new RegExp(`<meta property="og:url" content="${origin}/bai-viet\\.html\\?slug=article-1">`));
+    assert.match(articleHtml, new RegExp(`<meta property="og:image" content="${origin}/blog-media/article-1\\.jpg">`));
+    const socialImage = await fetch(`${origin}/blog-media/article-1.jpg`);
+    assert.equal(socialImage.headers.get("content-type"), "image/jpeg");
+    assert.deepEqual(Buffer.from(await socialImage.arrayBuffer()), Buffer.from([0xff, 0xd8, 0xff, 0xd9]));
+    assert.equal((await fetch(`${origin}/blog-media/article-4.jpg`)).status, 404);
     const publicBlog = await api("/api/blog");
     assert.equal(publicBlog.body.articles.length, 3);
     assert.ok(publicBlog.body.articles.every((article) => article.status === "published"));

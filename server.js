@@ -158,6 +158,9 @@ function createStore({ databasePath, password, publicOrigin = "", allowLocalAdmi
     res.writeHead(status, { "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store", ...headers });
     res.end(JSON.stringify(data));
   }
+  function escapeHtml(value) {
+    return value.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/'/g, "&#39;");
+  }
   const server = http.createServer(async (req, res) => {
     res.setHeader("X-Content-Type-Options", "nosniff");
     res.setHeader("Referrer-Policy", "same-origin");
@@ -193,6 +196,16 @@ function createStore({ databasePath, password, publicOrigin = "", allowLocalAdmi
         const body = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${[...pages].map((page) => `  <url><loc>${escapeXml(new URL(page, origin).href)}</loc></url>`).join("\n")}\n</urlset>\n`;
         res.writeHead(200, { "Content-Type": "application/xml; charset=utf-8", "Cache-Control": "public, max-age=3600" });
         return res.end(req.method === "HEAD" ? undefined : body);
+      }
+      if (route === "/blog-media" || route.startsWith("/blog-media/")) {
+        if (req.method !== "GET" && req.method !== "HEAD") throw new RequestError(405, "Phương thức không hỗ trợ.");
+        const match = /^\/blog-media\/([a-zA-Z0-9_-]{1,120})\.jpg$/.exec(route);
+        if (!match) throw new RequestError(404, "Không tìm thấy ảnh bài viết.");
+        const article = JSON.parse(getSetting("blog")).articles.find((item) => item.id === match[1] && item.status === "published");
+        if (!article || !/^data:image\/jpeg;base64,[A-Za-z0-9+/]+=*$/.test(article.image)) throw new RequestError(404, "Không tìm thấy ảnh bài viết.");
+        const image = Buffer.from(article.image.slice("data:image/jpeg;base64,".length), "base64");
+        res.writeHead(200, { "Content-Type": "image/jpeg", "Content-Length": image.length, "Cache-Control": "public, max-age=300" });
+        return res.end(req.method === "HEAD" ? undefined : image);
       }
       if (route.startsWith("/api/")) {
         if (!["GET", "POST", "PUT", "PATCH"].includes(req.method)) throw new RequestError(405, "Phương thức không hỗ trợ.");
@@ -421,6 +434,38 @@ function createStore({ databasePath, password, publicOrigin = "", allowLocalAdmi
         }
         res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store" });
         return res.end(req.method === "HEAD" ? undefined : fs.readFileSync(file, "utf8").replace("</body>", '<script src="admin-session.js"></script>\n</body>'));
+      }
+      if (name === "bai-viet.html") {
+        const html = fs.readFileSync(file, "utf8");
+        const slug = url.searchParams.get("slug");
+        const article = slug && JSON.parse(getSetting("blog")).articles.find((item) => item.id === slug && item.status === "published");
+        if (!article) {
+          res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-cache" });
+          return res.end(req.method === "HEAD" ? undefined : html);
+        }
+        const origin = (publicOrigin || `http://${req.headers.host}`).replace(/\/+$/, "");
+        const articleUrl = new URL("/bai-viet.html", origin);
+        articleUrl.searchParams.set("slug", article.id);
+        const imageUrl = /^data:image\/jpeg;base64,/.test(article.image)
+          ? new URL(`/blog-media/${encodeURIComponent(article.id)}.jpg`, origin).href
+          : article.image;
+        const pageTitle = escapeHtml(article.seoTitle || article.title);
+        const shareTitle = escapeHtml(article.title);
+        const description = escapeHtml(article.seoDescription || article.summary);
+        const escapedUrl = escapeHtml(articleUrl.href);
+        const escapedImage = escapeHtml(imageUrl);
+        const personalizedHtml = html
+          .replace(/<title>[\s\S]*?<\/title>/, `<title>${pageTitle}</title>`)
+          .replace(/<meta name="description" content="[^"]*">/, `<meta name="description" content="${description}">`)
+          .replace(/<meta property="og:title" content="[^"]*">/, `<meta property="og:title" content="${shareTitle}">`)
+          .replace(/<meta property="og:description" content="[^"]*">/, `<meta property="og:description" content="${description}">`)
+          .replace(/<meta property="og:url" content="[^"]*">/, `<meta property="og:url" content="${escapedUrl}">`)
+          .replace(/<meta property="og:image" content="[^"]*">/, `<meta property="og:image" content="${escapedImage}">`)
+          .replace(/<meta name="twitter:title" content="[^"]*">/, `<meta name="twitter:title" content="${shareTitle}">`)
+          .replace(/<meta name="twitter:description" content="[^"]*">/, `<meta name="twitter:description" content="${description}">`)
+          .replace(/<meta name="twitter:image" content="[^"]*">/, `<meta name="twitter:image" content="${escapedImage}">`);
+        res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=60" });
+        return res.end(req.method === "HEAD" ? undefined : personalizedHtml);
       }
       const types = { ".html": "text/html; charset=utf-8", ".js": "text/javascript; charset=utf-8", ".css": "text/css; charset=utf-8", ".png": "image/png", ".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".svg": "image/svg+xml", ".ico": "image/x-icon" };
       res.writeHead(200, { "Content-Type": types[path.extname(file)], "Cache-Control": "no-cache" });
