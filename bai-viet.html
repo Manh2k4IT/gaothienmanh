@@ -110,6 +110,19 @@
     .table-of-contents a { color: #435548; font-size: 13px; line-height: 1.6; text-decoration: none; }
     .table-of-contents a:hover { color: #92702f; text-decoration: underline; text-underline-offset: 2px; }
     .article-content [id] { scroll-margin-top: 100px; }
+    .related-articles { margin-top: 44px; padding-top: 26px; border-top: 1px solid var(--line); }
+    .related-articles > h2 { margin: 0 0 20px; color: var(--green); font-family: "Roboto", Arial, sans-serif; font-size: 24px; line-height: 1.3; }
+    .related-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px; }
+    .related-card { display: block; min-width: 0; }
+    .related-card img { display: block; width: 100%; aspect-ratio: 1.58; object-fit: cover; border-radius: 4px; background: var(--cream); }
+    .related-card h3 { margin: 12px 0 0; color: var(--green); font-family: "Roboto", Arial, sans-serif; font-size: 17px; font-weight: 700; line-height: 1.5; overflow-wrap: anywhere; }
+    .related-card:hover h3 { color: #92702f; }
+    .related-card:focus-visible { outline: 2px solid var(--green); outline-offset: 4px; }
+    @media (max-width: 650px) {
+      .related-grid { grid-template-columns: 1fr; }
+      .related-card { display: grid; grid-template-columns: 35% minmax(0, 1fr); align-items: start; gap: 14px; }
+      .related-card h3 { margin: 0; }
+    }
     .not-found { padding: 60px 0; text-align: center; }
     .not-found h1 { font-size: 36px; }
     .not-found p { margin: 14px 0 22px; color: var(--muted); font-size: 13px; }
@@ -371,6 +384,30 @@
           container.append(tableOfContents);
         }
         container.append(content);
+        const related = RiceArticles.latestRelatedArticles(blog.articles, article.id);
+        if (related.length) {
+          const section = document.createElement("section");
+          section.className = "related-articles";
+          section.setAttribute("aria-labelledby", "relatedArticlesHeading");
+          const heading = textElement("h2", "", "Bài viết liên quan");
+          heading.id = "relatedArticlesHeading";
+          section.append(heading);
+          const grid = document.createElement("div");
+          grid.className = "related-grid";
+          related.forEach((item) => {
+            const card = document.createElement("a");
+            card.className = "related-card";
+            card.href = `bai-viet.html?slug=${encodeURIComponent(item.id)}`;
+            const cover = document.createElement("img");
+            cover.src = item.image;
+            cover.alt = "";
+            cover.loading = "lazy";
+            card.append(cover, textElement("h3", "", item.title));
+            grid.append(card);
+          });
+          section.append(grid);
+          container.append(section);
+        }
       }
     } catch (error) {
       console.error("Không thể tải bài viết.", error);

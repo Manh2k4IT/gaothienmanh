@@ -11,6 +11,20 @@ function context(memory = new Map()) {
   return sandbox.window.RiceArticles;
 }
 
+test("Related articles show at most three newest published articles excluding the current one", () => {
+  const api = context();
+  const article = (id, date, status = "published") => ({ id, createdAt: date, updatedAt: date, status });
+  const items = [
+    article("old", "2026-01-01"), article("current", "2026-10-10"),
+    article("third", "2026-07-01"), article("draft", "2026-10-11", "draft"),
+    article("newest", "2026-10-09"), article("second", "2026-09-01")
+  ];
+  assert.deepEqual(Array.from(api.latestRelatedArticles(items, "current"), (item) => item.id), ["newest", "second", "third"]);
+  assert.equal(items[0].id, "old");
+  assert.equal(api.latestRelatedArticles([items[1], items[3]], "current").length, 0);
+  assert.equal(api.latestRelatedArticles([items[0]], "current").length, 1);
+});
+
 test("Blog categories preserve old groups, rename membership, persist and delete without deleting articles", () => {
   const memory = new Map();
   const api = context(memory);

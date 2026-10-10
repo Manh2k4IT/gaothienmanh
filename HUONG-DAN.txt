@@ -91,6 +91,8 @@ Giay phep: https://www.pexels.com/license/
    (Command+B tren Mac) de bat/tat; co the dung nut B tren thanh cong cu.
    Anh bia: nhap o Chu thich anh bia. Anh trong bai: sau khi chen, nhap
    chu thich ngay duoi anh; voi anh cu, bam anh > Chu thich anh de sua.
+   Duoi bai viet co muc Bai viet lien quan: tu dong hien toi da 3 bai moi
+   nhat da dang, khong lap bai dang doc. Khong co bai khac thi an muc nay.
 9. Menu: vao admin > Menu (/admin-menu.html). Them/sua/xoa menu chinh,
    them muc dropdown voi ten va lien ket rieng; dung mui ten len/xuong de sap xep.
    Bam Luu menu de dang truc tiep len may chu, khong can cong cu Du lieu cua hang.

@@ -269,5 +269,11 @@
     return data;
   }
 
-  window.RiceArticles = { storageKey, categoriesKey, getArticles, saveArticles, sanitizeContent, getCategories, saveCategories, validateCategories, validateArticles, safeTextColor, slugifyCategory, categoryHref, saveCategorySelection, fetchBlog, saveBlog };
+  function latestRelatedArticles(articles, currentId) {
+    return articles.filter((article) => article.status === "published" && article.id !== currentId)
+      .sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt) || Date.parse(b.updatedAt) - Date.parse(a.updatedAt))
+      .slice(0, 3);
+  }
+
+  window.RiceArticles = { storageKey, categoriesKey, getArticles, saveArticles, sanitizeContent, getCategories, saveCategories, validateCategories, validateArticles, safeTextColor, slugifyCategory, categoryHref, saveCategorySelection, fetchBlog, saveBlog, latestRelatedArticles };
 })();
