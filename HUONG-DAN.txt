@@ -7,6 +7,8 @@ Giay phep: https://www.pexels.com/license/
 1. Cai Node.js 24 hoac moi hon. Trong thu muc website, chay: npm start
 2. Mo http://127.0.0.1:8002 (khong dung server tinh cong 8000/8001).
    Giao dien cua hang: vao admin > Giao dien cua hang (/admin-giao-dien.html).
+   Footer dung chu 15 px, tieu de nhom 16 px va ban quyen 13 px, mau sang
+   de de doc. Bo cuc tu dong gian cot tren may tinh bang va dien thoai.
    Sua logo/ten cua hang, banner, cau chuyen, khoi dang ky va chan trang.
    Nhom 4 cam ket cua hang: sua tieu de va mo ta tung o tren trang chu;
    bieu tuong va thu tu 4 o giu nguyen. Bam Luu giao dien de ap dung.
