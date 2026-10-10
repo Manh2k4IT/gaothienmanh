@@ -1,0 +1,23 @@
+.admin-session-footer { margin-top: auto; padding-top: 20px; }
+.admin-session-logout { display: flex; width: 100%; min-height: 44px; align-items: center; justify-content: center; padding: 10px 14px; border: 1px solid #d3a650; border-radius: 5px; background: #24543b; color: white; font: inherit; font-size: 12px; font-weight: 700; cursor: pointer; }
+.admin-session-logout:hover { background: #2c6245; }
+.admin-session-logout:focus-visible { outline: 2px solid #edca78; outline-offset: 2px; }
+.admin-session-logout:disabled { opacity: .55; cursor: wait; }
+.admin-session-error { margin: 10px 0 0; color: #ffd1cb; font-size: 12px; line-height: 1.6; overflow-wrap: anywhere; }
+.admin-session-footer [hidden], .admin-order-count[hidden] { display: none !important; }
+.admin-order-count { display: inline-flex; min-width: 22px; height: 22px; align-items: center; justify-content: center; margin-left: auto; padding: 0 6px; border-radius: 12px; background: #d52d38; color: white; font-size: 11px; font-weight: 700; }
+.shop-header .admin-session-footer { margin-top: 0; padding-top: 0; }
+.shop-header .admin-session-error { color: #a33122; }
+.admin-sidebar-menu { display: flex; flex: 1 0 auto; flex-direction: column; }
+.admin-sidebar-menu > * { flex-shrink: 0; }
+.admin-menu-toggle { display: none; }
+@media (max-width: 650px) {
+  .sidebar { position: relative; }
+  .sidebar > .brand { min-height: 46px; padding-right: 52px; }
+  .sidebar .admin-menu-toggle { position: absolute; top: 13px; right: 16px; display: flex; width: 44px; height: 44px; align-items: center; justify-content: center; padding: 0; border: 1px solid #ffffff40; border-radius: 5px; background: #24543b; color: white; font: inherit; font-size: 24px; cursor: pointer; }
+  .sidebar .admin-menu-toggle:focus-visible { outline: 2px solid #edca78; outline-offset: 2px; }
+  .sidebar:not(.admin-menu-open) .admin-sidebar-menu { display: none; }
+  .sidebar .admin-sidebar-menu { padding-top: 10px; }
+  .sidebar .admin-sidebar-menu .side-link { font-size: 13px; }
+  .sidebar .admin-session-footer { width: 100%; padding-top: 12px; }
+}

@@ -158,6 +158,12 @@ function createStore({ databasePath, password, publicOrigin = "", allowLocalAdmi
     res.writeHead(status, { "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store", ...headers });
     res.end(JSON.stringify(data));
   }
+  function orderNotifications() {
+    const seen = Number(getSetting("orders-seen-cursor") || 0);
+    const cursor = db.prepare("SELECT coalesce(max(rowid), 0) AS cursor FROM orders").get().cursor;
+    const count = db.prepare("SELECT count(*) AS count FROM orders WHERE rowid > ?").get(seen).count;
+    return { count, cursor };
+  }
   function escapeHtml(value) {
     return value.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/'/g, "&#39;");
   }
@@ -265,6 +271,15 @@ function createStore({ databasePath, password, publicOrigin = "", allowLocalAdmi
         if (route.startsWith("/api/admin/")) {
           const token = requireAdmin(req);
           if (route === "/api/admin/session" && req.method === "GET") return json(res, 200, { ok: true, localMode: token === null });
+          if (route === "/api/admin/order-notifications" && req.method === "GET") return json(res, 200, orderNotifications());
+          if (route === "/api/admin/orders/seen" && req.method === "POST") {
+            const body = await readBody(req);
+            const current = orderNotifications();
+            if (!Number.isSafeInteger(body?.cursor) || body.cursor < 0 || body.cursor > current.cursor) throw new RequestError(400, "Mốc thông báo đơn hàng không hợp lệ.");
+            const seen = Number(getSetting("orders-seen-cursor") || 0);
+            setSetting("orders-seen-cursor", String(Math.max(seen, body.cursor)));
+            return json(res, 200, orderNotifications());
+          }
           if (route === "/api/admin/blog" && req.method === "GET") return json(res, 200, JSON.parse(getSetting("blog")));
           if (route === "/api/admin/blog" && req.method === "PUT") {
             const body = await readBody(req, 25 * 1024 * 1024);
@@ -391,7 +406,7 @@ function createStore({ databasePath, password, publicOrigin = "", allowLocalAdmi
             const page = Number(url.searchParams.get("page") || 1);
             if (!Number.isSafeInteger(page) || page < 1) throw new RequestError(400, "Trang không hợp lệ.");
             const rows = db.prepare("SELECT * FROM orders ORDER BY created_at DESC LIMIT 30 OFFSET ?").all((page - 1) * 30);
-            return json(res, 200, { orders: rows.map((row) => ({ ...JSON.parse(row.detail), id: row.id, createdAt: row.created_at, status: row.status })), count: db.prepare("SELECT count(*) AS count FROM orders").get().count });
+            return json(res, 200, { orders: rows.map((row) => ({ ...JSON.parse(row.detail), id: row.id, createdAt: row.created_at, status: row.status })), count: db.prepare("SELECT count(*) AS count FROM orders").get().count, notificationCursor: orderNotifications().cursor });
           }
           if (/^\/api\/admin\/orders\/[a-f0-9-]{36}$/.test(route) && req.method === "PATCH") {
             const body = await readBody(req);
@@ -433,7 +448,7 @@ function createStore({ databasePath, password, publicOrigin = "", allowLocalAdmi
           return res.end();
         }
         res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store" });
-        return res.end(req.method === "HEAD" ? undefined : fs.readFileSync(file, "utf8").replace("</body>", '<script src="admin-session.js"></script>\n</body>'));
+        return res.end(req.method === "HEAD" ? undefined : fs.readFileSync(file, "utf8").replace("</head>", '<link rel="stylesheet" href="admin-session.css">\n</head>').replace("</body>", '<script src="admin-session.js"></script>\n</body>'));
       }
       if (name === "bai-viet.html") {
         const html = fs.readFileSync(file, "utf8");

@@ -51,6 +51,12 @@ Giay phep: https://www.pexels.com/license/
    tep nay de dang du lieu. Khong tu dong di chuyen du lieu cua ban.
 5. Khach bam Dat hang ngay, nhap ten, dien thoai, dia chi va gui don.
    Don moi hien trong admin khi bam Lam moi don hang.
+   Muc Don hang tren menu admin hien so do dem don chua xem, kiem tra moi
+   30 giay khi tab dang mo va khi quay lai tab. Tai danh sach don thanh cong
+   se danh dau da xem tren may chu; don den sau moc tai van giu thong bao.
+   Nut Dang xuat nam duoi cung menu admin, khong che noi dung chinh sua.
+   Tren dien thoai (rong toi da 650 px), menu admin mac dinh dong. Bam nut
+   menu de mo/dong; chon lien ket, bam ngoai menu hoac Escape de dong lai.
    Chua thanh toan online, chua tu tinh phi giao hang, chua tru/giu ton kho.
    Admin tu xac nhan don, cap nhat ton va dang du lieu moi len may chu.
 6. Co so du lieu: data\store.sqlite. Sao luu bang cong cu SQLite backup

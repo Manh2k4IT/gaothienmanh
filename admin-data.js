@@ -32,11 +32,6 @@
       message("Đã đăng nhập.");
     });
   });
-  document.getElementById("logout").addEventListener("click", () => action(async () => {
-    await RiceOrders.post("/api/admin/logout", {});
-    showAdmin(false);
-    message("Đã đăng xuất.");
-  }));
   document.getElementById("publish").addEventListener("click", () => {
     if (!confirm("Đăng toàn bộ sản phẩm và voucher của trình duyệt này, thay thế dữ liệu đang bán trên máy chủ?")) return;
     action(async () => {

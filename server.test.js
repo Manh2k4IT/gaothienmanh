@@ -329,7 +329,9 @@ test("Admin login requires username and password, protects every admin page, and
       const response = await fetch(origin + "/" + name, { headers: { Cookie: cookie }, redirect: "manual" });
       assert.equal(response.status, 200, name);
       assert.equal(response.headers.get("cache-control"), "no-store");
-      assert.match(await response.text(), /src="admin-session.js"/);
+      const html = await response.text();
+      assert.match(html, /src="admin-session.js"/);
+      assert.match(html, /href="admin-session.css"/);
     }
     const logout = await post("/api/admin/logout", {}, oldCookie);
     assert.equal(logout.status, 200);
@@ -340,6 +342,68 @@ test("Admin login requires username and password, protects every admin page, and
   } finally {
     server.closeAllConnections();
     await new Promise((resolve) => server.close(resolve));
+    fs.rmSync(directory, { recursive: true, force: true });
+  }
+});
+
+test("Order notifications persist seen cursors and preserve orders arriving while viewing", async () => {
+  const directory = fs.mkdtempSync(path.join(os.tmpdir(), "rice-notifications-test-"));
+  const databasePath = path.join(directory, "test.sqlite");
+  const password = crypto.randomBytes(24).toString("hex");
+  let server;
+  let origin;
+  async function start() {
+    server = createStore({ databasePath, password });
+    await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
+    origin = `http://127.0.0.1:${server.address().port}`;
+  }
+  async function stop() {
+    server.closeAllConnections();
+    await new Promise((resolve) => server.close(resolve));
+    server = null;
+  }
+  async function api(route, { method = "GET", body, cookie } = {}) {
+    const response = await fetch(origin + route, { method, headers: { Origin: origin, "Content-Type": "application/json", Cookie: cookie || "" },
+      ...(body === undefined ? {} : { body: JSON.stringify(body) }) });
+    return { status: response.status, body: await response.json(), cookie: response.headers.get("set-cookie")?.split(";")[0] };
+  }
+  async function login() {
+    return (await api("/api/admin/login", { method: "POST", body: { username: "Manh Trinh", password } })).cookie;
+  }
+  try {
+    await start();
+    assert.equal((await api("/api/admin/order-notifications")).status, 401);
+    assert.equal((await api("/api/admin/orders/seen", { method: "POST", body: { cursor: 0 } })).status, 401);
+    const cookie = await login();
+    assert.deepEqual((await api("/api/admin/order-notifications", { cookie })).body, { count: 0, cursor: 0 });
+    const product = (await api("/api/catalog")).body.products[0];
+    const body = { accepted: true, customer: { name: "Test Customer", phone: "0901234567", address: "123 Test Street", note: "" },
+      items: [{ id: product.id, quantity: 1 }], expectedTotal: product.price };
+    const first = await api("/api/orders", { method: "POST", body: { ...body, requestId: crypto.randomUUID() } });
+    assert.equal(first.status, 201);
+    assert.equal((await api("/api/admin/order-notifications", { cookie })).body.count, 1);
+    const viewed = (await api("/api/admin/orders", { cookie })).body;
+    assert.equal((await api("/api/admin/order-notifications", { cookie })).body.count, 1);
+    for (const cursor of [-1, 1.5, "1", null]) {
+      assert.equal((await api("/api/admin/orders/seen", { method: "POST", body: { cursor }, cookie })).status, 400);
+    }
+    assert.equal((await api("/api/admin/orders/seen", { method: "POST", body: { cursor: viewed.notificationCursor + 1 }, cookie })).status, 400);
+    const second = await api("/api/orders", { method: "POST", body: { ...body, requestId: crypto.randomUUID() } });
+    assert.equal(second.status, 201);
+    const seen = await api("/api/admin/orders/seen", { method: "POST", body: { cursor: viewed.notificationCursor }, cookie });
+    assert.equal(seen.body.count, 1);
+    assert.equal((await api(`/api/admin/orders/${second.body.id}`, { method: "PATCH", body: { status: "confirmed" }, cookie })).status, 200);
+    assert.equal((await api("/api/admin/order-notifications", { cookie })).body.count, 1);
+    await stop();
+    await start();
+    const newCookie = await login();
+    assert.equal((await api("/api/admin/order-notifications", { cookie: newCookie })).body.count, 1);
+    const all = (await api("/api/admin/orders", { cookie: newCookie })).body;
+    assert.equal((await api("/api/admin/orders/seen", { method: "POST", body: { cursor: all.notificationCursor }, cookie: newCookie })).body.count, 0);
+    assert.equal((await api("/api/admin/orders/seen", { method: "POST", body: { cursor: viewed.notificationCursor }, cookie: newCookie })).body.count, 0);
+    assert.equal((await api("/api/admin/orders", { cookie: newCookie })).body.count, 2);
+  } finally {
+    if (server) await stop();
     fs.rmSync(directory, { recursive: true, force: true });
   }
 });

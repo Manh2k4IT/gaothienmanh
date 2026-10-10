@@ -125,6 +125,8 @@
     document.getElementById("pageLabel").textContent = `Trang ${page}`;
     document.getElementById("previous").disabled = page === 1;
     document.getElementById("next").disabled = page * 30 >= data.count;
+    await RiceOrders.post("/api/admin/orders/seen", { cursor: data.notificationCursor });
+    window.dispatchEvent(new Event("riceordersseen"));
   }
   async function action(callback) {
     if (busy) return;
@@ -146,7 +148,6 @@
   document.getElementById("refresh").addEventListener("click", () => action(async () => { await loadOrders(); message("Đã làm mới đơn hàng."); }));
   document.getElementById("previous").addEventListener("click", () => action(async () => { if (page > 1) await loadOrders(page - 1); }));
   document.getElementById("next").addEventListener("click", () => action(() => loadOrders(page + 1)));
-  document.getElementById("logout").addEventListener("click", () => action(async () => { await RiceOrders.post("/api/admin/logout", {}); showAdmin(false); message("Đã đăng xuất."); }));
   action(async () => {
     try {
       const session = await RiceOrders.request("/api/admin/session");
