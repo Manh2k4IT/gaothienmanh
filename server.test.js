@@ -494,6 +494,9 @@ test("Order API: authoritative pricing, vouchers, customer validation, persisten
     assert.match(productHtml, /<title>Gạo Jasmine thơm — Gạo Thiên Mạnh<\/title>/);
     assert.match(productHtml, new RegExp(`<link rel="canonical" href="${origin}/chi-tiet-gao\\.html\\?id=gao-jasmine">`));
     assert.match(productHtml, /"@type":"Product"/);
+    assert.match(productHtml, /"@type":"BreadcrumbList"/);
+    assert.match(productHtml, /Gạo Jasmine có hạt thon dài, màu trắng trong/);
+    assert.match(productHtml, /<h2>Thông tin sản phẩm<\/h2>/);
     assert.match(productHtml, /"priceCurrency":"VND"/);
     assert.match(productHtml, /"image":\["https:\/\/images\.unsplash\.com\//);
     assert.match(productHtml, /"seller":\{"@type":"Organization","name":"Gạo Thiên Mạnh"\}/);

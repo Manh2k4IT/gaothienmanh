@@ -169,6 +169,20 @@ function createStore({ databasePath, password, publicOrigin = "", allowLocalAdmi
   function escapeHtml(value) {
     return value.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/'/g, "&#39;");
   }
+  function plainText(value) {
+    return value.replace(/<br\s*\/?>|<\/(?:p|div|h[1-6]|li)>/gi, "\n")
+      .replace(/<[^>]*>/g, " ")
+      .replace(/&nbsp;/gi, " ")
+      .replace(/&amp;/gi, "&")
+      .replace(/&lt;/gi, "<")
+      .replace(/&gt;/gi, ">")
+      .replace(/&quot;/gi, "\"")
+      .replace(/&#39;|&apos;/gi, "'")
+      .replace(/[ \t]+\n/g, "\n")
+      .replace(/\n[ \t]+/g, "\n")
+      .replace(/\n{3,}/g, "\n\n")
+      .trim();
+  }
   function escapeJsonLd(value) {
     return JSON.stringify(value).replace(/</g, "\\u003c");
   }
@@ -603,25 +617,39 @@ function createStore({ databasePath, password, publicOrigin = "", allowLocalAdmi
         const productUrl = new URL("/chi-tiet-gao.html", origin);
         productUrl.searchParams.set("id", product.id);
         const description = product.description || `${product.name}, ${product.origin}. Xem giá bán và liên hệ Gạo Thiên Mạnh để đặt gạo giao tận nhà.`;
+        const detailedDescription = plainText(product.details || "");
+        const schemaDescription = [description, detailedDescription].filter(Boolean).join("\n\n");
         const productImage = /^data:image\/jpeg;base64,/.test(product.image)
           ? new URL(`/product-media/${encodeURIComponent(product.id)}.jpg`, origin).href
           : /^https?:\/\//i.test(product.image) ? new URL(product.image).href : "";
         const title = `${product.name} — Gạo Thiên Mạnh`;
+        const breadcrumbItems = [
+          { "@type": "ListItem", position: 1, name: "Gạo Thiên Mạnh", item: new URL("/", origin).href },
+          { "@type": "ListItem", position: 2, name: "Gạo ngon", item: new URL("/gao.html", origin).href },
+          { "@type": "ListItem", position: 3, name: product.name, item: productUrl.href }
+        ];
         const productSchema = {
           "@context": "https://schema.org",
-          "@type": "Product",
-          name: product.name,
-          description,
-          sku: product.id,
-          ...(productImage ? { image: [productImage] } : {}),
-          offers: {
-            "@type": "Offer",
-            url: productUrl.href,
-            priceCurrency: "VND",
-            price: product.price,
-            availability: product.stock === 0 ? "https://schema.org/OutOfStock" : "https://schema.org/InStock",
-            seller: { "@type": "Organization", name: "Gạo Thiên Mạnh" }
-          }
+          "@graph": [
+            {
+              "@type": "Product",
+              name: product.name,
+              description: schemaDescription,
+              sku: product.id,
+              ...(productImage ? { image: [productImage] } : {}),
+              offers: {
+                "@type": "Offer",
+                url: productUrl.href,
+                priceCurrency: "VND",
+                price: product.price,
+                ...(Number.isSafeInteger(product.stock) ? {
+                  availability: product.stock === 0 ? "https://schema.org/OutOfStock" : "https://schema.org/InStock"
+                } : {}),
+                seller: { "@type": "Organization", name: "Gạo Thiên Mạnh" }
+              }
+            },
+            { "@type": "BreadcrumbList", itemListElement: breadcrumbItems }
+          ]
         };
         let productHtml = addCanonical(html, productUrl.href)
           .replace(/<title>[\s\S]*?<\/title>/, `<title>${escapeHtml(title)}</title>`)
@@ -633,6 +661,11 @@ function createStore({ databasePath, password, publicOrigin = "", allowLocalAdmi
         productHtml = setMeta(productHtml, /<meta name="twitter:title" content="[^"]*">/, title);
         productHtml = setMeta(productHtml, /<meta name="twitter:description" content="[^"]*">/, description);
         productHtml = setMeta(productHtml, /<meta name="twitter:image" content="[^"]*">/, productImage);
+        const detailsMarkup = detailedDescription
+          ? `<section><h2>Thông tin sản phẩm</h2>${detailedDescription.split(/\n{2,}/).map((paragraph) => `<p>${escapeHtml(paragraph.replace(/\n/g, " "))}</p>`).join("")}</section>`
+          : "";
+        const fallbackMarkup = `<article class="product-seo-fallback"><h1>${escapeHtml(product.name)}</h1><p>${escapeHtml(description)}</p><p>Giá: ${product.price.toLocaleString("vi-VN")} ₫</p>${detailsMarkup}</article>`;
+        productHtml = productHtml.replace('<section id="productDetails" aria-live="polite"></section>', `<section id="productDetails" aria-live="polite">${fallbackMarkup}</section>`);
         productHtml = productHtml.replace("</head>", `${jsonLdScript(productSchema)}\n</head>`);
         res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=60" });
         return res.end(req.method === "HEAD" ? undefined : productHtml);
