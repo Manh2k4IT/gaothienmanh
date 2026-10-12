@@ -15,6 +15,8 @@ class RequestError extends Error {
   constructor(status, message) { super(message); this.status = status; }
 }
 function createStore({ databasePath, password, publicOrigin = "", allowLocalAdmin = false }) {
+  const canonicalOrigin = publicOrigin ? new URL(publicOrigin).origin : "";
+  publicOrigin = canonicalOrigin;
   fs.mkdirSync(path.dirname(databasePath), { recursive: true });
   const db = new DatabaseSync(databasePath);
   db.exec("PRAGMA journal_mode = WAL; PRAGMA busy_timeout = 5000;");
@@ -46,7 +48,7 @@ function createStore({ databasePath, password, publicOrigin = "", allowLocalAdmi
   if (!getSetting("blog")) setSetting("blog", JSON.stringify({ articles: [], categories: [], version: 1 }));
   if (!getSetting("site-content")) setSetting("site-content", JSON.stringify({ content: siteContent.defaults(), version: 1 }));
   const storedContent = JSON.parse(getSetting("site-content"));
-  if (storedContent.content.header === undefined || storedContent.content.benefits === undefined) {
+  if (storedContent.content.header === undefined || storedContent.content.benefits === undefined || storedContent.content.seo === undefined) {
     setSetting("site-content", JSON.stringify({ content: siteContent.validate(siteContent.migrate(storedContent.content)), version: storedContent.version + 1 }));
   }
   const categoryDefaults = () => defaultCategory(JSON.parse(getSetting("products")));
@@ -167,6 +169,35 @@ function createStore({ databasePath, password, publicOrigin = "", allowLocalAdmi
   function escapeHtml(value) {
     return value.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/'/g, "&#39;");
   }
+  function escapeJsonLd(value) {
+    return JSON.stringify(value).replace(/</g, "\\u003c");
+  }
+  function canonicalUrl(route, url, origin) {
+    const pathname = route === "/index.html" ? "/" : route;
+    const result = new URL(pathname, origin);
+    const allowedParams = {
+      "/gao.html": ["category"],
+      "/chi-tiet-gao.html": ["id"],
+      "/bai-viet-danh-sach.html": ["category"],
+      "/bai-viet.html": ["slug"]
+    };
+    for (const key of allowedParams[pathname] || []) {
+      const value = url.searchParams.get(key);
+      if (value) result.searchParams.set(key, value);
+    }
+    return result.href;
+  }
+  function addCanonical(html, href) {
+    if (/<link\s+rel="canonical"/i.test(html)) return html;
+    const link = `<link rel="canonical" href="${escapeHtml(href)}">`;
+    return html.replace('<script src="seo.js"></script>', `${link}\n  <script src="seo.js"></script>`);
+  }
+  function setMeta(html, pattern, value) {
+    return html.replace(pattern, (tag) => tag.replace(/content="[^"]*"/, `content="${escapeHtml(value)}"`));
+  }
+  function jsonLdScript(value) {
+    return `<script type="application/ld+json">${escapeJsonLd(value)}</script>`;
+  }
   const server = http.createServer(async (req, res) => {
     res.setHeader("X-Content-Type-Options", "nosniff");
     res.setHeader("Referrer-Policy", "same-origin");
@@ -174,10 +205,23 @@ function createStore({ databasePath, password, publicOrigin = "", allowLocalAdmi
     try {
       const url = new URL(req.url, "http://localhost");
       const route = url.pathname;
+      if (canonicalOrigin && ["GET", "HEAD"].includes(req.method) && !route.startsWith("/api/")) {
+        const canonicalHost = new URL(canonicalOrigin).host.toLowerCase();
+        const requestHost = (req.headers.host || "").toLowerCase();
+        const forwardedProto = (req.headers["x-forwarded-proto"] || "").split(",")[0].trim().toLowerCase();
+        if ((requestHost && requestHost !== canonicalHost) || (canonicalOrigin.startsWith("https:") && forwardedProto === "http") || route === "/index.html") {
+          const destination = new URL(canonicalOrigin);
+          destination.pathname = url.pathname;
+          destination.search = url.search;
+          if (route === "/index.html") destination.pathname = "/";
+          res.writeHead(301, { Location: destination.href, "Cache-Control": "public, max-age=3600" });
+          return res.end();
+        }
+      }
       if (!publicOrigin && !/^(?:localhost|127\.0\.0\.1|\[::1\])(?::\d+)?$/.test(req.headers.host || "")) throw new RequestError(403, "Cần cấu hình PUBLIC_ORIGIN khi sử dụng tên miền.");
       if (route === "/robots.txt" || route === "/sitemap.xml") {
         if (req.method !== "GET" && req.method !== "HEAD") throw new RequestError(405, "Phương thức không hỗ trợ.");
-        const origin = (publicOrigin || `http://${req.headers.host}`).replace(/\/+$/, "");
+        const origin = canonicalOrigin || `http://${req.headers.host}`;
         if (route === "/robots.txt") {
           res.writeHead(200, { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "public, max-age=3600" });
           return res.end(req.method === "HEAD" ? undefined : `User-agent: *\nAllow: /\nSitemap: ${origin}/sitemap.xml\n`);
@@ -211,6 +255,31 @@ function createStore({ databasePath, password, publicOrigin = "", allowLocalAdmi
         if (!article || !/^data:image\/jpeg;base64,[A-Za-z0-9+/]+=*$/.test(article.image)) throw new RequestError(404, "Không tìm thấy ảnh bài viết.");
         const image = Buffer.from(article.image.slice("data:image/jpeg;base64,".length), "base64");
         res.writeHead(200, { "Content-Type": "image/jpeg", "Content-Length": image.length, "Cache-Control": "public, max-age=300" });
+        return res.end(req.method === "HEAD" ? undefined : image);
+      }
+      if (route === "/product-media" || route.startsWith("/product-media/")) {
+        if (req.method !== "GET" && req.method !== "HEAD") throw new RequestError(405, "Phương thức không hỗ trợ.");
+        const match = /^\/product-media\/([a-zA-Z0-9_-]{1,120})\.jpg$/.exec(route);
+        if (!match) throw new RequestError(404, "Không tìm thấy ảnh sản phẩm.");
+        const product = JSON.parse(getSetting("products")).find((item) => item.id === match[1]);
+        if (!product || !/^data:image\/jpeg;base64,[A-Za-z0-9+/]+=*$/.test(product.image)) throw new RequestError(404, "Không tìm thấy ảnh sản phẩm.");
+        const image = Buffer.from(product.image.slice("data:image/jpeg;base64,".length), "base64");
+        res.writeHead(200, { "Content-Type": "image/jpeg", "Content-Length": image.length, "Cache-Control": "public, max-age=300" });
+        return res.end(req.method === "HEAD" ? undefined : image);
+      }
+      if (route === "/brand-logo") {
+        if (req.method !== "GET" && req.method !== "HEAD") throw new RequestError(405, "Phương thức không hỗ trợ.");
+        const logo = JSON.parse(getSetting("site-content")).content.brand.logo;
+        if (!logo.startsWith("data:")) {
+          const destination = new URL(logo, canonicalOrigin || `http://${req.headers.host}`);
+          res.writeHead(302, { Location: destination.href, "Cache-Control": "public, max-age=3600" });
+          return res.end();
+        }
+        const match = /^data:image\/(png|jpeg|webp);base64,([A-Za-z0-9+/]+=*)$/.exec(logo);
+        if (!match) throw new RequestError(404, "Không tìm thấy logo.");
+        const image = Buffer.from(match[2], "base64");
+        const contentType = match[1] === "jpeg" ? "image/jpeg" : `image/${match[1]}`;
+        res.writeHead(200, { "Content-Type": contentType, "Content-Length": image.length, "Cache-Control": "public, max-age=3600" });
         return res.end(req.method === "HEAD" ? undefined : image);
       }
       if (route.startsWith("/api/")) {
@@ -455,10 +524,11 @@ function createStore({ databasePath, password, publicOrigin = "", allowLocalAdmi
         const slug = url.searchParams.get("slug");
         const article = slug && JSON.parse(getSetting("blog")).articles.find((item) => item.id === slug && item.status === "published");
         if (!article) {
-          res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-cache" });
-          return res.end(req.method === "HEAD" ? undefined : html);
+          const notFoundHtml = html.replace("</head>", '<meta name="robots" content="noindex, nofollow">\n</head>');
+          res.writeHead(404, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-cache" });
+          return res.end(req.method === "HEAD" ? undefined : notFoundHtml);
         }
-        const origin = (publicOrigin || `http://${req.headers.host}`).replace(/\/+$/, "");
+        const origin = canonicalOrigin || `http://${req.headers.host}`;
         const articleUrl = new URL("/bai-viet.html", origin);
         articleUrl.searchParams.set("slug", article.id);
         const imageUrl = /^data:image\/jpeg;base64,/.test(article.image)
@@ -469,7 +539,44 @@ function createStore({ databasePath, password, publicOrigin = "", allowLocalAdmi
         const description = escapeHtml(article.seoDescription || article.summary);
         const escapedUrl = escapeHtml(articleUrl.href);
         const escapedImage = escapeHtml(imageUrl);
-        const personalizedHtml = html
+        const site = JSON.parse(getSetting("site-content")).content;
+        const brandLogo = site.brand.logo.startsWith("data:")
+          ? new URL("/brand-logo", origin).href
+          : new URL(site.brand.logo, origin).href;
+        const categories = JSON.parse(getSetting("blog")).categories;
+        const articleCategory = categories.find((item) => item.id === article.categoryId);
+        const breadcrumbs = [
+          { "@type": "ListItem", position: 1, name: site.brand.name, item: new URL("/", origin).href },
+          { "@type": "ListItem", position: 2, name: "Bài viết", item: new URL("/bai-viet-danh-sach.html", origin).href }
+        ];
+        if (articleCategory) {
+          const categoryUrl = new URL("/bai-viet-danh-sach.html", origin);
+          categoryUrl.searchParams.set("category", articleCategory.slug);
+          breadcrumbs.push({ "@type": "ListItem", position: breadcrumbs.length + 1, name: articleCategory.name, item: categoryUrl.href });
+        }
+        breadcrumbs.push({ "@type": "ListItem", position: breadcrumbs.length + 1, name: article.title, item: articleUrl.href });
+        const articleSchema = {
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "BlogPosting",
+              headline: article.title,
+              description: article.seoDescription || article.summary,
+              mainEntityOfPage: articleUrl.href,
+              author: { "@type": "Organization", name: site.brand.name },
+              publisher: {
+                "@type": "Organization",
+                name: site.brand.name,
+                logo: { "@type": "ImageObject", url: brandLogo }
+              },
+              ...(Number.isFinite(Date.parse(article.createdAt)) ? { datePublished: new Date(article.createdAt).toISOString() } : {}),
+              ...(Number.isFinite(Date.parse(article.updatedAt)) ? { dateModified: new Date(article.updatedAt).toISOString() } : {}),
+              ...(imageUrl.startsWith("http") ? { image: [imageUrl] } : {})
+            },
+            { "@type": "BreadcrumbList", itemListElement: breadcrumbs }
+          ]
+        };
+        const personalizedHtml = addCanonical(html, articleUrl.href)
           .replace(/<title>[\s\S]*?<\/title>/, `<title>${pageTitle}</title>`)
           .replace(/<meta name="description" content="[^"]*">/, `<meta name="description" content="${description}">`)
           .replace(/<meta property="og:title" content="[^"]*">/, `<meta property="og:title" content="${shareTitle}">`)
@@ -478,11 +585,102 @@ function createStore({ databasePath, password, publicOrigin = "", allowLocalAdmi
           .replace(/<meta property="og:image" content="[^"]*">/, `<meta property="og:image" content="${escapedImage}">`)
           .replace(/<meta name="twitter:title" content="[^"]*">/, `<meta name="twitter:title" content="${shareTitle}">`)
           .replace(/<meta name="twitter:description" content="[^"]*">/, `<meta name="twitter:description" content="${description}">`)
-          .replace(/<meta name="twitter:image" content="[^"]*">/, `<meta name="twitter:image" content="${escapedImage}">`);
+          .replace(/<meta name="twitter:image" content="[^"]*">/, `<meta name="twitter:image" content="${escapedImage}">`)
+          .replace("</head>", `${jsonLdScript(articleSchema)}\n</head>`);
         res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=60" });
         return res.end(req.method === "HEAD" ? undefined : personalizedHtml);
       }
+      if (name === "chi-tiet-gao.html") {
+        const html = fs.readFileSync(file, "utf8");
+        const productId = url.searchParams.get("id");
+        const product = productId && JSON.parse(getSetting("products")).find((item) => item.id === productId);
+        if (!product) {
+          const notFoundHtml = html.replace("</head>", '<meta name="robots" content="noindex, nofollow">\n</head>');
+          res.writeHead(404, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-cache" });
+          return res.end(req.method === "HEAD" ? undefined : notFoundHtml);
+        }
+        const origin = canonicalOrigin || `http://${req.headers.host}`;
+        const productUrl = new URL("/chi-tiet-gao.html", origin);
+        productUrl.searchParams.set("id", product.id);
+        const description = product.description || `${product.name}, ${product.origin}. Xem giá bán và liên hệ Gạo Thiên Mạnh để đặt gạo giao tận nhà.`;
+        const productImage = /^data:image\/jpeg;base64,/.test(product.image)
+          ? new URL(`/product-media/${encodeURIComponent(product.id)}.jpg`, origin).href
+          : /^https?:\/\//i.test(product.image) ? new URL(product.image).href : "";
+        const title = `${product.name} — Gạo Thiên Mạnh`;
+        const productSchema = {
+          "@context": "https://schema.org",
+          "@type": "Product",
+          name: product.name,
+          description,
+          sku: product.id,
+          ...(productImage ? { image: [productImage] } : {}),
+          offers: {
+            "@type": "Offer",
+            url: productUrl.href,
+            priceCurrency: "VND",
+            price: product.price,
+            availability: product.stock === 0 ? "https://schema.org/OutOfStock" : "https://schema.org/InStock",
+            seller: { "@type": "Organization", name: "Gạo Thiên Mạnh" }
+          }
+        };
+        let productHtml = addCanonical(html, productUrl.href)
+          .replace(/<title>[\s\S]*?<\/title>/, `<title>${escapeHtml(title)}</title>`)
+          .replace(/<meta name="description" content="[^"]*">/, `<meta name="description" content="${escapeHtml(description)}">`);
+        productHtml = setMeta(productHtml, /<meta property="og:title" content="[^"]*">/, title);
+        productHtml = setMeta(productHtml, /<meta property="og:description" content="[^"]*">/, description);
+        productHtml = setMeta(productHtml, /<meta property="og:url" content="[^"]*">/, productUrl.href);
+        productHtml = setMeta(productHtml, /<meta property="og:image" content="[^"]*">/, productImage);
+        productHtml = setMeta(productHtml, /<meta name="twitter:title" content="[^"]*">/, title);
+        productHtml = setMeta(productHtml, /<meta name="twitter:description" content="[^"]*">/, description);
+        productHtml = setMeta(productHtml, /<meta name="twitter:image" content="[^"]*">/, productImage);
+        productHtml = productHtml.replace("</head>", `${jsonLdScript(productSchema)}\n</head>`);
+        res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=60" });
+        return res.end(req.method === "HEAD" ? undefined : productHtml);
+      }
       const types = { ".html": "text/html; charset=utf-8", ".js": "text/javascript; charset=utf-8", ".css": "text/css; charset=utf-8", ".png": "image/png", ".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".svg": "image/svg+xml", ".ico": "image/x-icon" };
+      if (name.endsWith(".html")) {
+        let html = fs.readFileSync(file, "utf8");
+        const origin = canonicalOrigin || `http://${req.headers.host}`;
+        const canonical = canonicalUrl(route, url, origin);
+        html = addCanonical(html, canonical);
+        if (route === "/" || route === "/index.html") {
+          const site = JSON.parse(getSetting("site-content")).content;
+          const title = site.seo.title;
+          const description = site.seo.description;
+          const logo = site.brand.logo.startsWith("data:")
+            ? new URL("/brand-logo", origin).href
+            : new URL(site.brand.logo, origin).href;
+          html = html.replace(/<title>[\s\S]*?<\/title>/, `<title>${escapeHtml(title)}</title>`);
+          html = setMeta(html, /<meta name="description" content="[^"]*">/, description);
+          html = setMeta(html, /<meta property="og:title" content="[^"]*">/, title);
+          html = setMeta(html, /<meta property="og:description" content="[^"]*">/, description);
+          html = setMeta(html, /<meta property="og:url" content="[^"]*">/, canonical);
+          html = setMeta(html, /<meta property="og:image" content="[^"]*">/, logo);
+          html = setMeta(html, /<meta name="twitter:title" content="[^"]*">/, title);
+          html = setMeta(html, /<meta name="twitter:description" content="[^"]*">/, description);
+          html = setMeta(html, /<meta name="twitter:url" content="[^"]*">/, canonical);
+          html = setMeta(html, /<meta name="twitter:image" content="[^"]*">/, logo);
+          html = setMeta(html, /<meta property="og:url" content="[^"]*">/, canonical);
+          html = setMeta(html, /<meta name="twitter:url" content="[^"]*">/, canonical);
+          const organizationSchema = {
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            name: site.brand.name,
+            url: new URL("/", origin).href,
+            logo
+          };
+          const websiteSchema = {
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            name: site.brand.name,
+            url: new URL("/", origin).href,
+            inLanguage: "vi-VN"
+          };
+          html = html.replace("</head>", `${jsonLdScript(organizationSchema)}\n${jsonLdScript(websiteSchema)}\n</head>`);
+        }
+        res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-cache" });
+        return res.end(html);
+      }
       res.writeHead(200, { "Content-Type": types[path.extname(file)], "Cache-Control": "no-cache" });
       if (req.method === "HEAD") return res.end();
         const stream = fs.createReadStream(file);

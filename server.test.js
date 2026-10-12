@@ -54,6 +54,11 @@ test("Blog API shares, validates and persists articles between public pages and 
     assert.match(articleHtml, /<meta property="og:description" content="Mô tả SEO\.">/);
     assert.match(articleHtml, new RegExp(`<meta property="og:url" content="${origin}/bai-viet\\.html\\?slug=article-1">`));
     assert.match(articleHtml, new RegExp(`<meta property="og:image" content="${origin}/blog-media/article-1\\.jpg">`));
+    assert.match(articleHtml, new RegExp(`<link rel="canonical" href="${origin}/bai-viet\\.html\\?slug=article-1">`));
+    assert.match(articleHtml, /"@type":"BlogPosting"/);
+    assert.match(articleHtml, /"@type":"BreadcrumbList"/);
+    assert.match(articleHtml, /"datePublished":"2026-10-08T00:00:00\.000Z"/);
+    assert.equal((await fetch(`${origin}/bai-viet.html?slug=missing`)).status, 404);
     const socialImage = await fetch(`${origin}/blog-media/article-1.jpg`);
     assert.equal(socialImage.headers.get("content-type"), "image/jpeg");
     assert.deepEqual(Buffer.from(await socialImage.arrayBuffer()), Buffer.from([0xff, 0xd8, 0xff, 0xd9]));
@@ -483,6 +488,19 @@ test("Order API: authoritative pricing, vouchers, customer validation, persisten
     assert.equal((await api("/api/quote", { method: "POST", body: { items } })).status, 409);
     for (const file of ["/server.js", "/server.test.js", "/data/store.sqlite", "/package.json", "/HUONG-DAN.txt"]) assert.equal((await fetch(origin + file)).status, 404);
     assert.equal((await fetch(origin + "/dat-hang.html")).status, 200);
+    const productPage = await fetch(`${origin}/chi-tiet-gao.html?id=gao-jasmine`);
+    const productHtml = await productPage.text();
+    assert.equal(productPage.status, 200);
+    assert.match(productHtml, /<title>Gạo Jasmine thơm — Gạo Thiên Mạnh<\/title>/);
+    assert.match(productHtml, new RegExp(`<link rel="canonical" href="${origin}/chi-tiet-gao\\.html\\?id=gao-jasmine">`));
+    assert.match(productHtml, /"@type":"Product"/);
+    assert.match(productHtml, /"priceCurrency":"VND"/);
+    assert.match(productHtml, /"image":\["https:\/\/images\.unsplash\.com\//);
+    assert.match(productHtml, /"seller":\{"@type":"Organization","name":"Gạo Thiên Mạnh"\}/);
+    assert.equal((await fetch(`${origin}/chi-tiet-gao.html?id=missing`)).status, 404);
+    const homePage = await (await fetch(origin + "/")).text();
+    assert.match(homePage, new RegExp(`<link rel="canonical" href="${origin}/">`));
+    assert.match(homePage, /"@type":"Organization"/);
     const robots = await fetch(origin + "/robots.txt");
     assert.equal(robots.status, 200);
     assert.match(await robots.text(), /Sitemap: http:\/\/127\.0\.0\.1:\d+\/sitemap\.xml/);
@@ -503,6 +521,31 @@ test("Order API: authoritative pricing, vouchers, customer validation, persisten
     assert.equal((await api("/api/admin/orders", { cookie: relogin.cookie })).status, 401);
   } finally {
     if (server?.listening) await stop();
+    fs.rmSync(directory, { recursive: true, force: true });
+  }
+});
+
+test("Public SEO URLs redirect aliases to the configured HTTPS canonical domain", async () => {
+  const directory = fs.mkdtempSync(path.join(os.tmpdir(), "rice-seo-test-"));
+  const server = createStore({
+    databasePath: path.join(directory, "test.sqlite"),
+    password: crypto.randomBytes(24).toString("hex"),
+    publicOrigin: "https://gaoviet.id.vn/"
+  });
+  try {
+    await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
+    const base = `http://127.0.0.1:${server.address().port}`;
+    const response = await fetch(`${base}/chi-tiet-gao.html?id=gao-jasmine&tracking=1`, { redirect: "manual" });
+    assert.equal(response.status, 301);
+    assert.equal(response.headers.get("location"), "https://gaoviet.id.vn/chi-tiet-gao.html?id=gao-jasmine&tracking=1");
+    const hostilePath = await fetch(`${base}//attacker.invalid/path`, { redirect: "manual" });
+    assert.equal(hostilePath.headers.get("location"), "https://gaoviet.id.vn/path");
+    assert.equal(new URL(hostilePath.headers.get("location")).host, "gaoviet.id.vn");
+  } finally {
+    if (server.listening) {
+      server.closeAllConnections();
+      await new Promise((resolve) => server.close(resolve));
+    }
     fs.rmSync(directory, { recursive: true, force: true });
   }
 });

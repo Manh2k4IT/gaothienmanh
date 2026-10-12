@@ -314,10 +314,12 @@
       } else {
         document.title = article.seoTitle || article.title;
         document.querySelector('meta[name="description"]').content = article.seoDescription;
-        const canonical = document.createElement("link");
-        canonical.rel = "canonical";
-        canonical.href = location.href;
-        document.head.append(canonical);
+        if (!document.querySelector('link[rel="canonical"]')) {
+          const canonical = document.createElement("link");
+          canonical.rel = "canonical";
+          canonical.href = location.href;
+          document.head.append(canonical);
+        }
 
         container.append(textElement("a", "back-link", "← Tất cả bài viết"));
         container.querySelector(".back-link").href = "bai-viet-danh-sach.html";

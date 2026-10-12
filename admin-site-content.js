@@ -71,13 +71,13 @@
       details.append(node("summary", "", `${String(index + 1).padStart(2, "0")} · ${section.title}`));
       const fields = node("div", "content-fields");
       for (const field of section.fields) {
-        const label = node("label", field.type === "textarea" ? "content-wide" : "", field.label);
-        const input = node(field.type === "textarea" ? "textarea" : "input", "");
+        const label = node("label", ["textarea", "seo-description"].includes(field.type) ? "content-wide" : "", field.label);
+        const input = node(["textarea", "seo-description"].includes(field.type) ? "textarea" : "input", "");
         input.name = `${section.key}.${field.key}`;
         input.value = content[section.key][field.key];
         input.required = field.type !== "image";
-        if (field.type !== "textarea") input.type = field.type === "email" ? "email" : field.type === "phone" ? "tel" : "text";
-        input.maxLength = field.type === "textarea" ? 2000 : ["image", "link"].includes(field.type) ? 1000 : 200;
+        if (!["textarea", "seo-description"].includes(field.type)) input.type = field.type === "email" ? "email" : field.type === "phone" ? "tel" : "text";
+        input.maxLength = field.maxLength || (field.type === "textarea" ? 2000 : ["image", "link"].includes(field.type) ? 1000 : 200);
         input.addEventListener("input", () => {
           content[section.key][field.key] = input.value;
           input.setCustomValidity("");

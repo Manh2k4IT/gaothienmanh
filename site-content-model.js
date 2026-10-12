@@ -9,6 +9,10 @@
       field("tagline", "Dòng chữ dưới tên", "Gạo ngon · Cơm lành"),
       field("announcement", "Dòng thông báo đầu trang", "GẠO MỚI MỖI NGÀY · GIAO HÀNG TẬN NHÀ")
     ] },
+    { key: "seo", title: "SEO thương hiệu", fields: [
+      { ...field("title", "Tiêu đề SEO trang chủ", "Gạo Thiên Mạnh — Gạo ngon, cơm lành"), maxLength: 70 },
+      { ...field("description", "Meta description trang chủ", "Gạo Thiên Mạnh tuyển chọn gạo ngon từ những mùa vàng Việt Nam, giao tận nhà. Khám phá gạo Jasmine, ST25 và gạo lứt cho bữa cơm gia đình."), type: "textarea", maxLength: 320 }
+    ] },
     { key: "header", title: "Liên hệ đầu trang", fields: [
       field("phone", "Số điện thoại Hotline đầu trang", "0901 234 567", "phone"),
       field("topPhoneLabel", "Chữ trước số điện thoại ở thanh trên", "Hotline"),
@@ -85,6 +89,7 @@
     const initial = defaults();
     if (result.header === undefined) result = { ...result, header: { ...initial.header, phone: content.footer.phone, email: content.footer.email } };
     if (result.benefits === undefined) result = { ...result, benefits: initial.benefits };
+    if (result.seo === undefined) result = { ...result, seo: initial.seo };
     return result;
   }
   function validImage(value) {
@@ -107,7 +112,7 @@
       result[section.key] = {};
       for (const f of section.fields) {
         const value = content[section.key]?.[f.key];
-        const max = f.type === "textarea" ? 2000 : f.type === "link" ? 1000 : 200;
+        const max = f.maxLength || (f.type === "textarea" ? 2000 : f.type === "link" ? 1000 : 200);
         if (f.type === "image") {
           if (!validImage(value)) throw new TypeError(`${f.label}: chọn ảnh PNG, JPEG, WebP (tối đa 1 MB) hoặc liên kết ảnh hợp lệ.`);
         } else {

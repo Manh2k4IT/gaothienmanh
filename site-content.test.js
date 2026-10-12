@@ -10,12 +10,14 @@ const { DatabaseSync } = require("node:sqlite");
 test("Header migration preserves custom content and seeds existing contact information once", () => {
   const old = defaults();
   delete old.header;
+  delete old.seo;
   old.footer.phone = "0909 111 222";
   old.footer.email = "custom@example.com";
   old.hero.title = "Tiêu đề đang lưu";
   const upgraded = validate(migrate(old));
   assert.equal(upgraded.header.phone, old.footer.phone);
   assert.equal(upgraded.header.email, old.footer.email);
+  assert.deepEqual(upgraded.seo, defaults().seo);
   assert.equal(upgraded.hero.title, old.hero.title);
   assert.equal(old.header, undefined);
   assert.equal(migrate(upgraded), upgraded);
@@ -43,6 +45,12 @@ test("Site content validates text, links and raster images without HTML interpre
   invalid.footer.phone = "0901 234 567";
   invalid.footer.email = "invalid";
   assert.throws(() => validate(invalid), TypeError);
+  const longTitle = defaults();
+  longTitle.seo.title = "x".repeat(71);
+  assert.throws(() => validate(longTitle), TypeError);
+  const longDescription = defaults();
+  longDescription.seo.description = "x".repeat(321);
+  assert.throws(() => validate(longDescription), TypeError);
 });
 
 test("Benefits migration preserves all saved sections and edits across repeated migrations", () => {
@@ -90,6 +98,8 @@ test("Site content API: authentication, same-origin, conflict, persistence and i
     const cookie = login.headers.get("set-cookie").split(";")[0];
     initial.content.brand.name = "Cửa hàng mới";
     initial.content.brand.logo = "data:image/png;base64," + Buffer.from("\x89PNG\r\n\x1a\nhello", "latin1").toString("base64");
+    initial.content.seo.title = "Cửa hàng mới | Gạo ngon";
+    initial.content.seo.description = "Gạo ngon giao tận nhà từ cửa hàng mới.";
     assert.equal((await save(initial, cookie, "https://untrusted.example")).status, 403);
     const invalid = JSON.parse(JSON.stringify(initial));
     invalid.content.story.href = "javascript:alert(1)";
@@ -100,6 +110,16 @@ test("Site content API: authentication, same-origin, conflict, persistence and i
     assert.equal(saved.version, 2);
     assert.deepEqual(saved.content, initial.content);
     assert.equal((await save(initial, cookie)).status, 409);
+    const homeResponse = await fetch(origin + "/");
+    const homeHtml = await homeResponse.text();
+    assert.match(homeHtml, /<title>Cửa hàng mới \| Gạo ngon<\/title>/);
+    assert.match(homeHtml, /<meta name="description" content="Gạo ngon giao tận nhà từ cửa hàng mới\.">/);
+    assert.match(homeHtml, /"name":"Cửa hàng mới"/);
+    assert.match(homeHtml, /"logo":"http:\/\/127\.0\.0\.1:\d+\/brand-logo"/);
+    const logoResponse = await fetch(origin + "/brand-logo");
+    assert.equal(logoResponse.headers.get("content-type"), "image/png");
+    assert.equal(logoResponse.status, 200);
+    assert.equal((await logoResponse.arrayBuffer()).byteLength, Buffer.from("\x89PNG\r\n\x1a\nhello", "latin1").length);
     await stop();
     await start();
     assert.deepEqual(await (await fetch(origin + "/api/site-content")).json(), saved);
@@ -107,6 +127,7 @@ test("Site content API: authentication, same-origin, conflict, persistence and i
     const legacy = JSON.parse(JSON.stringify(saved));
     delete legacy.content.header;
     delete legacy.content.benefits;
+    delete legacy.content.seo;
     legacy.content.footer.phone = "0909 111 222";
     const db = new DatabaseSync(databasePath);
     db.prepare("UPDATE settings SET value = ? WHERE key = 'site-content'").run(JSON.stringify(legacy));
@@ -116,6 +137,7 @@ test("Site content API: authentication, same-origin, conflict, persistence and i
     assert.equal(upgraded.version, saved.version + 1);
     assert.equal(upgraded.content.header.phone, legacy.content.footer.phone);
     assert.deepEqual(upgraded.content.benefits, defaults().benefits);
+    assert.deepEqual(upgraded.content.seo, defaults().seo);
     assert.equal(upgraded.content.brand.name, saved.content.brand.name);
     await stop();
     await start();

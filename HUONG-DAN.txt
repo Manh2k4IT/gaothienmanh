@@ -66,7 +66,8 @@ Giay phep: https://www.pexels.com/license/
    Don luu thong tin ca nhan: chi cap quyen truy cap cho nguoi quan tri;
    khong dua file data, file sao luu hay mat khau len Git/repository cong khai.
 7. Len hosting: chon VPS/hosting ho tro Node.js 24 va o dia ben vung cho SQLite.
-   Dat HOST=0.0.0.0, PORT theo hosting, PUBLIC_ORIGIN=https://ten-mien-cua-ban.
+   Dat HOST=0.0.0.0, PORT theo hosting, PUBLIC_ORIGIN=https://ten-mien-chinh.
+   PUBLIC_ORIGIN khong co dau / cuoi; cac host/HTTP khac se chuyen huong 301 ve day.
    Sau khi gan ten mien va bat HTTPS, kiem tra /robots.txt va /sitemap.xml,
    khai bao sitemap trong Google Search Console. Trang blog duoc phep index,
    bai viet va danh muc blog duoc luu tren may chu trong data\store.sqlite,

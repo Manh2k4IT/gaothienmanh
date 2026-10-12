@@ -16,6 +16,11 @@
     document.querySelectorAll(selector).forEach(el => { el.style.backgroundImage = `url(${JSON.stringify(image)})`; });
   }
   function apply(c) {
+    if (["/", "/index.html"].includes(location.pathname)) {
+      document.title = c.seo.title;
+      const description = document.querySelector('meta[name="description"]');
+      if (description) description.content = c.seo.description;
+    }
     document.querySelectorAll(".brand img, .shop-brand img, .store-footer-logo").forEach(el => { el.src = c.brand.logo; el.alt = c.brand.name; });
     text(".brand strong, .shop-brand strong, .store-footer strong", c.brand.name);
     text(".brand small, .shop-brand small", c.brand.tagline);
